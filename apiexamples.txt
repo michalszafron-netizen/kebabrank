@@ -1,0 +1,1833 @@
+curl --location 'https://cloud.gmapsextractor.com/api/v2/search' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {{ your token }}' \
+--data-raw '{
+    "q": "design agency",
+    "page": 1,
+    "ll": "@40.6970194,-74.3093048,11z",
+    "hl": "en",
+    "gl": "us",
+    "extra": true
+}'
+
+
+{
+  "total": 20,
+  "params": {
+    "q": "design agency",
+    "page": 1,
+    "ll": "@40.6970194,-74.3093048,11z",
+    "hl": "en",
+    "gl": "us",
+    "extra": true,
+    "version": 2
+  },
+  "data": [
+    {
+      "Name": "Trillion",
+      "Fulladdress": "382 Springfield Ave #217, Summit, NJ 07901",
+      "Street": "382 Springfield Ave #217",
+      "Municipality": "Summit, NJ 07901",
+      "Categories": [
+        "Marketing agency",
+        "Advertising agency",
+        "Graphic designer",
+        "Internet marketing service",
+        "Website designer"
+      ],
+      "About": "Service options: [Online appointments], Accessibility: [Wheelchair accessible entrance, Wheelchair accessible parking lot, Wheelchair accessible restroom, Wheelchair accessible seating], Crowd: [LGBTQ+ friendly], Planning: [Appointment required]",
+      "Phone": "(908) 219-4703",
+      "Phones": "(908) 219-4703, +1 908-219-4703",
+      "Claimed": "YES",
+      "Owner": "Trillion (Owner)",
+      "Owner Id": "117478048950051287729",
+      "Owner Link": "https://www.google.com/maps/contrib/117478048950051287729",
+      "Review Count": 38,
+      "Average Rating": 5,
+      "Review URL": "https://search.google.com/local/reviews?placeid=ChIJMQXhR02uw4kRjlnEK-S8p0M&authuser=0&hl=en&gl=US",
+      "Latitude": 40.7178554,
+      "Longitude": -74.3581382,
+      "Time Zone": "America/New_York",
+      "Website": "trillioncreative.com/",
+      "Domain": "trillioncreative.com",
+      "Opening Hours": "Saturday(2026-02-07): [Closed], Sunday(2026-02-08): [Closed], Monday(2026-02-09): [9 AM–6 PM], Tuesday(2026-02-10): [9 AM–6 PM], Wednesday(2026-02-11): [9 AM–6 PM], Thursday(2026-02-12): [9 AM–6 PM], Friday(2026-02-13): [9 AM–6 PM]",
+      "Featured Image": "https://lh3.googleusercontent.com/gps-cs-s/AHVAwerZqg6xAFGJcNiFpciHc0EiTwc5sZNM6ygkfV95qXBIF5E67AdGK3EzMkxya6veF36UhnLWllQjU8G5JtgiNb7VVbJW3K6G7h8O02053AB8lZSdRcCs9XGRsjgJh_fCrU6PRs62xw=w138-h92-k-no",
+      "Google Maps URL": "https://www.google.com/maps?cid=4875072809824704910",
+      "Google Knowledge URL": "https://www.google.com/search?kgmid=/g/1vm_yv0r",
+      "Cid": "4875072809824704910",
+      "Fid": "0x89c3ae4d47e10531:0x43a7bce42bc4598e",
+      "Kgmid": "/g/1vm_yv0r",
+      "Place Id": "ChIJMQXhR02uw4kRjlnEK-S8p0M",
+      "Web Result URL": "https://www.google.com/search?q=local+guide+program&ibp=gwp;0,26,OhkKFyITVHJpbGxpb24gU3VtbWl0LCBOSigC&pcl=lp",
+      "emails": [
+        "hello@trillioncreative.com"
+      ],
+      "facebook_links": [],
+      "instagram_links": [
+        "https://www.instagram.com/trillioncreates"
+      ],
+      "linkedin_links": [
+        "https://www.linkedin.com/company/trillion-creative"
+      ],
+      "pinterest_links": [],
+      "tiktok_links": [],
+      "twitter_links": [],
+      "yelp_links": [],
+      "youtube_links": [],
+      "meta": {
+        "title": "Trillion: A Results-Driven Creative Agency",
+        "description": "We are a results-driven agency specializing in strategic brand development, smart marketing strategies, and creative design solutions."
+      },
+      "tracking_ids": {
+        "google": {
+          "gtm": "GTM-W2MKJB"
+        }
+      }
+    },
+    {
+      "Name": "Pinnacle Codes",
+      "Fulladdress": "803 Kenilworth Blvd Unit 221, Kenilworth, NJ 07033",
+      "Street": "803 Kenilworth Blvd Unit 221",
+      "Municipality": "Kenilworth, NJ 07033",
+      "Categories": [
+        "Website designer",
+        "Graphic designer",
+        "Marketing consultant"
+      ],
+      "About": "Service options: [Online appointments, Onsite services not available]",
+      "Phone": "(908) 768-4690",
+      "Phones": "(908) 768-4690, +1 908-768-4690",
+      "Claimed": "YES",
+      "Owner": "Pinnacle Codes (Owner)",
+      "Owner Id": "106582164393296613810",
+      "Owner Link": "https://www.google.com/maps/contrib/106582164393296613810",
+      "Review Count": 31,
+      "Average Rating": 5,
+      "Review URL": "https://search.google.com/local/reviews?placeid=ChIJS1EVOz2zw4kRxdeKR25L6JA&authuser=0&hl=en&gl=US",
+      "Latitude": 40.6777133,
+      "Longitude": -74.281635,
+      "Time Zone": "America/New_York",
+      "Website": "pinnacle.codes/",
+      "Domain": "pinnacle.codes",
+      "Opening Hours": "Saturday(2026-02-07): [Open 24 hours], Sunday(2026-02-08): [Open 24 hours], Monday(2026-02-09): [Open 24 hours], Tuesday(2026-02-10): [Open 24 hours], Wednesday(2026-02-11): [Open 24 hours], Thursday(2026-02-12): [Open 24 hours], Friday(2026-02-13): [Open 24 hours]",
+      "Featured Image": "https://lh3.googleusercontent.com/p/AF1QipNA45aza9XSl7x9wHcR8ifsc9n-AhfnGk2UCVru=w166-h92-k-no",
+      "Google Maps URL": "https://www.google.com/maps?cid=10441678673077262277",
+      "Google Knowledge URL": "https://www.google.com/search?kgmid=/g/11rjpm7n0j",
+      "Cid": "10441678673077262277",
+      "Fid": "0x89c3b33d3b15514b:0x90e84b6e478ad7c5",
+      "Kgmid": "/g/11rjpm7n0j",
+      "Place Id": "ChIJS1EVOz2zw4kRxdeKR25L6JA",
+      "Web Result URL": "https://www.google.com/search?q=local+guide+program&ibp=gwp;0,26,OiMKISIdUGlubmFjbGUgQ29kZXMgS2VuaWx3b3J0aCwgTkooAg&pcl=lp",
+      "emails": [
+        "info@pinnacle.codes"
+      ],
+      "facebook_links": [],
+      "instagram_links": [],
+      "linkedin_links": [],
+      "pinterest_links": [],
+      "tiktok_links": [],
+      "twitter_links": [],
+      "yelp_links": [],
+      "youtube_links": [],
+      "meta": {
+        "title": "Your Partner of Choice for Tailored Custom Web Applications",
+        "description": "Your Partner of Custom solutions for small and mid-sized enterprises, and render business automation services, using time-proven technologies and approaches."
+      },
+      "tracking_ids": {}
+    },
+    {
+      "Name": "Premiere Creative",
+      "Fulladdress": "350 Millburn Ave #2, Millburn, NJ 07041",
+      "Street": "350 Millburn Ave #2",
+      "Municipality": "Millburn, NJ 07041",
+      "Categories": [
+        "Marketing agency",
+        "Advertising agency",
+        "E commerce agency",
+        "Internet marketing service",
+        "Marketing consultant",
+        "Website designer"
+      ],
+      "About": "From the business: [Identifies as women-owned], Service options: [Online appointments, Onsite services not available, ], Accessibility: [Wheelchair accessible parking lot,  Does not have assistive hearing loop, No wheelchair accessible restroom, No wheelchair accessible seating], Amenities: [Gender-neutral restroom], Crowd: [LGBTQ+ friendly], Planning: [Appointment required], Parking: [Paid parking lot, Paid street parking]",
+      "Phone": "(973) 346-8100",
+      "Phones": "(973) 346-8100, +1 973-346-8100",
+      "Claimed": "YES",
+      "Owner": "Premiere Creative (Owner)",
+      "Owner Id": "107792557303204181449",
+      "Owner Link": "https://www.google.com/maps/contrib/107792557303204181449",
+      "Review Count": 59,
+      "Average Rating": 5,
+      "Review URL": "https://search.google.com/local/reviews?placeid=ChIJGdsAnyusw4kRZkojRGIAHcI&authuser=0&hl=en&gl=US",
+      "Latitude": 40.723420399999995,
+      "Longitude": -74.3077124,
+      "Time Zone": "America/New_York",
+      "Website": "premierecreative.com/?utm_source=gmb&utm_medium=organic&utm_campaign=tracking_traffic",
+      "Domain": "premierecreative.com",
+      "Opening Hours": "Saturday(2026-02-07): [Closed], Sunday(2026-02-08): [Closed], Monday(2026-02-09): [9 AM–5 PM], Tuesday(2026-02-10): [9 AM–5 PM], Wednesday(2026-02-11): [9 AM–5 PM], Thursday(2026-02-12): [9 AM–5 PM], Friday(2026-02-13): [9 AM–5 PM]",
+      "Featured Image": "https://lh3.googleusercontent.com/p/AF1QipOcEyny1sw2I7Q6Oslkj06czg9ArIAg8n1FhSAs=w163-h92-k-no",
+      "Google Maps URL": "https://www.google.com/maps?cid=13987336439732587110",
+      "Google Knowledge URL": "https://www.google.com/search?kgmid=/g/1tcy57k5",
+      "Cid": "13987336439732587110",
+      "Fid": "0x89c3ac2b9f00db19:0xc21d006244234a66",
+      "Kgmid": "/g/1tcy57k5",
+      "Place Id": "ChIJGdsAnyusw4kRZkojRGIAHcI",
+      "Web Result URL": "https://www.google.com/search?q=local+guide+program&ibp=gwp;0,26,OiQKIiIeUHJlbWllcmUgQ3JlYXRpdmUgTWlsbGJ1cm4sIE5KKAI&pcl=lp",
+      "emails": [],
+      "facebook_links": [
+        "https://www.facebook.com/PremiereCreative"
+      ],
+      "instagram_links": [],
+      "linkedin_links": [
+        "https://www.linkedin.com/company/premiere-creative-nj"
+      ],
+      "pinterest_links": [
+        "https://www.pinterest.com/premierewebseo"
+      ],
+      "tiktok_links": [],
+      "twitter_links": [],
+      "yelp_links": [],
+      "youtube_links": [
+        "https://www.youtube.com/user/PremiereCreativeVid"
+      ],
+      "meta": {
+        "title": "Digital Marketing Agency in NJ/NY | Premiere Creative",
+        "description": "Premiere Creative is a NJ/NY digital marketing agency specializing in SEO, Google Ads, Amazon, web design, and growth-focused marketing strategies."
+      },
+      "tracking_ids": {
+        "google": {
+          "gtm": "GTM-WQWQKP4"
+        }
+      }
+    },
+    {
+      "Name": "Wonder & Co. Creative",
+      "Street": "",
+      "Municipality": "",
+      "Categories": [
+        "Design agency",
+        "Service establishment",
+        "Graphic designer",
+        "Website designer"
+      ],
+      "About": "From the business: [Identifies as women-owned], Service options: [Online appointments], Crowd: [LGBTQ+ friendly], Planning: [Appointment required]",
+      "Phones": "",
+      "Claimed": "YES",
+      "Owner": "Wonder & Co. Creative (Owner)",
+      "Owner Id": "101174603128341514622",
+      "Owner Link": "https://www.google.com/maps/contrib/101174603128341514622",
+      "Review Count": 10,
+      "Average Rating": 5,
+      "Review URL": "https://search.google.com/local/reviews?placeid=ChIJz4O6jgGtw4kRN6PxH2eeHqA&authuser=0&hl=en&gl=US",
+      "Latitude": 41.0138859,
+      "Longitude": -74.5524009,
+      "Time Zone": "America/New_York",
+      "Website": "wonderandcocreative.com/",
+      "Domain": "wonderandcocreative.com",
+      "Opening Hours": "Saturday(2026-02-07): [Closed], Sunday(2026-02-08): [Closed], Monday(2026-02-09): [10 AM–5 PM], Tuesday(2026-02-10): [10 AM–5 PM], Wednesday(2026-02-11): [10 AM–5 PM], Thursday(2026-02-12): [10 AM–5 PM], Friday(2026-02-13): [10 AM–5 PM]",
+      "Featured Image": "https://lh3.googleusercontent.com/p/AF1QipNicCyOAXsy6BYdJl3ytpRNcjHZxW0cLRYhJl_0=w80-h120-k-no",
+      "Google Maps URL": "https://www.google.com/maps?cid=11537833461124539191",
+      "Google Knowledge URL": "https://www.google.com/search?kgmid=/g/11jcntx4_k",
+      "Cid": "11537833461124539191",
+      "Fid": "0x89c3ad018eba83cf:0xa01e9e671ff1a337",
+      "Kgmid": "/g/11jcntx4_k",
+      "Place Id": "ChIJz4O6jgGtw4kRN6PxH2eeHqA",
+      "Web Result URL": "https://www.google.com/search?q=local+guide+program&ibp=gwp;0,26,OhsKGSIVV29uZGVyICYgQ28uIENyZWF0aXZlKAI&pcl=lp",
+      "emails": [
+        "hello@wonderandcocreative.com"
+      ],
+      "facebook_links": [],
+      "instagram_links": [
+        "https://www.instagram.com/wonderandcocreative"
+      ],
+      "linkedin_links": [],
+      "pinterest_links": [],
+      "tiktok_links": [],
+      "twitter_links": [],
+      "yelp_links": [],
+      "youtube_links": [],
+      "meta": {
+        "title": "Wonder & Co. Creative | Graphic Design Studio",
+        "description": "Wonder & Co. is a branding and graphic design studio located in Maplewood, \nNew Jersey. Our savvy collective exists to build your brand a PERSONALITY."
+      },
+      "tracking_ids": {
+        "google": {
+          "ads": {
+            "remarketing": "2019379584"
+          }
+        }
+      }
+    },
+    {
+      "Name": "AKG Creative",
+      "Fulladdress": "623 Morris Ave, Springfield, NJ 07081",
+      "Street": "623 Morris Ave",
+      "Municipality": "Springfield, NJ 07081",
+      "Categories": [
+        "Marketing consultant"
+      ],
+      "About": "Service options: [Online appointments, Onsite services], Accessibility: [Wheelchair accessible parking lot, Wheelchair accessible restroom, Wheelchair accessible seating], Amenities: [Gender-neutral restroom], Crowd: [LGBTQ+ friendly], Planning: [Appointment required]",
+      "Phone": "(609) 240-7117",
+      "Phones": "(609) 240-7117, +1 609-240-7117",
+      "Claimed": "YES",
+      "Owner": "AKG Creative (Owner)",
+      "Owner Id": "116838557245304909290",
+      "Owner Link": "https://www.google.com/maps/contrib/116838557245304909290",
+      "Review Count": 15,
+      "Average Rating": 5,
+      "Review URL": "https://search.google.com/local/reviews?placeid=ChIJ3djqF0VL-0MRD9Lra2RDE-I&authuser=0&hl=en&gl=US",
+      "Latitude": 40.7171174,
+      "Longitude": -74.3270052,
+      "Time Zone": "America/New_York",
+      "Website": "akgcreative.com/",
+      "Domain": "akgcreative.com",
+      "Opening Hours": "Saturday(2026-02-07): [Closed], Sunday(2026-02-08): [Closed], Monday(2026-02-09): [8 AM–8 PM], Tuesday(2026-02-10): [8 AM–8 PM], Wednesday(2026-02-11): [8 AM–8 PM], Thursday(2026-02-12): [8 AM–8 PM], Friday(2026-02-13): [8 AM–8 PM]",
+      "Featured Image": "https://lh3.googleusercontent.com/p/AF1QipPycNs3RduGQoH-099EymiTAwwxbEqoJhYFgI4f=w137-h92-k-no",
+      "Google Maps URL": "https://www.google.com/maps?cid=16290438375715623439",
+      "Google Knowledge URL": "https://www.google.com/search?kgmid=/g/11qbj349sg",
+      "Cid": "16290438375715623439",
+      "Fid": "0x43fb4b4517ead8dd:0xe21343646bebd20f",
+      "Kgmid": "/g/11qbj349sg",
+      "Place Id": "ChIJ3djqF0VL-0MRD9Lra2RDE-I",
+      "Web Result URL": "https://www.google.com/search?q=local+guide+program&ibp=gwp;0,26,OiIKICIcQUtHIENyZWF0aXZlIFNwcmluZ2ZpZWxkLCBOSigC&pcl=lp",
+      "emails": [],
+      "facebook_links": [
+        "https://www.facebook.com/akgcreativeinc"
+      ],
+      "instagram_links": [
+        "https://www.instagram.com/akgcreative"
+      ],
+      "linkedin_links": [
+        "https://www.linkedin.com/company/akgcreative"
+      ],
+      "pinterest_links": [],
+      "tiktok_links": [],
+      "twitter_links": [
+        "https://x.com/akgcreative"
+      ],
+      "yelp_links": [],
+      "youtube_links": [
+        "https://www.youtube.com/@akgcreative"
+      ],
+      "meta": {
+        "title": "AKG Creative | Disruption Marketing Experts",
+        "description": "Full-service digital media agency! Experts in all things branding and marketing. We specialize in creating results where no one else can…"
+      },
+      "tracking_ids": {
+        "google": {
+          "ads": {
+            "remarketing": "1762617044"
+          }
+        }
+      }
+    },
+    {
+      "Name": "Digital Group X",
+      "Fulladdress": "161 Locust Ave, Mountainside, NJ 07092",
+      "Street": "161 Locust Ave",
+      "Municipality": "Mountainside, NJ 07092",
+      "Categories": [
+        "Website designer",
+        "Advertising agency",
+        "Design agency",
+        "Internet marketing service",
+        "Marketing agency",
+        "Marketing consultant"
+      ],
+      "About": "From the business: [Small business], Service options: [Online appointments, Onsite services not available], Accessibility: [Wheelchair accessible parking lot], Planning: [Appointment required]",
+      "Phone": "(908) 251-1277",
+      "Phones": "(908) 251-1277, +1 908-251-1277",
+      "Claimed": "YES",
+      "Owner": "Digital Group X (Owner)",
+      "Owner Id": "111258706121607779272",
+      "Owner Link": "https://www.google.com/maps/contrib/111258706121607779272",
+      "Review Count": 12,
+      "Average Rating": 5,
+      "Review URL": "https://search.google.com/local/reviews?placeid=ChIJ9zaVCBWxw4kRJfYN9JmUlcM&authuser=0&hl=en&gl=US",
+      "Latitude": 40.6751663,
+      "Longitude": -74.3467199,
+      "Time Zone": "America/New_York",
+      "Website": "www.digitalgroupx.com/",
+      "Domain": "digitalgroupx.com",
+      "Opening Hours": "Saturday(2026-02-07): [9 AM–5 PM], Sunday(2026-02-08): [Closed], Monday(2026-02-09): [9 AM–5 PM], Tuesday(2026-02-10): [9 AM–5 PM], Wednesday(2026-02-11): [9 AM–5 PM], Thursday(2026-02-12): [9 AM–5 PM], Friday(2026-02-13): [9 AM–5 PM]",
+      "Featured Image": "https://lh3.googleusercontent.com/p/AF1QipNEW08IO7eknkB9Yem-NzrQjCz2jsprDw01vDg8=w138-h92-k-no",
+      "Google Maps URL": "https://www.google.com/maps?cid=14093333997871298085",
+      "Google Knowledge URL": "https://www.google.com/search?kgmid=/g/11mw8lh7nx",
+      "Cid": "14093333997871298085",
+      "Fid": "0x89c3b115089536f7:0xc3959499f40df625",
+      "Kgmid": "/g/11mw8lh7nx",
+      "Place Id": "ChIJ9zaVCBWxw4kRJfYN9JmUlcM",
+      "Web Result URL": "https://www.google.com/search?q=local+guide+program&ibp=gwp;0,26,OiYKJCIgRGlnaXRhbCBHcm91cCBYIE1vdW50YWluc2lkZSwgTkooAg&pcl=lp",
+      "emails": [
+        "info@digitalgroupx.com"
+      ],
+      "facebook_links": [
+        "https://www.facebook.com/DigitalGroupX"
+      ],
+      "instagram_links": [
+        "https://www.instagram.com/digitalgroupx"
+      ],
+      "linkedin_links": [
+        "https://www.linkedin.com/company/64695372",
+        "https://www.linkedin.com/company/digital-group-x"
+      ],
+      "pinterest_links": [],
+      "tiktok_links": [],
+      "twitter_links": [
+        "https://x.com/Digital_Group_X"
+      ],
+      "yelp_links": [],
+      "youtube_links": [
+        "https://www.youtube.com/channel/UCwMdaNJBwrsoFvydAjhYqTw"
+      ],
+      "meta": {
+        "title": "Digital Group X | Web Design & SEO - New York Area",
+        "description": "Digital Group X is a Web Design & SEO digital agency located in the New York Metro Area. Call us at 908.251.12.77 for a free estimate."
+      },
+      "tracking_ids": {
+        "meta": {
+          "pixelId": "525822158451263"
+        },
+        "google": {
+          "gtm": "GTM-KZ93T83",
+          "ads": {
+            "remarketing": "1770520388"
+          }
+        }
+      }
+    },
+    {
+      "Name": "Dalvin Digital Design",
+      "Street": "",
+      "Municipality": "",
+      "Categories": [
+        "Website designer",
+        "Design agency",
+        "Service establishment",
+        "Graphic designer"
+      ],
+      "About": "From the business: [Identifies as Black-owned]",
+      "Phone": "(650) 416-6404",
+      "Phones": "(650) 416-6404, +1 650-416-6404",
+      "Claimed": "YES",
+      "Owner": "Dalvin Digital Design (Owner)",
+      "Owner Id": "107663017952624266443",
+      "Owner Link": "https://www.google.com/maps/contrib/107663017952624266443",
+      "Review Count": 34,
+      "Average Rating": 5,
+      "Review URL": "https://search.google.com/local/reviews?placeid=ChIJ7x26126tw4kRDX2UPpmzerU&authuser=0&hl=en&gl=US",
+      "Latitude": 46.423669,
+      "Longitude": -129.9427086,
+      "Time Zone": "America/New_York",
+      "Website": "www.dalvindigital.com/",
+      "Domain": "dalvindigital.com",
+      "Opening Hours": "Saturday(2026-02-07): [Closed], Sunday(2026-02-08): [Closed], Monday(2026-02-09): [Open 24 hours], Tuesday(2026-02-10): [Open 24 hours], Wednesday(2026-02-11): [Open 24 hours], Thursday(2026-02-12): [Open 24 hours], Friday(2026-02-13): [Open 24 hours]",
+      "Featured Image": "https://lh3.googleusercontent.com/p/AF1QipOXLjT8As_46Ifj9Nif9Gw3Uz_hcg3yKaQV_IKU=w92-h92-k-no",
+      "Google Maps URL": "https://www.google.com/maps?cid=13076961938784943373",
+      "Google Knowledge URL": "https://www.google.com/search?kgmid=/g/11h1g5ccnn",
+      "Cid": "13076961938784943373",
+      "Fid": "0x89c3ad6ed7ba1def:0xb57ab3993e947d0d",
+      "Kgmid": "/g/11h1g5ccnn",
+      "Place Id": "ChIJ7x26126tw4kRDX2UPpmzerU",
+      "Web Result URL": "https://www.google.com/search?q=local+guide+program&ibp=gwp;0,26,OhsKGSIVRGFsdmluIERpZ2l0YWwgRGVzaWduKAI&pcl=lp",
+      "emails": [
+        "sales@dalvindigital.com"
+      ],
+      "facebook_links": [],
+      "instagram_links": [
+        "https://instagram.com/dalvindigitaldesign"
+      ],
+      "linkedin_links": [],
+      "pinterest_links": [],
+      "tiktok_links": [],
+      "twitter_links": [
+        "https://x.com/dalvindigital"
+      ],
+      "yelp_links": [],
+      "youtube_links": [],
+      "meta": {
+        "title": "Dalvin Digital Design – Web & Mobile Design Agency",
+        "description": ""
+      },
+      "tracking_ids": {
+        "google": {
+          "ads": {
+            "remarketing": "238440058"
+          }
+        }
+      }
+    },
+    {
+      "Name": "Drawing Board Studios",
+      "Fulladdress": "17 Holmes Ave, New Providence, NJ 07974",
+      "Street": "17 Holmes Ave",
+      "Municipality": "New Providence, NJ 07974",
+      "Categories": [
+        "Marketing agency"
+      ],
+      "About": "From the business: [Identifies as women-owned], Service options: [Online appointments, Onsite services], Accessibility: [Wheelchair accessible parking lot]",
+      "Phone": "(908) 868-0862",
+      "Phones": "(908) 868-0862, +1 908-868-0862",
+      "Claimed": "YES",
+      "Owner": "Drawing Board Studios (Owner)",
+      "Owner Id": "104022126078825655129",
+      "Owner Link": "https://www.google.com/maps/contrib/104022126078825655129",
+      "Review Count": 6,
+      "Average Rating": 5,
+      "Review URL": "https://search.google.com/local/reviews?placeid=ChIJTfAKpLylw4kR-iM65cC4JoY&authuser=0&hl=en&gl=US",
+      "Latitude": 40.7043361,
+      "Longitude": -74.4137832,
+      "Time Zone": "America/New_York",
+      "Website": "www.drawingbrdstudios.com/",
+      "Domain": "drawingbrdstudios.com",
+      "Opening Hours": "Saturday(2026-02-07): [Closed], Sunday(2026-02-08): [Closed], Monday(2026-02-09): [9 AM–6 PM], Tuesday(2026-02-10): [9 AM–6 PM], Wednesday(2026-02-11): [9 AM–6 PM], Thursday(2026-02-12): [9 AM–6 PM], Friday(2026-02-13): [9 AM–6 PM]",
+      "Featured Image": "https://lh3.googleusercontent.com/p/AF1QipPqu_0aNaeh8NnoOTwlC7o6fi8GTmgJoOy7wbwA=w92-h92-k-no",
+      "Google Maps URL": "https://www.google.com/maps?cid=9666616788816372730",
+      "Google Knowledge URL": "https://www.google.com/search?kgmid=/g/11j1br_7rk",
+      "Cid": "9666616788816372730",
+      "Fid": "0x89c3a5bca40af04d:0x8626b8c0e53a23fa",
+      "Kgmid": "/g/11j1br_7rk",
+      "Place Id": "ChIJTfAKpLylw4kR-iM65cC4JoY",
+      "Web Result URL": "https://www.google.com/search?q=local+guide+program&ibp=gwp;0,26,Oi4KLCIoRHJhd2luZyBCb2FyZCBTdHVkaW9zIE5ldyBQcm92aWRlbmNlLCBOSigC&pcl=lp",
+      "emails": [
+        "drawingbrdstudios@gmail.com"
+      ],
+      "facebook_links": [
+        "https://www.facebook.com/DrawingBoardStudios"
+      ],
+      "instagram_links": [
+        "https://www.instagram.com/drawingbrdstudios"
+      ],
+      "linkedin_links": [
+        "https://www.linkedin.com/company/drawing-board-studios-nj"
+      ],
+      "pinterest_links": [],
+      "tiktok_links": [],
+      "twitter_links": [],
+      "yelp_links": [],
+      "youtube_links": [],
+      "meta": {
+        "title": "Creative Marketing  Agency | Drawing Board Studios | New Providence",
+        "description": "Drawing Board Studios is a Creative Marketing Agency in New Providence, NJ offering Digital Marketing Communication for Small Local business including Social Media, Graphic Design, Marketing Strategy, Logo Design, Photography, Animation. Creative Design Agency. Marketing Communications Agency."
+      },
+      "tracking_ids": {}
+    },
+    {
+      "Name": "Diane Benjamin Design",
+      "Fulladdress": "51 Pine Terrace E, Short Hills, NJ 07078",
+      "Street": "51 Pine Terrace E",
+      "Municipality": "Short Hills, NJ 07078",
+      "Categories": [
+        "Design agency"
+      ],
+      "About": "",
+      "Phone": "(347) 579-7482",
+      "Phones": "(347) 579-7482, +1 347-579-7482",
+      "Claimed": "YES",
+      "Owner": "Diane Benjamin Design (Owner)",
+      "Owner Id": "107295233800906793644",
+      "Owner Link": "https://www.google.com/maps/contrib/107295233800906793644",
+      "Review Count": 4,
+      "Average Rating": 5,
+      "Review URL": "https://search.google.com/local/reviews?placeid=ChIJA6ykcIeuw4kRm2Rt5gBS6fE&authuser=0&hl=en&gl=US",
+      "Latitude": 40.7239699,
+      "Longitude": -74.3199747,
+      "Time Zone": "America/New_York",
+      "Website": "www.dianebenjamindesign.com/",
+      "Domain": "dianebenjamindesign.com",
+      "Opening Hours": "Saturday(2026-02-07): [Closed], Sunday(2026-02-08): [Closed], Monday(2026-02-09): [8:30 AM–5:30 PM], Tuesday(2026-02-10): [8:30 AM–5:30 PM], Wednesday(2026-02-11): [8:30 AM–5:30 PM], Thursday(2026-02-12): [8:30 AM–5:30 PM], Friday(2026-02-13): [8:30 AM–4 PM]",
+      "Featured Image": "https://lh3.googleusercontent.com/p/AF1QipOMRi4wFfTZgsOou_934HOGuBxDEN9E4Q1m6gHL=w92-h92-k-no",
+      "Google Maps URL": "https://www.google.com/maps?cid=17431553996533621915",
+      "Google Knowledge URL": "https://www.google.com/search?kgmid=/g/11gcqjyf5p",
+      "Cid": "17431553996533621915",
+      "Fid": "0x89c3ae8770a4ac03:0xf1e95200e66d649b",
+      "Kgmid": "/g/11gcqjyf5p",
+      "Place Id": "ChIJA6ykcIeuw4kRm2Rt5gBS6fE",
+      "Web Result URL": "https://www.google.com/search?q=local+guide+program&ibp=gwp;0,26,OisKKSIlRGlhbmUgQmVuamFtaW4gRGVzaWduIFNob3J0IEhpbGxzLCBOSigC&pcl=lp",
+      "emails": [
+        "diane@dianebenjamindesign.com"
+      ],
+      "facebook_links": [],
+      "instagram_links": [
+        "https://www.instagram.com/benjamin_diane"
+      ],
+      "linkedin_links": [],
+      "pinterest_links": [],
+      "tiktok_links": [],
+      "twitter_links": [],
+      "yelp_links": [],
+      "youtube_links": [],
+      "meta": {
+        "title": "Diane Benjamin Design",
+        "description": "Graphic designer specializing in packaging, logos, branding for gourmet \nfoods, coffee, tea, wines, spirits, beauty."
+      },
+      "tracking_ids": {
+        "google": {
+          "ga4": "G-J926V2GKFE"
+        }
+      }
+    },
+    {
+      "Name": "Elite Web Design Co.",
+      "Fulladdress": "350 Springfield Ave #200, Summit, NJ 07901",
+      "Street": "350 Springfield Ave #200",
+      "Municipality": "Summit, NJ 07901",
+      "Categories": [
+        "Website designer",
+        "Graphic designer",
+        "Marketing agency"
+      ],
+      "About": "From the business: [Identifies as veteran-owned, Identifies as women-owned], Service options: [Online appointments, Onsite services], Accessibility: [Wheelchair accessible parking lot], Planning: [Appointment required]",
+      "Phone": "(908) 720-3375",
+      "Phones": "(908) 720-3375, +1 908-720-3375",
+      "Claimed": "YES",
+      "Owner": "Elite Web Design Co. (Owner)",
+      "Owner Id": "109605057207780515922",
+      "Owner Link": "https://www.google.com/maps/contrib/109605057207780515922",
+      "Review Count": 43,
+      "Average Rating": 5,
+      "Review URL": "https://search.google.com/local/reviews?placeid=ChIJlZZCYxu7w4kRl6egsdVX9yg&authuser=0&hl=en&gl=US",
+      "Latitude": 40.7178543,
+      "Longitude": -74.3566021,
+      "Time Zone": "America/New_York",
+      "Website": "elitewebdesign.us/",
+      "Domain": "elitewebdesign.us",
+      "Opening Hours": "Saturday(2026-02-07): [Closed], Sunday(2026-02-08): [Closed], Monday(2026-02-09): [10 AM–4 PM], Tuesday(2026-02-10): [10 AM–4 PM], Wednesday(2026-02-11): [10 AM–4 PM], Thursday(2026-02-12): [10 AM–4 PM], Friday(2026-02-13): [10 AM–4 PM]",
+      "Featured Image": "https://lh3.googleusercontent.com/p/AF1QipOpQBNdPWyJKBhcBJ15ke1yglv_C3XOZzvVQegU=w129-h92-k-no",
+      "Google Maps URL": "https://www.google.com/maps?cid=2951924656084395927",
+      "Google Knowledge URL": "https://www.google.com/search?kgmid=/g/11rctzhkpr",
+      "Cid": "2951924656084395927",
+      "Fid": "0x89c3bb1b63429695:0x28f757d5b1a0a797",
+      "Kgmid": "/g/11rctzhkpr",
+      "Place Id": "ChIJlZZCYxu7w4kRl6egsdVX9yg",
+      "Web Result URL": "https://www.google.com/search?q=local+guide+program&ibp=gwp;0,26,OiUKIyIfRWxpdGUgV2ViIERlc2lnbiBDby4gU3VtbWl0LCBOSigC&pcl=lp",
+      "emails": [
+        "ashleigh@elitewebdesign.us",
+        "work@elitewebdesign.us",
+        "info@elitewebdesign.us"
+      ],
+      "facebook_links": [
+        "https://www.facebook.com/elitewebdesigncoNJ"
+      ],
+      "instagram_links": [
+        "https://www.instagram.com/elite.webdesign"
+      ],
+      "linkedin_links": [],
+      "pinterest_links": [],
+      "tiktok_links": [],
+      "twitter_links": [],
+      "yelp_links": [],
+      "youtube_links": [],
+      "meta": {
+        "title": "Web Design Services in New Jersey",
+        "description": "Looking for web design services in New Jersey? Our team of experts provides cost-effective solutions that meet your needs. Contact us now!"
+      },
+      "tracking_ids": {
+        "meta": {
+          "pixelId": "962829394730533"
+        },
+        "google": {
+          "ua": "UA-268203312-1",
+          "ga4": "G-ZWNLRZ4QKT",
+          "ads": {
+            "remarketing": "1716668072"
+          }
+        }
+      }
+    },
+    {
+      "Name": "Gruskin Creative",
+      "Fulladdress": "294 Morris Ave, Springfield, NJ 07081",
+      "Street": "294 Morris Ave",
+      "Municipality": "Springfield, NJ 07081",
+      "Categories": [
+        "Design agency"
+      ],
+      "About": "Service options: [Online appointments, Onsite services not available], Accessibility: [Wheelchair accessible parking lot], Planning: [Appointment required]",
+      "Phone": "(973) 376-8989",
+      "Phones": "(973) 376-8989, +1 973-376-8989",
+      "Claimed": "YES",
+      "Owner": "Gruskin Creative (Owner)",
+      "Owner Id": "109637665415557717617",
+      "Owner Link": "https://www.google.com/maps/contrib/109637665415557717617",
+      "Review Count": 2,
+      "Average Rating": 5,
+      "Review URL": "https://search.google.com/local/reviews?placeid=ChIJZ_jE4n2vw4kRnQGn949T5B8&authuser=0&hl=en&gl=US",
+      "Latitude": 40.7119579,
+      "Longitude": -74.3136396,
+      "Time Zone": "America/New_York",
+      "Website": "www.gruskincreative.com/",
+      "Domain": "gruskincreative.com",
+      "Opening Hours": "Saturday(2026-02-07): [Closed], Sunday(2026-02-08): [Closed], Monday(2026-02-09): [8:30 AM–6 PM], Tuesday(2026-02-10): [8:30 AM–6 PM], Wednesday(2026-02-11): [8:30 AM–6 PM], Thursday(2026-02-12): [8:30 AM–6 PM], Friday(2026-02-13): [8:30 AM–2:15 PM]",
+      "Featured Image": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=RBxxHhZ6DOiHjMu5aErOXw&cb_client=search.gws-prod.gps&w=80&h=92&yaw=28.774817&pitch=0&thumbfov=100",
+      "Google Maps URL": "https://www.google.com/maps?cid=2298053587666141597",
+      "Google Knowledge URL": "https://www.google.com/search?kgmid=/g/11r6v3cjnc",
+      "Cid": "2298053587666141597",
+      "Fid": "0x89c3af7de2c4f867:0x1fe4538ff7a7019d",
+      "Kgmid": "/g/11r6v3cjnc",
+      "Place Id": "ChIJZ_jE4n2vw4kRnQGn949T5B8",
+      "Web Result URL": "https://www.google.com/search?q=local+guide+program&ibp=gwp;0,26,OiYKJCIgR3J1c2tpbiBDcmVhdGl2ZSBTcHJpbmdmaWVsZCwgTkooAg&pcl=lp",
+      "emails": [],
+      "facebook_links": [
+        "https://www.facebook.com/gruskincreative"
+      ],
+      "instagram_links": [
+        "https://www.instagram.com/gruskincreative"
+      ],
+      "linkedin_links": [
+        "https://www.linkedin.com/company/gruskincreative"
+      ],
+      "pinterest_links": [],
+      "tiktok_links": [],
+      "twitter_links": [],
+      "yelp_links": [],
+      "youtube_links": [],
+      "meta": {
+        "title": "Gruskin Creative | A Brand Experience Firm",
+        "description": "Gruskin Creative is a brand experience firm with a passion for design and delivering award-winning solutions for our clients. We create brand experiences that engage the senses for meaningful connection."
+      },
+      "tracking_ids": {
+        "google": {
+          "ua": "UA-134177089-1",
+          "ga4": "G-6RL972TCJX"
+        },
+        "hotjar": {
+          "id": "1296980"
+        }
+      }
+    },
+    {
+      "Name": "LogoGeez",
+      "Fulladdress": "24 Edwin Pl, Newark, NJ 07112",
+      "Street": "24 Edwin Pl",
+      "Municipality": "Newark, NJ 07112",
+      "Categories": [
+        "Design agency"
+      ],
+      "About": "",
+      "Phone": "(773) 831-7419",
+      "Phones": "(773) 831-7419, +1 773-831-7419",
+      "Claimed": "NO",
+      "Owner": "LogoGeez (Owner)",
+      "Owner Link": "",
+      "Review Count": 7,
+      "Average Rating": 3.9,
+      "Review URL": "https://search.google.com/local/reviews?placeid=ChIJ4XXItNdTwokRttWAZVbNXNE&authuser=0&hl=en&gl=US",
+      "Latitude": 40.7153971,
+      "Longitude": -74.2160639,
+      "Time Zone": "America/New_York",
+      "Website": "logogeez.com/",
+      "Domain": "logogeez.com",
+      "Opening Hours": "Saturday(2026-02-07): [Closed], Sunday(2026-02-08): [Closed], Monday(2026-02-09): [8 AM–7 PM], Tuesday(2026-02-10): [8 AM–7 PM], Wednesday(2026-02-11): [8 AM–7 PM], Thursday(2026-02-12): [8 AM–7 PM], Friday(2026-02-13): [8 AM–7 PM]",
+      "Featured Image": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=k_pJ5qHdtAsAMhtFTQN5yA&cb_client=search.gws-prod.gps&w=80&h=92&yaw=215.47647&pitch=0&thumbfov=100",
+      "Google Maps URL": "https://www.google.com/maps?cid=15086158622738142646",
+      "Google Knowledge URL": "https://www.google.com/search?kgmid=/g/11sk10mhp5",
+      "Cid": "15086158622738142646",
+      "Fid": "0x89c253d7b4c875e1:0xd15ccd566580d5b6",
+      "Kgmid": "/g/11sk10mhp5",
+      "Place Id": "ChIJ4XXItNdTwokRttWAZVbNXNE",
+      "Web Result URL": "https://www.google.com/search?q=local+guide+program&ibp=gwp;0,26,OhkKFyITTG9nb0dlZXogTmV3YXJrLCBOSigC&pcl=lp",
+      "emails": [
+        "logogeezinc@gmail.com"
+      ],
+      "facebook_links": [],
+      "instagram_links": [
+        "https://www.instagram.com/logogeez.inc"
+      ],
+      "linkedin_links": [],
+      "pinterest_links": [],
+      "tiktok_links": [],
+      "twitter_links": [],
+      "yelp_links": [],
+      "youtube_links": [],
+      "meta": {
+        "title": "HOME - LogoGeez",
+        "description": "Logo Design With our experienced designers at work, you can stay assured about the quality, excellence and craftsmanship of the logos we design for you. Get Started Website Development We excel at providing you with customized and innovative websites, each having its own trademark features. Get Started Social Media Designing Whether it’s Facebook, Twitter, Instagram […]"
+      },
+      "tracking_ids": {}
+    },
+    {
+      "Name": "kk creative web design",
+      "Fulladdress": "Summit, NJ 07901",
+      "Street": "Summit, NJ 07901",
+      "Municipality": "",
+      "Categories": [
+        "Website designer"
+      ],
+      "About": "From the business: [Identifies as women-owned]",
+      "Phone": "(917) 597-0349",
+      "Phones": "(917) 597-0349, +1 917-597-0349",
+      "Claimed": "YES",
+      "Owner": "kk creative web design (Owner)",
+      "Owner Id": "108892765713909889591",
+      "Owner Link": "https://www.google.com/maps/contrib/108892765713909889591",
+      "Review Count": 15,
+      "Average Rating": 5,
+      "Review URL": "https://search.google.com/local/reviews?placeid=ChIJh_vILPmuw4kRRHNGhfXe7fg&authuser=0&hl=en&gl=US",
+      "Latitude": 40.714637599999996,
+      "Longitude": -74.3646122,
+      "Time Zone": "America/New_York",
+      "Website": "www.kkcreativewebdesign.com/",
+      "Domain": "kkcreativewebdesign.com",
+      "Opening Hours": "Saturday(2026-02-07): [Closed], Sunday(2026-02-08): [Closed], Monday(2026-02-09): [9 AM–5 PM], Tuesday(2026-02-10): [9 AM–5 PM], Wednesday(2026-02-11): [9 AM–5 PM], Thursday(2026-02-12): [9 AM–5 PM], Friday(2026-02-13): [9 AM–5 PM]",
+      "Featured Image": "https://lh3.googleusercontent.com/p/AF1QipOomCDV65EgA7sns8Ds-Yzl8WksnL4lhhc6TM5s=w92-h92-k-no",
+      "Google Maps URL": "https://www.google.com/maps?cid=17937238036970894148",
+      "Google Knowledge URL": "https://www.google.com/search?kgmid=/g/11fzf7xl15",
+      "Cid": "17937238036970894148",
+      "Fid": "0x89c3aef92cc8fb87:0xf8eddef585467344",
+      "Kgmid": "/g/11fzf7xl15",
+      "Place Id": "ChIJh_vILPmuw4kRRHNGhfXe7fg",
+      "Web Result URL": "https://www.google.com/search?q=local+guide+program&ibp=gwp;0,26,OicKJSIha2sgY3JlYXRpdmUgd2ViIGRlc2lnbiBTdW1taXQsIE5KKAI&pcl=lp",
+      "emails": [
+        "kk@kkcreativewebdesign.com"
+      ],
+      "facebook_links": [],
+      "instagram_links": [],
+      "linkedin_links": [],
+      "pinterest_links": [],
+      "tiktok_links": [],
+      "twitter_links": [],
+      "yelp_links": [],
+      "youtube_links": [],
+      "meta": {
+        "title": "Web Design | Kk Creative Web Design | Summit",
+        "description": "kk creative web design is a boutique firm that makes building an innovative website a possibility for any small business!"
+      },
+      "tracking_ids": {}
+    },
+    {
+      "Name": "One Marketing Group",
+      "Street": "",
+      "Municipality": "",
+      "Categories": [
+        "Website designer",
+        "Service establishment",
+        "Internet marketing service",
+        "Graphic designer"
+      ],
+      "About": "From the business: [Identifies as Latino-owned], Service options: [Online appointments], Planning: [Appointment required]",
+      "Phone": "(973) 447-9217",
+      "Phones": "(973) 447-9217, +1 973-447-9217",
+      "Claimed": "YES",
+      "Owner": "One Marketing Group (Owner)",
+      "Owner Id": "114313522176208080529",
+      "Owner Link": "https://www.google.com/maps/contrib/114313522176208080529",
+      "Review Count": 30,
+      "Average Rating": 5,
+      "Review URL": "https://search.google.com/local/reviews?placeid=ChIJp-edcuStw4kRDBgU5SrcB5w&authuser=0&hl=en&gl=US",
+      "Latitude": 40.073132,
+      "Longitude": -74.724323,
+      "Time Zone": "America/New_York",
+      "Website": "onemarketingroup.com/",
+      "Domain": "onemarketingroup.com",
+      "Opening Hours": "Saturday(2026-02-07): [8 AM–5 PM], Sunday(2026-02-08): [Closed], Monday(2026-02-09): [8 AM–5 PM], Tuesday(2026-02-10): [8 AM–5 PM], Wednesday(2026-02-11): [8 AM–5 PM], Thursday(2026-02-12): [8 AM–5 PM], Friday(2026-02-13): [8 AM–5 PM]",
+      "Featured Image": "https://lh3.googleusercontent.com/p/AF1QipPaAa4D9LeG8mcaxSm1lH0QbmbQq5TncasXUSML=w188-h92-k-no",
+      "Google Maps URL": "https://www.google.com/maps?cid=11243197071543769100",
+      "Google Knowledge URL": "https://www.google.com/search?kgmid=/g/11mvr7ymy_",
+      "Cid": "11243197071543769100",
+      "Fid": "0x89c3ade4729de7a7:0x9c07dc2ae514180c",
+      "Kgmid": "/g/11mvr7ymy_",
+      "Place Id": "ChIJp-edcuStw4kRDBgU5SrcB5w",
+      "Web Result URL": "https://www.google.com/search?q=local+guide+program&ibp=gwp;0,26,OhkKFyITT25lIE1hcmtldGluZyBHcm91cCgC&pcl=lp",
+      "emails": [
+        "hello@onemarketingroup.com"
+      ],
+      "facebook_links": [
+        "https://www.facebook.com/people/One-Marketing-Group/61555206196598"
+      ],
+      "instagram_links": [
+        "https://www.instagram.com/onemarkg"
+      ],
+      "linkedin_links": [
+        "https://www.linkedin.com/company/onemarkg"
+      ],
+      "pinterest_links": [],
+      "tiktok_links": [],
+      "twitter_links": [],
+      "yelp_links": [],
+      "youtube_links": [],
+      "meta": {
+        "title": "Digital Marketing Agency | One Marketing Group New jersey",
+        "description": "NJ Digital Marketing Agency located in the NJ Metropolitan area focused on elevating your company’s website, branding, and digital presence."
+      },
+      "tracking_ids": {
+        "google": {
+          "ga4": "G-YMW86XVTPS",
+          "gtm": "GTM-TJRXNMPF"
+        }
+      }
+    },
+    {
+      "Name": "London Portfolio",
+      "Fulladdress": "356 Millburn Ave STE 4, Millburn, NJ 07041",
+      "Street": "356 Millburn Ave STE 4",
+      "Municipality": "Millburn, NJ 07041",
+      "Categories": [
+        "Design agency"
+      ],
+      "About": "",
+      "Phone": "(973) 763-0004",
+      "Phones": "(973) 763-0004, +1 973-763-0004",
+      "Claimed": "NO",
+      "Owner": "London Portfolio (Owner)",
+      "Owner Link": "",
+      "Review Count": "",
+      "Average Rating": "",
+      "Review URL": "https://search.google.com/local/reviews?placeid=ChIJgUB6wPOtw4kRZTZPCNkZ6R0&authuser=0&hl=en&gl=US",
+      "Latitude": 40.7235312,
+      "Longitude": -74.3080171,
+      "Time Zone": "America/New_York",
+      "Website": "londonportfolio.com/",
+      "Domain": "londonportfolio.com",
+      "Opening Hours": "Saturday(2026-02-07): [Open 24 hours], Sunday(2026-02-08): [Open 24 hours], Monday(2026-02-09): [Open 24 hours], Tuesday(2026-02-10): [Open 24 hours], Wednesday(2026-02-11): [Open 24 hours], Thursday(2026-02-12): [Open 24 hours], Friday(2026-02-13): [Open 24 hours]",
+      "Featured Image": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=mfwT46td-IaXKhBxjPaK7A&cb_client=search.gws-prod.gps&w=80&h=92&yaw=155.05081&pitch=0&thumbfov=100",
+      "Google Maps URL": "https://www.google.com/maps?cid=2155282316611499621",
+      "Google Knowledge URL": "https://www.google.com/search?kgmid=/g/11h3kwq5rl",
+      "Cid": "2155282316611499621",
+      "Fid": "0x89c3adf3c07a4081:0x1de919d9084f3665",
+      "Kgmid": "/g/11h3kwq5rl",
+      "Place Id": "ChIJgUB6wPOtw4kRZTZPCNkZ6R0",
+      "Web Result URL": "https://www.google.com/search?q=local+guide+program&ibp=gwp;0,26,OiMKISIdTG9uZG9uIFBvcnRmb2xpbyBNaWxsYnVybiwgTkooAg&pcl=lp",
+      "emails": [
+        "sales@londonportfolio.com"
+      ],
+      "facebook_links": [],
+      "instagram_links": [],
+      "linkedin_links": [],
+      "pinterest_links": [],
+      "tiktok_links": [],
+      "twitter_links": [],
+      "yelp_links": [],
+      "youtube_links": [],
+      "meta": {
+        "title": "Design Studio | Paper Products & Textiles | London Portfolio",
+        "description": "London Portfolio is a Surface Design Studio offering art licensing & illustration for paper products, textiles and surface design located in New Jersey."
+      },
+      "tracking_ids": {
+        "google": {
+          "ua": "UA-133016642-1"
+        }
+      }
+    },
+    {
+      "Name": "TL Websites",
+      "Fulladdress": "PO Box 1896, Elizabeth, NJ 07202",
+      "Street": "PO Box 1896",
+      "Municipality": "Elizabeth, NJ 07202",
+      "Categories": [
+        "Website designer",
+        "Advertising agency",
+        "Business to business service",
+        "Graphic designer",
+        "Marketing consultant",
+        "Web hosting company"
+      ],
+      "About": "",
+      "Phone": "(908) 422-7952",
+      "Phones": "(908) 422-7952, +1 908-422-7952",
+      "Claimed": "YES",
+      "Owner": "TL Websites (Owner)",
+      "Owner Id": "113238358139255147120",
+      "Owner Link": "https://www.google.com/maps/contrib/113238358139255147120",
+      "Review Count": 11,
+      "Average Rating": 5,
+      "Review URL": "https://search.google.com/local/reviews?placeid=ChIJdf5bJ6-yw4kRV9efz8lMYF4&authuser=0&hl=en&gl=US",
+      "Latitude": 40.669675999999995,
+      "Longitude": -74.2165295,
+      "Time Zone": "America/New_York",
+      "Website": "www.tlwebsites.com/",
+      "Domain": "tlwebsites.com",
+      "Opening Hours": "Saturday(2026-02-07): [8 AM–10 PM], Sunday(2026-02-08): [8 AM–10 PM], Monday(2026-02-09): [8 AM–10 PM], Tuesday(2026-02-10): [8 AM–10 PM], Wednesday(2026-02-11): [8 AM–10 PM], Thursday(2026-02-12): [8 AM–10 PM], Friday(2026-02-13): [8 AM–10 PM]",
+      "Featured Image": "https://lh3.googleusercontent.com/p/AF1QipMQK1BHbvJntcrONWzqQoG9NbP8jPFB32nxda6W=w138-h92-k-no",
+      "Google Maps URL": "https://www.google.com/maps?cid=6800519866984945495",
+      "Google Knowledge URL": "https://www.google.com/search?kgmid=/g/11dxj2f7ds",
+      "Cid": "6800519866984945495",
+      "Fid": "0x89c3b2af275bfe75:0x5e604cc9cf9fd757",
+      "Kgmid": "/g/11dxj2f7ds",
+      "Place Id": "ChIJdf5bJ6-yw4kRV9efz8lMYF4",
+      "Web Result URL": "https://www.google.com/search?q=local+guide+program&ibp=gwp;0,26,Oh8KHSIZVEwgV2Vic2l0ZXMgRWxpemFiZXRoLCBOSigC&pcl=lp",
+      "emails": [
+        "contact@tlwebsites.com"
+      ],
+      "facebook_links": [
+        "https://www.facebook.com/TLWebsites"
+      ],
+      "instagram_links": [
+        "https://www.instagram.com/tlwebsites"
+      ],
+      "linkedin_links": [
+        "https://linkedin.com/company/tlwebsites"
+      ],
+      "pinterest_links": [
+        "https://www.pinterest.com/tlwebsites"
+      ],
+      "tiktok_links": [],
+      "twitter_links": [
+        "https://x.com/tlwebsites"
+      ],
+      "yelp_links": [
+        "https://www.yelp.com/biz/tl-websites-elizabeth"
+      ],
+      "youtube_links": [],
+      "meta": {
+        "title": "TL Websites | Web Design and Marketing",
+        "description": "TL Websites is a Web Design and Marketing firm working with businesses and organizations to help them have a better online presence."
+      },
+      "tracking_ids": {}
+    },
+    {
+      "Name": "CES Marketing Agency",
+      "Street": "",
+      "Municipality": "",
+      "Categories": [
+        "Marketing agency",
+        "Advertising agency",
+        "Service establishment",
+        "Internet marketing service",
+        "Marketing consultant",
+        "Website designer"
+      ],
+      "About": "Service options: [Online appointments]",
+      "Phone": "(732) 685-0457",
+      "Phones": "(732) 685-0457, +1 732-685-0457",
+      "Claimed": "YES",
+      "Owner": "CES Marketing Agency (Owner)",
+      "Owner Id": "110409749520474267872",
+      "Owner Link": "https://www.google.com/maps/contrib/110409749520474267872",
+      "Review Count": 3,
+      "Average Rating": 5,
+      "Review URL": "https://search.google.com/local/reviews?placeid=ChIJF_z45w0iL4QRxcEr4y5lQLs&authuser=0&hl=en&gl=US",
+      "Latitude": 40.714739,
+      "Longitude": -74.1526434,
+      "Time Zone": "America/New_York",
+      "Website": "cesmarketingagency.com/",
+      "Domain": "cesmarketingagency.com",
+      "Opening Hours": "Saturday(2026-02-07): [Open 24 hours], Sunday(2026-02-08): [Open 24 hours], Monday(2026-02-09): [Open 24 hours], Tuesday(2026-02-10): [Open 24 hours], Wednesday(2026-02-11): [Open 24 hours], Thursday(2026-02-12): [Open 24 hours], Friday(2026-02-13): [Open 24 hours]",
+      "Featured Image": "https://lh3.googleusercontent.com/p/AF1QipMp4sNpcQ0eq9DwjlLKYSEgf-lvf0fVuOM183H4=w138-h92-k-no",
+      "Google Maps URL": "https://www.google.com/maps?cid=13492895735656202693",
+      "Google Knowledge URL": "https://www.google.com/search?kgmid=/g/11yqx9rqf5",
+      "Cid": "13492895735656202693",
+      "Fid": "0x842f220de7f8fc17:0xbb40652ee32bc1c5",
+      "Kgmid": "/g/11yqx9rqf5",
+      "Place Id": "ChIJF_z45w0iL4QRxcEr4y5lQLs",
+      "Web Result URL": "https://www.google.com/search?q=local+guide+program&ibp=gwp;0,26,OhoKGCIUQ0VTIE1hcmtldGluZyBBZ2VuY3koAg&pcl=lp",
+      "emails": [],
+      "facebook_links": [
+        "https://www.facebook.com/cesmarketing"
+      ],
+      "instagram_links": [
+        "https://www.instagram.com/cesmarketingagency"
+      ],
+      "linkedin_links": [],
+      "pinterest_links": [],
+      "tiktok_links": [],
+      "twitter_links": [],
+      "yelp_links": [],
+      "youtube_links": [],
+      "meta": {
+        "title": "Agencia de Diseño y Desarrollo Web en Estados Unidos ✔️",
+        "description": "Agencia de Diseño Web en usa ☎️ Profesionales en diseño de sitios web para empresas, diseñadores UX/UI y SEO, empresa de páginas web en Estados Unidos."
+      },
+      "tracking_ids": {
+        "meta": {
+          "pixelId": "1170089678633616"
+        },
+        "google": {
+          "gtm": "GTM-WJKK4S33",
+          "ads": {
+            "remarketing": "1770520035"
+          }
+        }
+      }
+    },
+    {
+      "Name": "Rocktopus",
+      "Street": "",
+      "Municipality": "",
+      "Categories": [
+        "Design agency",
+        "Advertising agency",
+        "Art studio",
+        "Service establishment",
+        "Food and beverage consultant",
+        "Graphic designer",
+        "Market researcher",
+        "Marketing agency",
+        "Marketing consultant"
+      ],
+      "About": "From the business: [Identifies as Latino-owned, Identifies as women-owned], Service options: [Online appointments], Crowd: [LGBTQ+ friendly], Planning: [Appointment required]",
+      "Phone": "(707) 771-9711",
+      "Phones": "(707) 771-9711, +1 707-771-9711",
+      "Claimed": "YES",
+      "Owner": "Rocktopus (Owner)",
+      "Owner Id": "100124715325449722653",
+      "Owner Link": "https://www.google.com/maps/contrib/100124715325449722653",
+      "Review Count": 5,
+      "Average Rating": 5,
+      "Review URL": "https://search.google.com/local/reviews?placeid=ChIJQwVZ1bGtw4kR7V9rq1cNEKs&authuser=0&hl=en&gl=US",
+      "Latitude": 14.157641199999999,
+      "Longitude": -106.69185949999999,
+      "Time Zone": "America/New_York",
+      "Website": "www.rocktopus.biz/?utm_source=google&utm_medium=wix_google_business_profile&utm_campaign=3537297671859329959",
+      "Domain": "rocktopus.biz",
+      "Opening Hours": "Saturday(2026-02-07): [12–4 PM], Sunday(2026-02-08): [Closed], Monday(2026-02-09): [7 AM–7 PM], Tuesday(2026-02-10): [7 AM–7 PM], Wednesday(2026-02-11): [7 AM–7 PM], Thursday(2026-02-12): [7 AM–7 PM], Friday(2026-02-13): [7 AM–7 PM]",
+      "Featured Image": "https://lh3.googleusercontent.com/p/AF1QipNOoWliTdAJRI4U5q2T22KupUOU8MUnLJ3MxVj7=w122-h92-k-no",
+      "Google Maps URL": "https://www.google.com/maps?cid=12326366850302304237",
+      "Google Knowledge URL": "https://www.google.com/search?kgmid=/g/11qmrf9stp",
+      "Cid": "12326366850302304237",
+      "Fid": "0x89c3adb1d5590543:0xab100d57ab6b5fed",
+      "Kgmid": "/g/11qmrf9stp",
+      "Place Id": "ChIJQwVZ1bGtw4kR7V9rq1cNEKs",
+      "Web Result URL": "https://www.google.com/search?q=local+guide+program&ibp=gwp;0,26,Og8KDSIJUm9ja3RvcHVzKAI&pcl=lp",
+      "emails": [
+        "info@rocktopus.biz",
+        "danielle@rocktopus.biz"
+      ],
+      "facebook_links": [],
+      "instagram_links": [],
+      "linkedin_links": [
+        "https://linkedin.com/in/rocktopus"
+      ],
+      "pinterest_links": [],
+      "tiktok_links": [],
+      "twitter_links": [],
+      "yelp_links": [],
+      "youtube_links": [],
+      "meta": {
+        "title": "Danielle Saros | Food & Beverage Creative Director | Rocktopus LLC | Food & Beverage Branding",
+        "description": "Danielle (Rocktopus) is an experienced creative director with raw talent and over two decades of experience in all disciplines of branding, marketing, design, and omnichannel communications. Her expertise spans multiple retail and wholesale industries, with a strong focus on Food & Beverage."
+      },
+      "tracking_ids": {}
+    },
+    {
+      "Name": "Banner Design",
+      "Fulladdress": "600 N Union Ave, Hillside, NJ 07205",
+      "Street": "600 N Union Ave",
+      "Municipality": "Hillside, NJ 07205",
+      "Categories": [
+        "Graphic designer",
+        "Engineer",
+        "Neon sign shop",
+        "Screen printer",
+        "Sign shop"
+      ],
+      "About": "",
+      "Phone": "(908) 687-5335",
+      "Phones": "(908) 687-5335, +1 908-687-5335",
+      "Claimed": "NO",
+      "Owner": "Banner Design (Owner)",
+      "Owner Link": "",
+      "Review Count": 2,
+      "Average Rating": 5,
+      "Review URL": "https://search.google.com/local/reviews?placeid=ChIJHwPQzRitw4kR4KBBCNrIAdI&authuser=0&hl=en&gl=US",
+      "Latitude": 40.708266699999996,
+      "Longitude": -74.24371049999999,
+      "Time Zone": "America/New_York",
+      "Opening Hours": "Saturday(2026-02-07): [Closed], Sunday(2026-02-08): [Closed], Monday(2026-02-09): [9 AM–5 PM], Tuesday(2026-02-10): [9 AM–5 PM], Wednesday(2026-02-11): [9 AM–5 PM], Thursday(2026-02-12): [9 AM–5 PM], Friday(2026-02-13): [9 AM–5 PM]",
+      "Featured Image": "https://lh3.googleusercontent.com/gps-cs-s/AHVAweqhBP3rDk5uFwbh-3U-fYt4HlO-TOrrPNy3YoRtRf10MGMY49UcSPi1NAnmxjsyHQUVXTjpE-1PP3bIDkDil_KBFUmr-gIIHrWOy1K_hRap274MHiV6z5hxg1vyoIO6vqztzB63=w259-h92-k-no",
+      "Google Maps URL": "https://www.google.com/maps?cid=15132597061708521696",
+      "Google Knowledge URL": "https://www.google.com/search?kgmid=/g/1tfn3p8x",
+      "Cid": "15132597061708521696",
+      "Fid": "0x89c3ad18cdd0031f:0xd201c8da0841a0e0",
+      "Kgmid": "/g/1tfn3p8x",
+      "Place Id": "ChIJHwPQzRitw4kR4KBBCNrIAdI",
+      "Web Result URL": "https://www.google.com/search?q=local+guide+program&ibp=gwp;0,26,OiAKHiIaQmFubmVyIERlc2lnbiBIaWxsc2lkZSwgTkooAg&pcl=lp",
+      "emails": [],
+      "twitter_links": [],
+      "instagram_links": [],
+      "facebook_links": [],
+      "tiktok_links": [],
+      "youtube_links": [],
+      "linkedin_links": []
+    },
+    {
+      "Name": "Indigo Studio LLC",
+      "Fulladdress": "12 Woodside Ave, Roselle Park, NJ 07204",
+      "Street": "12 Woodside Ave",
+      "Municipality": "Roselle Park, NJ 07204",
+      "Categories": [
+        "Marketing agency",
+        "Advertising agency",
+        "Graphic designer"
+      ],
+      "About": "Service options: [Online appointments, Onsite services, ]",
+      "Phone": "(316) 448-0098",
+      "Phones": "(316) 448-0098, +1 316-448-0098",
+      "Claimed": "YES",
+      "Owner": "Indigo Studio LLC (Owner)",
+      "Owner Id": "105124576702135667873",
+      "Owner Link": "https://www.google.com/maps/contrib/105124576702135667873",
+      "Review Count": 6,
+      "Average Rating": 5,
+      "Review URL": "https://search.google.com/local/reviews?placeid=ChIJ8xtzeNjWRWsRd45C71xTcQ4&authuser=0&hl=en&gl=US",
+      "Latitude": 40.665835699999995,
+      "Longitude": -74.2847785,
+      "Time Zone": "America/New_York",
+      "Website": "www.indigostudio.info/",
+      "Domain": "indigostudio.info",
+      "Opening Hours": "Saturday(2026-02-07): [Closed], Sunday(2026-02-08): [Closed], Monday(2026-02-09): [9 AM–5 PM], Tuesday(2026-02-10): [9 AM–5 PM], Wednesday(2026-02-11): [9 AM–5 PM], Thursday(2026-02-12): [9 AM–5 PM], Friday(2026-02-13): [9 AM–5 PM]",
+      "Featured Image": "https://lh3.googleusercontent.com/p/AF1QipN0wuw5ZROuy2QuRq3uKW-qnxzBHxrKcvgjoipy=w80-h122-k-no",
+      "Google Maps URL": "https://www.google.com/maps?cid=1040704647515508343",
+      "Google Knowledge URL": "https://www.google.com/search?kgmid=/g/11l6w3t85l",
+      "Cid": "1040704647515508343",
+      "Fid": "0x6b45d6d878731bf3:0xe71535cef428e77",
+      "Kgmid": "/g/11l6w3t85l",
+      "Place Id": "ChIJ8xtzeNjWRWsRd45C71xTcQ4",
+      "Web Result URL": "https://www.google.com/search?q=local+guide+program&ibp=gwp;0,26,OigKJiIiSW5kaWdvIFN0dWRpbyBMTEMgUm9zZWxsZSBQYXJrLCBOSigC&pcl=lp",
+      "emails": [
+        "hello@indigostudio.info"
+      ],
+      "facebook_links": [
+        "https://www.facebook.com/indigostudi0"
+      ],
+      "instagram_links": [
+        "https://www.instagram.com/indigostudio___"
+      ],
+      "linkedin_links": [
+        "https://www.linkedin.com/company/indigostudio1"
+      ],
+      "pinterest_links": [
+        "https://www.pinterest.com/indigostudio___"
+      ],
+      "tiktok_links": [],
+      "twitter_links": [],
+      "yelp_links": [],
+      "youtube_links": [],
+      "meta": {
+        "title": "indigostudio.info",
+        "description": "A boutique social media marketing agency; we're the architects of digital dreams. Let's create compelling content together & give your brand a boost."
+      },
+      "tracking_ids": {}
+    }
+  ]
+}
+Example Response
+Body
+Headers (18)
+Date
+Sat, 21 Dec 2024 01:32:32 GMT
+
+Content-Type
+application/json; charset=utf-8
+
+Transfer-Encoding
+chunked
+
+Connection
+keep-alive
+
+X-Powered-By
+Express
+
+RateLimit-Policy
+30;w=60
+
+RateLimit-Limit
+30
+
+RateLimit-Remaining
+28
+
+RateLimit-Reset
+28
+
+ETag
+W/"78c1-xX3wTrVwXvbjcmSRiTcdFWXGLRY"
+
+cf-cache-status
+DYNAMIC
+
+Report-To
+{"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v4?s=ZGSjBPt5K3VvFwaqbZe5JLmih1OzkAvi04wnWFt2rYelIVjVSrWWzMryA3u42kSWDi16qVprvc8lPREIO02zHwTz3IjASHm6PPf%2BSMXVlyK8G8NpdnfPfGvRbCMgUhTTWsTbKuZFOq2UKgs%3D"}],"group":"cf-nel","max_age":604800}
+
+NEL
+{"success_fraction":0,"report_to":"cf-nel","max_age":604800}
+
+Server
+cloudflare
+
+CF-RAY
+8f541e46591a2aab-LAX
+
+Content-Encoding
+br
+
+alt-svc
+h3=":443"; ma=86400
+
+server-timing
+cfL4;desc="?proto=TCP&rtt=1167&min_rtt=1158&rtt_var=452&sent=4&recv=5&lost=0&retrans=0&sent_bytes=2831&recv_bytes=1088&delivery_rate=2350649&cwnd=252&unsent_bytes=0&cid=941e314676f292ab&ts=6841&x=0"
+
+curl --location 'https://cloud.gmapsextractor.com/api/v1/search' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {{ your token }}' \
+--data-raw '{
+    "q": "restaurant",
+    "page": 1,
+    "ll": "@40.6970194,-74.3093048,11z",
+    "hl": "en",
+    "gl": "us"
+}'
+
+{
+  "total": 20,
+  "params": {
+    "q": "restaurant",
+    "page": 1,
+    "ll": "@40.6970194,-74.3093048,11z",
+    "hl": "en",
+    "gl": "us"
+  },
+  "data": [
+    {
+      "name": "Village Trattoria",
+      "full_address": "103 Summit Ave, Summit, NJ 07901",
+      "street": "103 Summit Ave",
+      "municipality": "Summit, NJ 07901",
+      "categories": "Italian restaurant, Lunch restaurant, Delivery Restaurant, Pizza delivery, Pizza restaurant, Pizza Takeout, Restaurant",
+      "price": "$",
+      "phone": "(908) 608-1441",
+      "phones": "(908) 608-1441, +1 908-608-1441",
+      "claimed": "YES",
+      "review_count": 591,
+      "average_rating": 4.7,
+      "review_url": "https://search.google.com/local/reviews?placeid=ChIJUfuTeU2uw4kRhsqZUVioR-c&authuser=0&hl=en&gl=US",
+      "latitude": 40.717887,
+      "longitude": -74.3560918,
+      "website": "villagetrattoria.net/?utm_source=google&utm_medium=gmb&utm_campaign=listing",
+      "domain": "villagetrattoria.net",
+      "opening_hours": "Friday: [11 AM-9:30 PM], Saturday: [11 AM-9:30 PM], Sunday: [12-8:30 PM], Monday: [11 AM-8:30 PM], Tuesday: [11 AM-8:30 PM], Wednesday: [11 AM-8:30 PM], Thursday: [11 AM-8:30 PM]",
+      "featured_image": "https://lh5.googleusercontent.com/p/AF1QipMX22RIpr7q43_11zCSV_ds6lV-zv53Uh-ztNpr=w122-h92-k-no",
+      "google_maps_url": "https://www.google.com/maps?cid=16665474043387431558",
+      "google_knowledge_url": "https://www.google.com/search?kgmid=/g/1td6btv2&kponly",
+      "cid": "16665474043387431558",
+      "kgmid": "/g/1td6btv2",
+      "place_id": "ChIJUfuTeU2uw4kRhsqZUVioR-c"
+    },
+    {
+      "name": "Valenca Restaurant",
+      "full_address": "665 Monroe Ave, Elizabeth, NJ 07201",
+      "street": "665 Monroe Ave",
+      "municipality": "Elizabeth, NJ 07201",
+      "categories": "Portuguese restaurant, Seafood restaurant, Spanish restaurant, Steak house",
+      "price": "$$",
+      "phone": "(908) 354-4024",
+      "phones": "(908) 354-4024, +1 908-354-4024",
+      "claimed": "YES",
+      "review_count": 6318,
+      "average_rating": 4.5,
+      "review_url": "https://search.google.com/local/reviews?placeid=ChIJvS-5J7tSwokRQvSoqhgeJYI&authuser=0&hl=en&gl=US",
+      "latitude": 40.6770048,
+      "longitude": -74.20341049999999,
+      "website": "valencarestaurantnj.com/",
+      "domain": "valencarestaurantnj.com",
+      "opening_hours": "Friday: [10:30 AM-1 AM], Saturday: [10:30 AM-1 AM], Sunday: [11 AM-12 AM], Monday: [10:30 AM-12 AM], Tuesday: [10:30 AM-12 AM], Wednesday: [10:30 AM-12 AM], Thursday: [10:30 AM-12 AM]",
+      "featured_image": "https://lh5.googleusercontent.com/p/AF1QipPJlDckkVoCAr6_NE_DjgLZJAgnq6Vy_akuJWq7=w163-h92-k-no",
+      "google_maps_url": "https://www.google.com/maps?cid=9377934890360173634",
+      "google_knowledge_url": "https://www.google.com/search?kgmid=/g/1td5mm6z&kponly",
+      "cid": "9377934890360173634",
+      "kgmid": "/g/1td5mm6z",
+      "place_id": "ChIJvS-5J7tSwokRQvSoqhgeJYI"
+    },
+    {
+      "name": "La Fogata Restaurant",
+      "full_address": "336 Morris Ave, Elizabeth, NJ 07208",
+      "street": "336 Morris Ave",
+      "municipality": "Elizabeth, NJ 07208",
+      "categories": "Latin American restaurant, Breakfast restaurant, European restaurant, Spanish restaurant",
+      "price": "$$",
+      "phone": "(908) 355-7747",
+      "phones": "(908) 355-7747, +1 908-355-7747",
+      "claimed": "YES",
+      "review_count": 1357,
+      "average_rating": 4.3,
+      "review_url": "https://search.google.com/local/reviews?placeid=ChIJUW9gWFWtw4kRz3zks3CG0lw&authuser=0&hl=en&gl=US",
+      "latitude": 40.66965,
+      "longitude": -74.21883799999999,
+      "website": "lafogatarestaurantnj.com/",
+      "domain": "lafogatarestaurantnj.com",
+      "opening_hours": "Friday: [6 AM-12 AM], Saturday: [6 AM-12 AM], Sunday: [7 AM-10 PM], Monday: [6 AM-10 PM], Tuesday: [6 AM-10 PM], Wednesday: [6 AM-10 PM], Thursday: [6 AM-10 PM]",
+      "featured_image": "https://lh5.googleusercontent.com/p/AF1QipNxvwMYrhOeYRoCmYwA4hQnUlZVxUHW32c6F7n4=w80-h106-k-no",
+      "google_maps_url": "https://www.google.com/maps?cid=6688556215211162831",
+      "google_knowledge_url": "https://www.google.com/search?kgmid=/g/1th6fslm&kponly",
+      "cid": "6688556215211162831",
+      "kgmid": "/g/1th6fslm",
+      "place_id": "ChIJUW9gWFWtw4kRz3zks3CG0lw"
+    },
+    {
+      "name": "Long Ave BBQ Hillside",
+      "full_address": "166 Long Ave, Hillside, NJ 07205",
+      "street": "166 Long Ave",
+      "municipality": "Hillside, NJ 07205",
+      "categories": "Portuguese restaurant, Barbecue restaurant, Chicken restaurant, Delivery Restaurant, Takeout Restaurant, Restaurant, Steak house",
+      "price": "$",
+      "phone": "(973) 923-1110",
+      "phones": "(973) 923-1110, +1 973-923-1110",
+      "claimed": "YES",
+      "review_count": 409,
+      "average_rating": 4.6,
+      "review_url": "https://search.google.com/local/reviews?placeid=ChIJ6ftg0DCtw4kRWJfJ6wsMrh0&authuser=0&hl=en&gl=US",
+      "latitude": 40.6961638,
+      "longitude": -74.2272282,
+      "website": "www.longavbbq.com/",
+      "domain": "longavbbq.com",
+      "opening_hours": "Friday: [11 AM-9 PM], Saturday: [11 AM-9 PM], Sunday: [11 AM-8 PM], Monday: [Closed], Tuesday: [11 AM-9 PM], Wednesday: [11 AM-9 PM], Thursday: [11 AM-9 PM]",
+      "featured_image": "https://lh5.googleusercontent.com/p/AF1QipM9jkQ4QrUI8VegU9vWWgaqXd8N_RTz7Bs0CTIe=w111-h92-k-no",
+      "google_maps_url": "https://www.google.com/maps?cid=2138660118387595096",
+      "google_knowledge_url": "https://www.google.com/search?kgmid=/g/1tw1fs5v&kponly",
+      "cid": "2138660118387595096",
+      "kgmid": "/g/1tw1fs5v",
+      "place_id": "ChIJ6ftg0DCtw4kRWJfJ6wsMrh0"
+    },
+    {
+      "name": "The Committed Pig",
+      "full_address": "339 Springfield Ave, Summit, NJ 07901",
+      "street": "339 Springfield Ave",
+      "municipality": "Summit, NJ 07901",
+      "categories": "Hamburger restaurant, American restaurant, Breakfast restaurant, Brunch restaurant, Coffee shop, Pancake restaurant, Restaurant",
+      "price": "$$",
+      "phone": "(908) 219-4543",
+      "phones": "(908) 219-4543, +1 908-219-4543",
+      "claimed": "YES",
+      "review_count": 1235,
+      "average_rating": 4.3,
+      "review_url": "https://search.google.com/local/reviews?placeid=ChIJ2x4gfE2uw4kR21Vl7gP5m3Y&authuser=0&hl=en&gl=US",
+      "latitude": 40.718301499999995,
+      "longitude": -74.3560897,
+      "website": "www.thecommittedpig.com/",
+      "domain": "thecommittedpig.com",
+      "opening_hours": "Friday: [10 AM-10 PM], Saturday: [9 AM-10 PM], Sunday: [9 AM-9 PM], Monday: [10 AM-9 PM], Tuesday: [10 AM-3 PM], Wednesday: [Closed], Thursday: [10 AM-9 PM]",
+      "featured_image": "https://lh5.googleusercontent.com/p/AF1QipP_1d3DBt7POQUFdeO-sG2kSR7YhkowsrOMRLUp=w138-h92-k-no",
+      "google_maps_url": "https://www.google.com/maps?cid=8546698513145484763",
+      "google_knowledge_url": "https://www.google.com/search?kgmid=/g/1tdjs24n&kponly",
+      "cid": "8546698513145484763",
+      "kgmid": "/g/1tdjs24n",
+      "place_id": "ChIJ2x4gfE2uw4kR21Vl7gP5m3Y"
+    },
+    {
+      "name": "Nostimo Mediterranean Greek Restaurant",
+      "full_address": "24 N 20th St, Kenilworth, NJ 07033",
+      "street": "24 N 20th St",
+      "municipality": "Kenilworth, NJ 07033",
+      "categories": "Greek restaurant",
+      "price": "$$",
+      "phone": "(908) 663-8824",
+      "phones": "(908) 663-8824, +1 908-663-8824",
+      "claimed": "YES",
+      "review_count": 217,
+      "average_rating": 4.7,
+      "review_url": "https://search.google.com/local/reviews?placeid=ChIJw3ts7F6xw4kRB8oz6D1bcTE&authuser=0&hl=en&gl=US",
+      "latitude": 40.6770036,
+      "longitude": -74.2926045,
+      "website": "www.nostimomediterranean.com/",
+      "domain": "nostimomediterranean.com",
+      "opening_hours": "Friday: [11 AM-10 PM], Saturday: [11 AM-10 PM], Sunday: [11 AM-9 PM], Monday: [11 AM-9 PM], Tuesday: [11 AM-9 PM], Wednesday: [11 AM-9 PM], Thursday: [11 AM-9 PM]",
+      "featured_image": "https://lh5.googleusercontent.com/p/AF1QipMQS3iz5QjOjV8MP3ds1ATA9uFBMh10twUG6pOj=w122-h92-k-no",
+      "google_maps_url": "https://www.google.com/maps?cid=3562729101673613831",
+      "google_knowledge_url": "https://www.google.com/search?kgmid=/g/11kbzzsbrk&kponly",
+      "cid": "3562729101673613831",
+      "kgmid": "/g/11kbzzsbrk",
+      "place_id": "ChIJw3ts7F6xw4kRB8oz6D1bcTE"
+    },
+    {
+      "name": "Da Benito",
+      "full_address": "200 Walton Ave, Union, NJ 07083",
+      "street": "200 Walton Ave",
+      "municipality": "Union, NJ 07083",
+      "categories": "Italian restaurant, Bar, Restaurant",
+      "phone": "(908) 964-5850",
+      "phones": "(908) 964-5850, +1 908-964-5850",
+      "claimed": "YES",
+      "review_count": 378,
+      "average_rating": 4.7,
+      "review_url": "https://search.google.com/local/reviews?placeid=ChIJ29yRm3myw4kRyr9Ib1GQAxs&authuser=0&hl=en&gl=US",
+      "latitude": 40.677301,
+      "longitude": -74.268284,
+      "website": "www.dabenito.com/",
+      "domain": "dabenito.com",
+      "opening_hours": "Friday: [11:30 AM-3:30 PM, 5-10 PM], Saturday: [5-10 PM], Sunday: [Closed], Monday: [11:30 AM-3:30 PM, 5-10 PM], Tuesday: [11:30 AM-3:30 PM, 5-10 PM], Wednesday: [Closed], Thursday: [Closed]",
+      "featured_image": "https://lh5.googleusercontent.com/p/AF1QipM5ptdFb_6tke6UR-YngegMt9mRfxRYFFEqBE-V=w163-h92-k-no",
+      "google_maps_url": "https://www.google.com/maps?cid=1946558143387975626",
+      "google_knowledge_url": "https://www.google.com/search?kgmid=/g/1tdzbb_f&kponly",
+      "cid": "1946558143387975626",
+      "kgmid": "/g/1tdzbb_f",
+      "place_id": "ChIJ29yRm3myw4kRyr9Ib1GQAxs"
+    },
+    {
+      "name": "La Campagnola Fine Italian Restaurant",
+      "full_address": "520 S 31st St, Kenilworth, NJ 07033",
+      "street": "520 S 31st St",
+      "municipality": "Kenilworth, NJ 07033",
+      "categories": "Italian restaurant, Cocktail bar",
+      "price": "$$",
+      "phone": "(908) 241-9200",
+      "phones": "(908) 241-9200, +1 908-241-9200",
+      "claimed": "YES",
+      "review_count": 442,
+      "average_rating": 4.7,
+      "review_url": "https://search.google.com/local/reviews?placeid=ChIJNeg6enqyw4kRxIF2Xs8fr8o&authuser=0&hl=en&gl=US",
+      "latitude": 40.6707831,
+      "longitude": -74.2761818,
+      "website": "www.lacampagnolakenilworth.com/",
+      "domain": "lacampagnolakenilworth.com",
+      "opening_hours": "Friday: [11:30 AM-10 PM], Saturday: [4-10 PM], Sunday: [2-8 PM], Monday: [Closed], Tuesday: [11:30 AM-9 PM], Wednesday: [Closed], Thursday: [11:30 AM-9 PM]",
+      "featured_image": "https://lh5.googleusercontent.com/p/AF1QipP_tUwlxtaDHQno3-LFXh1_Tf5f-SOVd8V1YwUh=w122-h92-k-no",
+      "google_maps_url": "https://www.google.com/maps?cid=14604927092089323972",
+      "google_knowledge_url": "https://www.google.com/search?kgmid=/g/1v8gczy9&kponly",
+      "cid": "14604927092089323972",
+      "kgmid": "/g/1v8gczy9",
+      "place_id": "ChIJNeg6enqyw4kRxIF2Xs8fr8o"
+    },
+    {
+      "name": "All' Assassina",
+      "full_address": "2705 Morris Ave, Union, NJ 07083",
+      "street": "2705 Morris Ave",
+      "municipality": "Union, NJ 07083",
+      "categories": "Restaurant, Italian restaurant, Delivery Restaurant, Takeout Restaurant, Pasta shop",
+      "price": "$$",
+      "phone": "(908) 977-1616",
+      "phones": "(908) 977-1616, +1 908-977-1616",
+      "claimed": "YES",
+      "review_count": 111,
+      "average_rating": 4.9,
+      "review_url": "https://search.google.com/local/reviews?placeid=ChIJhfrZoqmtw4kRH1Ocr4T5DvQ&authuser=0&hl=en&gl=US",
+      "latitude": 40.7050887,
+      "longitude": -74.2953438,
+      "website": "www.allassassina.com/",
+      "domain": "allassassina.com",
+      "opening_hours": "Friday: [11 AM-9 PM], Saturday: [11 AM-9 PM], Sunday: [12-9 PM], Monday: [Closed], Tuesday: [11 AM-9 PM], Wednesday: [Closed], Thursday: [11 AM-9 PM]",
+      "featured_image": "https://lh5.googleusercontent.com/p/AF1QipNIdu7iS2L6566mX6SFIDIZY1uoOfEANxGYm9zJ=w122-h92-k-no",
+      "google_maps_url": "https://www.google.com/maps?cid=17586267943205622559",
+      "google_knowledge_url": "https://www.google.com/search?kgmid=/g/11y2pxzsms&kponly",
+      "cid": "17586267943205622559",
+      "kgmid": "/g/11y2pxzsms",
+      "place_id": "ChIJhfrZoqmtw4kRH1Ocr4T5DvQ"
+    },
+    {
+      "name": "Sofia's Fine Italian Cuisine Restaurant",
+      "full_address": "272 Morris Ave, Springfield, NJ 07081",
+      "street": "272 Morris Ave",
+      "municipality": "Springfield, NJ 07081",
+      "categories": "Italian restaurant",
+      "price": "$$",
+      "phone": "(973) 218-6468",
+      "phones": "(973) 218-6468, +1 973-218-6468",
+      "claimed": "YES",
+      "review_count": 511,
+      "average_rating": 4.5,
+      "review_url": "https://search.google.com/local/reviews?placeid=ChIJ1-e363euw4kRm4C_YQLrv9Y&authuser=0&hl=en&gl=US",
+      "latitude": 40.711556,
+      "longitude": -74.312922,
+      "website": "sofiasitalianrestaurant.com/",
+      "domain": "sofiasitalianrestaurant.com",
+      "opening_hours": "Friday: [11:30 AM-10 PM], Saturday: [11:30 AM-10 PM], Sunday: [4-9 PM], Monday: [11:30 AM-10 PM], Tuesday: [11:30 AM-10 PM], Wednesday: [11:30 AM-10 PM], Thursday: [11:30 AM-10 PM]",
+      "featured_image": "https://lh5.googleusercontent.com/p/AF1QipO5FULT0H-yowVxacltFX_9MofSty-iXM9IdMQV=w122-h92-k-no",
+      "google_maps_url": "https://www.google.com/maps?cid=15474345240130715803",
+      "google_knowledge_url": "https://www.google.com/search?kgmid=/g/1tdmwkht&kponly",
+      "cid": "15474345240130715803",
+      "kgmid": "/g/1tdmwkht",
+      "place_id": "ChIJ1-e363euw4kRm4C_YQLrv9Y"
+    },
+    {
+      "name": "La Braise African Grill - Springfield",
+      "full_address": "247 Morris Ave, Springfield, NJ 07081",
+      "street": "247 Morris Ave",
+      "municipality": "Springfield, NJ 07081",
+      "categories": "Restaurant, African restaurant, American restaurant, Basque restaurant, Chicken restaurant, Fish & chips restaurant, Fried chicken takeaway, Lunch restaurant, Delivery Restaurant, Takeout Restaurant",
+      "price": "$$",
+      "phone": "(973) 379-4188",
+      "phones": "(973) 379-4188, +1 973-379-4188",
+      "claimed": "YES",
+      "review_count": 176,
+      "average_rating": 4.9,
+      "review_url": "https://search.google.com/local/reviews?placeid=ChIJq6r633euw4kRgFRHO59Hpkw&authuser=0&hl=en&gl=US",
+      "latitude": 40.7109994,
+      "longitude": -74.31186699999999,
+      "website": "labraisegrill.com/",
+      "domain": "labraisegrill.com",
+      "opening_hours": "Friday: [10 AM-9 PM], Saturday: [10 AM-9 PM], Sunday: [3-9 PM], Monday: [Closed], Tuesday: [10 AM-9 PM], Wednesday: [Closed], Thursday: [10 AM-9 PM]",
+      "featured_image": "https://lh5.googleusercontent.com/p/AF1QipPaWe7WbTg33ijwKSX9w7RN-63zUM3XJhV5WDKL=w122-h92-k-no",
+      "google_maps_url": "https://www.google.com/maps?cid=5523180742236394624",
+      "google_knowledge_url": "https://www.google.com/search?kgmid=/g/11pv8l27pz&kponly",
+      "cid": "5523180742236394624",
+      "kgmid": "/g/11pv8l27pz",
+      "place_id": "ChIJq6r633euw4kRgFRHO59Hpkw"
+    },
+    {
+      "name": "Boulevard Five72",
+      "full_address": "572 Boulevard, Kenilworth, NJ 07033",
+      "street": "572 Boulevard",
+      "municipality": "Kenilworth, NJ 07033",
+      "categories": "New American restaurant, Italian restaurant",
+      "price": "$$",
+      "phone": "(908) 709-1200",
+      "phones": "(908) 709-1200, +1 908-709-1200",
+      "claimed": "YES",
+      "review_count": 622,
+      "average_rating": 4.5,
+      "review_url": "https://search.google.com/local/reviews?placeid=ChIJFe-pLwuyw4kRrXnBsZWENks&authuser=0&hl=en&gl=US",
+      "latitude": 40.6766917,
+      "longitude": -74.2888583,
+      "website": "www.boulevardfive72.com/",
+      "domain": "boulevardfive72.com",
+      "opening_hours": "Friday: [12-10 PM], Saturday: [5-10 PM], Sunday: [10:30 AM-3 PM], Monday: [Closed], Tuesday: [5-9 PM], Wednesday: [12-9 PM], Thursday: [12-9 PM]",
+      "featured_image": "https://lh5.googleusercontent.com/p/AF1QipOGO6su7tHVmfpLPaIDFzGTB_wDZJA-jnKng3JP=w163-h92-k-no",
+      "google_maps_url": "https://www.google.com/maps?cid=5419664980054210989",
+      "google_knowledge_url": "https://www.google.com/search?kgmid=/g/1td1kyc6&kponly",
+      "cid": "5419664980054210989",
+      "kgmid": "/g/1td1kyc6",
+      "place_id": "ChIJFe-pLwuyw4kRrXnBsZWENks"
+    },
+    {
+      "name": "Mambo Cuban Restaurant & Lounge",
+      "full_address": "2185 US-22, Union, NJ 07083",
+      "street": "2185 US-22",
+      "municipality": "Union, NJ 07083",
+      "categories": "Cuban restaurant",
+      "price": "$$",
+      "phone": "(908) 396-6401",
+      "phones": "(908) 396-6401, +1 908-396-6401",
+      "claimed": "YES",
+      "review_count": 1851,
+      "average_rating": 4.6,
+      "review_url": "https://search.google.com/local/reviews?placeid=ChIJKZxk_ietw4kR5GVpJVJbNN4&authuser=0&hl=en&gl=US",
+      "latitude": 40.6920742,
+      "longitude": -74.2869292,
+      "website": "mambocubanrestaurant.com/",
+      "domain": "mambocubanrestaurant.com",
+      "opening_hours": "Friday: [11:30 AM-11 PM], Saturday: [11:30 AM-11 PM], Sunday: [11:30 AM-10 PM], Monday: [11:30 AM-10 PM], Tuesday: [11:30 AM-6 PM], Wednesday: [Closed], Thursday: [11:30 AM-10 PM]",
+      "featured_image": "https://lh5.googleusercontent.com/p/AF1QipMMgqUP2MgOz8E1jMOqWW5UdW6GudF4RBhbXead=w92-h92-k-no",
+      "google_maps_url": "https://www.google.com/maps?cid=16011522983582066148",
+      "google_knowledge_url": "https://www.google.com/search?kgmid=/g/11rtmjcxk6&kponly",
+      "cid": "16011522983582066148",
+      "kgmid": "/g/11rtmjcxk6",
+      "place_id": "ChIJKZxk_ietw4kR5GVpJVJbNN4"
+    },
+    {
+      "name": "Garden Restaurant",
+      "full_address": "943 Magie Ave, Union, NJ 07083",
+      "street": "943 Magie Ave",
+      "municipality": "Union, NJ 07083",
+      "categories": "Restaurant",
+      "price": "$$",
+      "phone": "(908) 558-0101",
+      "phones": "(908) 558-0101, +1 908-558-0101",
+      "claimed": "YES",
+      "review_count": 166,
+      "average_rating": 4.6,
+      "review_url": "https://search.google.com/local/reviews?placeid=ChIJTQ_D4Z-yw4kRvptDABO4lws&authuser=0&hl=en&gl=US",
+      "latitude": 40.672958,
+      "longitude": -74.24260799999999,
+      "website": "gardenrestaurantnj.com/",
+      "domain": "gardenrestaurantnj.com",
+      "opening_hours": "Friday: [11:30 AM-10 PM], Saturday: [4-10 PM], Sunday: [3-9 PM], Monday: [Closed], Tuesday: [11:30 AM-9 PM], Wednesday: [11:30 AM-9 PM], Thursday: [11:30 AM-9 PM]",
+      "featured_image": "https://lh5.googleusercontent.com/p/AF1QipMfXaHACfOXL-s3TfOb1UW0wR8VX19L55hnRdk1=w80-h106-k-no",
+      "google_maps_url": "https://www.google.com/maps?cid=835338647648836542",
+      "google_knowledge_url": "https://www.google.com/search?kgmid=/g/1th5kd9z&kponly",
+      "cid": "835338647648836542",
+      "kgmid": "/g/1th5kd9z",
+      "place_id": "ChIJTQ_D4Z-yw4kRvptDABO4lws"
+    },
+    {
+      "name": "Taormina Restaurant",
+      "full_address": "482 Boulevard, Kenilworth, NJ 07033",
+      "street": "482 Boulevard",
+      "municipality": "Kenilworth, NJ 07033",
+      "categories": "Italian restaurant, Restaurant",
+      "price": "$$$",
+      "phone": "(908) 497-1717",
+      "phones": "(908) 497-1717, +1 908-497-1717",
+      "claimed": "YES",
+      "review_count": 219,
+      "average_rating": 4.4,
+      "review_url": "https://search.google.com/local/reviews?placeid=ChIJHw3E7guyw4kR92Y9iPRH5f0&authuser=0&hl=en&gl=US",
+      "latitude": 40.676162,
+      "longitude": -74.29309099999999,
+      "website": "www.taorminaristorante.com/",
+      "domain": "taorminaristorante.com",
+      "opening_hours": "Friday: [12-3 PM, 5-10:30 PM], Saturday: [4:30-10:30 PM], Sunday: [4-8:30 PM], Monday: [Closed], Tuesday: [3:30-8:30 PM], Wednesday: [Closed], Thursday: [12-3 PM, 5-10 PM]",
+      "featured_image": "https://lh5.googleusercontent.com/p/AF1QipPWE0kPgZT-QjES-CRpkGQ8_abmGAI9KwHkCNOK=w122-h92-k-no",
+      "google_maps_url": "https://www.google.com/maps?cid=18295108176845825783",
+      "google_knowledge_url": "https://www.google.com/search?kgmid=/g/1tj74j_8&kponly",
+      "cid": "18295108176845825783",
+      "kgmid": "/g/1tj74j_8",
+      "place_id": "ChIJHw3E7guyw4kR92Y9iPRH5f0"
+    },
+    {
+      "name": "Torna a Sorrento Restaurant",
+      "full_address": "52 Westfield Ave, Elizabeth, NJ 07208",
+      "street": "52 Westfield Ave",
+      "municipality": "Elizabeth, NJ 07208",
+      "categories": "Italian restaurant",
+      "price": "$$",
+      "phone": "(908) 351-4060",
+      "phones": "(908) 351-4060, +1 908-351-4060",
+      "claimed": "YES",
+      "review_count": 236,
+      "average_rating": 4.5,
+      "review_url": "https://search.google.com/local/reviews?placeid=ChIJZ3Ziyaqyw4kRQN9SlOqtgJU&authuser=0&hl=en&gl=US",
+      "latitude": 40.6681482,
+      "longitude": -74.2184477,
+      "opening_hours": "Friday: [3-9 PM], Saturday: [4-10 PM], Sunday: [2-8 PM], Monday: [Closed], Tuesday: [3-9 PM], Wednesday: [3-9 PM], Thursday: [3-9 PM]",
+      "featured_image": "https://lh5.googleusercontent.com/p/AF1QipMKQ9rac2hxNZgfFqOAbrWhdtF9F_V7cAuE6-Y1=w122-h92-k-no",
+      "google_maps_url": "https://www.google.com/maps?cid=10772801531692638016",
+      "google_knowledge_url": "https://www.google.com/search?kgmid=/g/1wc325lk&kponly",
+      "cid": "10772801531692638016",
+      "kgmid": "/g/1wc325lk",
+      "place_id": "ChIJZ3Ziyaqyw4kRQN9SlOqtgJU"
+    },
+    {
+      "name": "Taberna Grill",
+      "full_address": "1060 Sheridan Ave, Elizabeth, NJ 07208",
+      "street": "1060 Sheridan Ave",
+      "municipality": "Elizabeth, NJ 07208",
+      "categories": "Portuguese restaurant, American restaurant, Nuevo Latino restaurant",
+      "price": "$$",
+      "phone": "(908) 282-0725",
+      "phones": "(908) 282-0725, +1 908-282-0725",
+      "claimed": "NO",
+      "review_count": 420,
+      "average_rating": 4.3,
+      "review_url": "https://search.google.com/local/reviews?placeid=ChIJh6d2GMhSwokRVS2qKh6QVvc&authuser=0&hl=en&gl=US",
+      "latitude": 40.6884726,
+      "longitude": -74.2077929,
+      "opening_hours": "Friday: [11 AM-11 PM], Saturday: [11 AM-11 PM], Sunday: [11 AM-10 PM], Monday: [Closed], Tuesday: [11 AM-10 PM], Wednesday: [11 AM-10 PM], Thursday: [11 AM-10 PM]",
+      "featured_image": "https://lh5.googleusercontent.com/p/AF1QipNw4saz6z3oqSgbGLc3rOBhBN_R3TSNF9tYGdli=w122-h92-k-no",
+      "google_maps_url": "https://www.google.com/maps?cid=17822591034604531029",
+      "google_knowledge_url": "https://www.google.com/search?kgmid=/g/1tkr059d&kponly",
+      "cid": "17822591034604531029",
+      "kgmid": "/g/1tkr059d",
+      "place_id": "ChIJh6d2GMhSwokRVS2qKh6QVvc"
+    },
+    {
+      "name": "El Gordo- UNION TOWNSHIP",
+      "full_address": "2179 Morris Ave, Union, NJ 07083",
+      "street": "2179 Morris Ave",
+      "municipality": "Union, NJ 07083",
+      "categories": "Peruvian restaurant, Chinese restaurant, Delivery service, Latin American restaurant, Delivery Restaurant, Takeout Restaurant, South American restaurant, Spanish restaurant",
+      "price": "$$",
+      "phone": "(908) 688-7000",
+      "phones": "(908) 688-7000, +1 908-688-7000",
+      "claimed": "YES",
+      "review_count": 324,
+      "average_rating": 4.1,
+      "review_url": "https://search.google.com/local/reviews?placeid=ChIJ9y8XTqatw4kRiA-nIiq9p1k&authuser=0&hl=en&gl=US",
+      "latitude": 40.6984127,
+      "longitude": -74.27792509999999,
+      "website": "www.elgordoeatery.com/",
+      "domain": "elgordoeatery.com",
+      "opening_hours": "Friday: [11 AM-10 PM], Saturday: [11 AM-10 PM], Sunday: [11 AM-10 PM], Monday: [Closed], Tuesday: [Closed], Wednesday: [11 AM-9 PM], Thursday: [11 AM-9 PM]",
+      "featured_image": "https://lh5.googleusercontent.com/p/AF1QipN1Nn2gqPacc_uWtfacdxcfhfE8iH00Mg_l3pQQ=w122-h92-k-no",
+      "google_maps_url": "https://www.google.com/maps?cid=6460340179153915784",
+      "google_knowledge_url": "https://www.google.com/search?kgmid=/g/11jwv5ntsv&kponly",
+      "cid": "6460340179153915784",
+      "kgmid": "/g/11jwv5ntsv",
+      "place_id": "ChIJ9y8XTqatw4kRiA-nIiq9p1k"
+    },
+    {
+      "name": "Piattino: A Neighborhood Bistro",
+      "full_address": "67 Union Pl, Summit, NJ 07901",
+      "street": "67 Union Pl",
+      "municipality": "Summit, NJ 07901",
+      "categories": "Italian restaurant, Takeout Restaurant, Pasta shop, Pizza restaurant, Seafood restaurant",
+      "price": "$$",
+      "phone": "(908) 219-4801",
+      "phones": "(908) 219-4801, +1 908-219-4801",
+      "claimed": "YES",
+      "review_count": 436,
+      "average_rating": 4.3,
+      "review_url": "https://search.google.com/local/reviews?placeid=ChIJe6xdMU2uw4kRnoGe6TqnT0o&authuser=0&hl=en&gl=US",
+      "latitude": 40.7170584,
+      "longitude": -74.3583799,
+      "website": "locations.ourotherbrands.villarestaurantgroup.com/en-us/piattino-oven-fired-pizza/nj/summit/67-union-pl/",
+      "domain": "villarestaurantgroup.com",
+      "opening_hours": "Friday: [11:30 AM-11 PM], Saturday: [11 AM-11 PM], Sunday: [11 AM-9 PM], Monday: [11:30 AM-9 PM], Tuesday: [11:30 AM-9 PM], Wednesday: [Open 24 hours], Thursday: [11:30 AM-10 PM]",
+      "featured_image": "https://lh5.googleusercontent.com/p/AF1QipOK-WwbrnLvlYoTWUlfk2NBar4NXmxOArcuavxx=w137-h92-k-no",
+      "google_maps_url": "https://www.google.com/maps?cid=5354682353436230046",
+      "google_knowledge_url": "https://www.google.com/search?kgmid=/g/11c5wy2vsp&kponly",
+      "cid": "5354682353436230046",
+      "kgmid": "/g/11c5wy2vsp",
+      "place_id": "ChIJe6xdMU2uw4kRnoGe6TqnT0o"
+    },
+    {
+      "name": "Enzzo's Trattoria-Restaurant",
+      "full_address": "514 Millburn Ave, Short Hills, NJ 07078",
+      "street": "514 Millburn Ave",
+      "municipality": "Short Hills, NJ 07078",
+      "categories": "Italian restaurant, Pizza restaurant",
+      "phone": "(973) 379-7111",
+      "phones": "(973) 379-7111, +1 973-379-7111",
+      "claimed": "NO",
+      "review_count": 185,
+      "average_rating": 4.5,
+      "review_url": "https://search.google.com/local/reviews?placeid=ChIJUwK_Z3yuw4kRnYTDJWvXHv0&authuser=0&hl=en&gl=US",
+      "latitude": 40.719524299999996,
+      "longitude": -74.3199626,
+      "website": "www.enzzos.com/",
+      "domain": "enzzos.com",
+      "opening_hours": "Friday: [5-10 PM], Saturday: [11:30 AM-11 PM], Sunday: [4-9:30 PM], Monday: [5-10 PM], Tuesday: [5-10 PM], Wednesday: [5-10 PM], Thursday: [5-10 PM]",
+      "featured_image": "https://lh5.googleusercontent.com/p/AF1QipMm2ljXRU-5PyBUuM_BHUYo3b3n3LBRmdO4DYgD=w122-h92-k-no",
+      "google_maps_url": "https://www.google.com/maps?cid=18239252396092130461",
+      "google_knowledge_url": "https://www.google.com/search?kgmid=/g/1td5y2m8&kponly",
+      "cid": "18239252396092130461",
+      "kgmid": "/g/1td5y2m8",
+      "place_id": "ChIJUwK_Z3yuw4kRnYTDJWvXHv0"
+    }
+  ]
+}
+
+Example Response
+Body
+Headers (18)
+Date
+Sat, 21 Dec 2024 01:30:23 GMT
+
+Content-Type
+application/json; charset=utf-8
+
+Transfer-Encoding
+chunked
+
+Connection
+keep-alive
+
+X-Powered-By
+Express
+
+RateLimit-Policy
+30;w=60
+
+RateLimit-Limit
+30
+
+RateLimit-Remaining
+29
+
+RateLimit-Reset
+60
+
+ETag
+W/"5b50-8+s5HMpSnuNlS0brRxsHuwuXTtA"
+
+cf-cache-status
+DYNAMIC
+
+Report-To
+{"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v4?s=GqordYqFFvnWjhfk2TDRB1UQK9PKcnoiXfyC5WAS4j653SfNGSTMrxjHfxKuWH%2BX7rlw7pudErXsLIe%2FJoYuZQinYzsWYdyOys9zPQWUWaBa8Odxs0%2F4kQbY2CEafmdq3A3QEPOOI1C48ik%3D"}],"group":"cf-nel","max_age":604800}
+
+NEL
+{"success_fraction":0,"report_to":"cf-nel","max_age":604800}
+
+Server
+cloudflare
+
+CF-RAY
+8f541b30bedaf7c5-LAX
+
+Content-Encoding
+br
+
+alt-svc
+h3=":443"; ma=86400
+
+server-timing
+cfL4;desc="?proto=TCP&rtt=1655&min_rtt=1501&rtt_var=871&sent=4&recv=5&lost=0&retrans=0&sent_bytes=2830&recv_bytes=1066&delivery_rate=1058479&cwnd=252&unsent_bytes=0&cid=67a224e480982dfe&ts=3548&x=0"

@@ -1,0 +1,204 @@
+{% extends "base.html" %}
+
+{# ---------- SEO overrides ---------- #}
+{% block title %}Najlepszy kebab we Wrocławiu – TOP 10 | Kebab Rank{% endblock %}
+{% block description %}Poznaj ranking 10 najlepszych kebabów we Wrocławiu. Sprawdź lokale z najwyższymi ocenami, w tym
+lidera ogólnopolskiego rankingu!{% endblock %}
+
+{% block canonical %}https://www.kebabrank.com/blog/najlepszy-kebab-wroclaw{% endblock %}
+
+{% block og_title %}Najlepszy kebab we Wrocławiu – TOP 10{% endblock %}
+{% block og_description %}Odkryj najlepsze lokale we Wrocławiu. Sprawdź, gdzie zjeść numer 1 w Polsce według Kebab
+Rank!{% endblock %}
+{% block og_image %}https://www.kebabrank.com/static/img/blog/wroclaw.jpeg{% endblock %}
+{% block og_url %}https://www.kebabrank.com/blog/najlepszy-kebab-wroclaw{% endblock %}
+
+{# Twitter = same values #}
+{% block tw_title %}{{ self.og_title() }}{% endblock %}
+{% block tw_desc %}{{ self.og_description() }}{% endblock %}
+{% block tw_image %}{{ self.og_image() }}{% endblock %}
+{% block tw_url %}{{ self.og_url() }}{% endblock %}
+
+{% block content %}
+<div class="h-full w-full overflow-y-auto bg-background-dark">
+    <!-- Navbar -->
+    <header class="w-full max-w-6xl mx-auto py-6 px-4 flex items-center justify-between">
+        <a href="/" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
+            <div
+                class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center shadow-[0_0_15px_rgba(255,106,0,0.4)]">
+                <span class="material-icons text-white text-2xl">kebab_dining</span>
+            </div>
+            <h1 class="text-2xl font-black tracking-tighter uppercase italic text-white">
+                Kebab<span class="text-primary">Rank</span> <span
+                    class="text-gray-500 text-sm not-italic ml-2 font-medium">Blog</span>
+            </h1>
+        </a>
+        <a href="/blog"
+            class="text-gray-400 hover:text-white transition-colors flex items-center gap-2 font-bold text-sm">
+            <span class="material-icons text-sm">arrow_back</span>
+            <span>Wróć do bloga</span>
+        </a>
+    </header>
+
+    <article class="w-full max-w-4xl mx-auto px-4 pb-20 pt-6">
+        <div class="bg-surface-dark border border-white/5 rounded-2xl p-6 md:p-12 shadow-2xl">
+            <!-- Article Header -->
+            <div class="text-center border-b border-white/5 pb-8 mb-8">
+                <div
+                    class="inline-block bg-primary/20 text-primary px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-4 border border-primary/30">
+                    🥇 Najlepszy w Polsce
+                </div>
+                <h1 class="text-3xl md:text-5xl font-black text-white mb-4 leading-tight">Najlepszy kebab we Wrocławiu –
+                    TOP 10 (2025)</h1>
+                <p class="text-gray-400 text-sm flex items-center justify-center gap-2">
+                    <span class="material-icons text-sm">schedule</span> Ostatnia aktualizacja: {{ current_date }}
+                </p>
+            </div>
+
+            <!-- Lead Text -->
+            <div class="space-y-6 text-lg md:text-xl text-gray-300 leading-relaxed mb-10 font-light">
+                <p>
+                    Wrocław to prawdziwa stolica polskiego kebaba. To właśnie tutaj, według naszych najnowszych danych i
+                    analiz AI, znajduje się <strong>najlepiej oceniany lokal w całej Polsce</strong>. Stolica Dolnego
+                    Śląska wyprzedza pod tym względem Kraków i Warszawę, oferując nie tylko ogromną ilość punktów, ale
+                    przede wszystkim bezkonkurencyjną jakość.
+                </p>
+                <p>
+                    W tej edycji rankingu skupiamy się na lokalach, które zrewolucjonizowały wrocławską scenę
+                    street-foodową, wprowadzając mięso rzemieślnicze (kraftowe) i unikalne sosy własnej produkcji.
+                </p>
+            </div>
+
+            <!-- TOC -->
+            <div class="bg-black/20 rounded-xl p-6 mb-10 border border-white/5">
+                <h2 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                    <span class="material-icons text-primary">list</span> <span>Spis treści</span>
+                </h2>
+                <ul class="space-y-2 text-gray-400">
+                    <li><a href="#top3" class="hover:text-primary transition-colors flex items-center gap-2"><span
+                                class="text-primary">◦</span> TOP 3 kebaby we Wrocławiu</a></li>
+                    <li><a href="#krajowy_lider"
+                            class="hover:text-primary transition-colors flex items-center gap-2"><span
+                                class="text-primary">◦</span> Wrocławski fenomen – Numer 1 w Polsce</a></li>
+                    <li><a href="#wroclaw_faq"
+                            class="hover:text-primary transition-colors flex items-center gap-2"><span
+                                class="text-primary">◦</span> FAQ: Gdzie zjeść we Wrocławiu?</a></li>
+                    <li><a href="#ceny_wroclaw"
+                            class="hover:text-primary transition-colors flex items-center gap-2"><span
+                                class="text-primary">◦</span> Ceny kebabów we Wrocławiu (2025)</a></li>
+                </ul>
+            </div>
+
+            <!-- Content Sections -->
+            <div class="space-y-12">
+                <section id="top3">
+                    <h2 class="text-2xl md:text-3xl font-bold text-white mb-6">🥇 TOP 3 kebaby we Wrocławiu</h2>
+
+                    {% if top_kebabs %}
+                    <div class="grid gap-6">
+                        {% for kebab in top_kebabs[:3] %}
+                        <a href="/wroclaw"
+                            class="bg-white/5 border border-white/10 rounded-xl p-4 flex items-center gap-4 hover:bg-white/10 transition-all hover:scale-[1.02] active:scale-[0.98] group">
+                            <div class="text-4xl">
+                                {% if loop.index == 1 %}🏆{% elif loop.index == 2 %}🥈{% else %}🥉{% endif %}
+                            </div>
+                            <div class="flex-1">
+                                <h3 class="text-xl font-bold text-white group-hover:text-primary transition-colors">{{
+                                    kebab.name }}</h3>
+                                <p class="text-gray-400 text-sm">{{ kebab.address }}</p>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-primary font-black text-2xl">{{ "%.1f"|format(kebab.rank_score) if
+                                    kebab.rank_score else "N/A" }}</div>
+                                <div class="text-xs text-gray-500 uppercase">PKT</div>
+                            </div>
+                        </a>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-gray-500 italic">Ranking jest obecnie aktualizowany...</p>
+                    {% endif %}
+                </section>
+
+                <section id="krajowy_lider" class="bg-primary/5 border border-primary/20 rounded-2xl p-6 md:p-8">
+                    <h2 class="text-2xl md:text-3xl font-bold text-white mb-6 flex items-center gap-2">
+                        <span class="material-icons text-primary text-3xl">star</span>
+                        Wrocławski fenomen – Numer 1 w Polsce
+                    </h2>
+                    <div class="text-gray-300 space-y-4">
+                        <p>
+                            To, co wyróżnia Wrocław na mapie Polski, to niespotykane przywiązanie do jakości mięsa.
+                            Najlepsze lokale w mieście przestały korzystać z mrożonych mielonek, stawiając na płaty
+                            mięsa najwyższej próby.
+                        </p>
+                        <p class="bg-black/30 p-4 border-l-4 border-primary italic">
+                            "Według naszych algorytmów analizujących tysiące opinii, to właśnie we Wrocławiu znajdziecie
+                            obecnie najwyżej oceniany punkt w całym kraju. To ewenement, który przyciąga fanów kebaba z
+                            odległych miast."
+                        </p>
+                    </div>
+                </section>
+
+                <section id="ceny_wroclaw">
+                    <h2 class="text-2xl md:text-3xl font-bold text-white mb-6">💰 Ceny kebabów we Wrocławiu (2025)</h2>
+                    <p class="text-gray-300 mb-6">Inflacja nie oszczędziła również rynków lokalnych. Oto jak prezentują
+                        się średnie ceny za porcje we Wrocławiu:</p>
+                    <ul class="grid md:grid-cols-2 gap-4">
+                        <li class="bg-white/5 p-4 rounded-lg flex justify-between"><strong class="text-white">Mały
+                                kebab:</strong> <span class="text-primary">22–27 zł</span></li>
+                        <li class="bg-white/5 p-4 rounded-lg flex justify-between"><strong class="text-white">Duży
+                                rzemieślniczy:</strong> <span class="text-primary">35–45 zł</span></li>
+                        <li class="bg-white/5 p-4 rounded-lg flex justify-between"><strong class="text-white">Danie na
+                                talerzu:</strong> <span class="text-primary">38–48 zł</span></li>
+                        <li class="bg-white/5 p-4 rounded-lg flex justify-between"><strong
+                                class="text-white">Box:</strong> <span class="text-primary">24–30 zł</span></li>
+                    </ul>
+                </section>
+
+                <section id="wroclaw_faq">
+                    <h2 class="text-2xl md:text-3xl font-bold text-white mb-6">❓ Często zadawane pytania</h2>
+
+                    <div class="space-y-4">
+                        <div class="bg-white/5 p-6 rounded-xl border border-white/5">
+                            <h3 class="text-lg font-bold text-white mb-2">Gdzie zjeść najlepszego kebaba we Wrocławiu?
+                            </h3>
+                            <p class="text-gray-400">Według aktualnego rankingu, liderzy to lokale przy ul. Powstańców
+                                Śląskich oraz ul. Borowskiej. Zawsze sprawdzaj aktualne oceny w naszej aplikacji przed
+                                wyjściem.</p>
+                        </div>
+
+                        <div class="bg-white/5 p-6 rounded-xl border border-white/5">
+                            <h3 class="text-lg font-bold text-white mb-2">Czym jest Gemüsee Kebab i gdzie go kupić?</h3>
+                            <p class="text-gray-400">To odmiana inspirowana stylem berlińskim (z pieczonymi warzywami i
+                                serem). We Wrocławiu świetny Gemüsee serwują m.in. Czarna Cebula oraz Mister Kebab na
+                                Leśnicy.</p>
+                        </div>
+
+                        <div class="bg-white/5 p-6 rounded-xl border border-white/5">
+                            <h3 class="text-lg font-bold text-white mb-2">Czy we Wrocławiu są kebaby otwarte w nocy?
+                            </h3>
+                            <p class="text-gray-400">Tak, lokale w okolicach Rynku i Placu Grunwaldzkiego często
+                                działają do 4:00 rano, a niektóre są całodobowe.</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Footer -->
+            <div class="mt-16 pt-8 border-t border-white/10">
+                <div class="bg-surface-dark border border-primary/30 p-8 rounded-2xl text-center">
+                    <h3 class="text-2xl font-black text-white mb-2">🥙 Zobacz pełny ranking Wrocław</h3>
+                    <p class="text-gray-400 mb-6">Nasze algorytmy codziennie analizują tysiące opinii, abyś zawsze
+                        wiedział, gdzie jest świeżo i smacznie.</p>
+                    <div class="flex flex-col md:flex-row gap-4 justify-center">
+                        <a href="/wroclaw"
+                            class="px-8 py-4 rounded-full bg-primary hover:bg-orange-600 text-white font-black transition-all hover:scale-105 shadow-[0_0_20px_rgba(255,106,0,0.3)]">
+                            Ranking Wrocław Online
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </article>
+</div>
+{% endblock %}

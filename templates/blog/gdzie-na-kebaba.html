@@ -1,0 +1,313 @@
+{% extends "base.html" %}
+
+{% block title %}Gdzie na kebaba w Polsce? Kompletny przewodnik 2024 | Kebab Rank{% endblock %}
+{% block description %}Szukasz najlepszego kebaba w swoim mieście? Sprawdź nasz przewodnik po kebabowych miejscówkach w
+całej Polsce. Ranking 50+ miast!{% endblock %}
+{% block keywords %}gdzie na kebaba, najlepszy kebab polska, kebab ranking, gdzie zjeść kebaba{% endblock %}
+{% block canonical %}https://kebabrank.com/blog/gdzie-na-kebaba{% endblock %}
+{% block og_title %}Gdzie na kebaba? Przewodnik po Polsce 2024{% endblock %}
+{% block og_description %}Kompletny przewodnik po najlepszych kebabach w Polsce. Sprawdź ranking w swoim mieście!{%
+endblock %}
+{% block og_image %}https://kebabrank.com/static/img/blog/guide.jpg{% endblock %}
+{% block og_url %}https://kebabrank.com/blog/gdzie-na-kebaba{% endblock %}
+{# Twitter = same values #}
+{% block tw_title %}{{ self.og_title() }}{% endblock %}
+{% block tw_desc %}{{ self.og_description() }}{% endblock %}
+{% block tw_image %}{{ self.og_image() }}{% endblock %}
+{% block tw_url %}{{ self.og_url() }}{% endblock %}
+{% block content %}
+<!-- Main Container -->
+<div class="h-full w-full overflow-y-auto bg-background-dark flex justify-center">
+
+    <!-- Central Column: Article Content -->
+    <div class="w-full max-w-4xl bg-[#0f172a] border-x border-white/5 relative z-20 shadow-2xl min-h-screen">
+        <!-- Navbar (Sticky) -->
+        <header
+            class="sticky top-0 z-50 bg-surface-dark/95 backdrop-blur-md border-b border-white/5 px-6 py-4 flex items-center justify-between">
+            <a href="/" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
+                <div
+                    class="w-8 h-8 rounded-md bg-primary flex items-center justify-center shadow-[0_0_10px_rgba(255,106,0,0.4)]">
+                    <span class="material-icons text-white text-lg">kebab_dining</span>
+                </div>
+                <h1 class="text-xl font-black tracking-tighter uppercase italic text-white hidden sm:block">
+                    Kebab<span class="text-primary">Rank</span> <span
+                        class="text-gray-500 text-xs not-italic ml-2 font-medium">Blog</span>
+                </h1>
+            </a>
+            <a href="/blog"
+                class="text-gray-400 hover:text-white transition-colors flex items-center gap-2 font-bold text-xs uppercase tracking-wider">
+                <span class="material-icons text-sm">arrow_back</span>
+                <span data-translate="back">Wróć</span>
+            </a>
+        </header>
+
+        <article class="p-6 md:p-12 pb-24" itemscope itemtype="https://schema.org/Article">
+            <!-- Article Header -->
+            <div class="mb-10">
+                <h1 class="text-3xl md:text-5xl font-black text-white mb-4 leading-tight" itemprop="headline">Gdzie na
+                    kebaba? Kompletny przewodnik po Polsce</h1>
+                <div class="flex flex-wrap gap-4 items-center text-xs text-gray-400 font-mono">
+                    <span
+                        class="bg-primary/10 text-primary px-3 py-1 rounded-full border border-primary/20">Polska</span>
+                    <span class="flex items-center gap-1"><span class="material-icons text-sm">schedule</span> {{
+                        current_date }}</span>
+                    <span class="flex items-center gap-1"><span class="material-icons text-sm">visibility</span> 5.8k
+                        wyświetleń</span>
+                </div>
+                <div itemprop="publisher" itemscope itemtype="https://schema.org/Organization" class="hidden">
+                    <meta itemprop="name" content="Kebab Rank">
+                    <meta itemprop="logo" content="https://kebabrank.com/static/img/logo.png">
+                </div>
+                <meta itemprop="author" content="KebabRank Team">
+                <meta itemprop="datePublished" content="2024-01-01">
+                <meta itemprop="image" content="https://kebabrank.com/static/img/blog/guide.jpg">
+            </div>
+
+            <!-- Lead Text -->
+            <p
+                class="text-lg text-gray-300 leading-relaxed mb-10 font-light border-l-4 border-primary pl-6 bg-white/5 py-4 rounded-r-lg">
+                Kebab to jedno z najpopularniejszych dań fast food w Polsce. Niezależnie od tego, czy jesteś w dużym
+                mieście czy małej miejscowości, zawsze znajdziesz miejsce na dobrego kebaba. Oto nasz kompletny
+                przewodnik!
+            </p>
+
+            <!-- TOC -->
+            <div class="bg-black/40 rounded-xl p-6 mb-10 border border-white/10">
+                <h2
+                    class="text-sm font-bold text-white mb-4 flex items-center gap-2 uppercase tracking-widest text-primary/80">
+                    <span class="material-icons text-base">list</span> Na skróty
+                </h2>
+                <ul class="space-y-3 text-sm font-medium text-gray-400">
+                    <li><a href="#jak-wybrac"
+                            class="hover:text-white hover:translate-x-1 transition-all flex items-center gap-3"><span
+                                class="w-1.5 h-1.5 rounded-full bg-primary"></span> Jak wybrać dobry kebab?</a></li>
+                    <li><a href="#miasta"
+                            class="hover:text-white hover:translate-x-1 transition-all flex items-center gap-3"><span
+                                class="w-1.5 h-1.5 rounded-full bg-gray-600"></span> Kebaby w największych miastach</a>
+                    </li>
+                    <li><a href="#godziny"
+                            class="hover:text-white hover:translate-x-1 transition-all flex items-center gap-3"><span
+                                class="w-1.5 h-1.5 rounded-full bg-gray-600"></span> O której godzinie najlepiej?</a>
+                    </li>
+                    <li><a href="#zdrowie"
+                            class="hover:text-white hover:translate-x-1 transition-all flex items-center gap-3"><span
+                                class="w-1.5 h-1.5 rounded-full bg-gray-600"></span> Kebab a zdrowie</a></li>
+                    <li><a href="#ciekawostki"
+                            class="hover:text-white hover:translate-x-1 transition-all flex items-center gap-3"><span
+                                class="w-1.5 h-1.5 rounded-full bg-gray-600"></span> Ciekawostki o kebabie</a></li>
+                </ul>
+            </div>
+
+            <!-- Content Sections -->
+            <div class="space-y-16">
+                <!-- Jak wybrac -->
+                <section id="jak-wybrac">
+                    <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                        <span class="material-icons text-yellow-500">lightbulb</span> Jak wybrać dobry kebab?
+                    </h2>
+                    <p class="text-gray-400 mb-6 font-light">Znalezienie idealnego kebaba to sztuka. Oto na co zwrócić
+                        uwagę:</p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-white/5 p-5 rounded-xl border border-white/5">
+                            <h3 class="text-lg font-bold text-white mb-2 flex items-center gap-2"><span
+                                    class="material-icons text-primary text-sm">groups</span> Sprawdź kolejkę</h3>
+                            <p class="text-sm text-gray-400">Długa kolejka to często dobry znak - lokalni wiedzą, gdzie
+                                jest najlepiej!</p>
+                        </div>
+                        <div class="bg-white/5 p-5 rounded-xl border border-white/5">
+                            <h3 class="text-lg font-bold text-white mb-2 flex items-center gap-2"><span
+                                    class="material-icons text-primary text-sm">visibility</span> Obserwuj rożen</h3>
+                            <p class="text-sm text-gray-400">Świeże mięso powinno być dobrze opieczone z zewnątrz, ale
+                                soczyste w środku.</p>
+                        </div>
+                        <div class="bg-white/5 p-5 rounded-xl border border-white/5">
+                            <h3 class="text-lg font-bold text-white mb-2 flex items-center gap-2"><span
+                                    class="material-icons text-primary text-sm">spa</span> Świeże warzywa</h3>
+                            <p class="text-sm text-gray-400">Dobre surówki powinny wyglądać chrupko i świeżo, a nie
+                                "zmęczone".</p>
+                        </div>
+                        <div class="bg-white/5 p-5 rounded-xl border border-white/5">
+                            <h3 class="text-lg font-bold text-white mb-2 flex items-center gap-2"><span
+                                    class="material-icons text-primary text-sm">star</span> Czytaj opinie</h3>
+                            <p class="text-sm text-gray-400">Weryfikuj oceny w Google Maps. Kebab Rank agreguje je dla
+                                Ciebie!</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Miasta -->
+                <section id="miasta">
+                    <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                        <span class="material-icons text-purple-500">location_city</span> W największych miastach
+                    </h2>
+
+                    <div class="grid grid-cols-1 gap-4 mb-8">
+                        <a href="/wroclaw"
+                            class="bg-white/5 hover:bg-white/10 p-5 rounded-xl border border-white/5 group transition-all flex items-center justify-between">
+                            <div>
+                                <h3 class="text-lg font-bold text-white group-hover:text-primary transition-colors">
+                                    Wrocław</h3>
+                                <p class="text-sm text-gray-400">Dolnośląska stolica kebaba z legendarnymi miejscami.
+                                </p>
+                            </div>
+                            <span
+                                class="material-icons text-gray-500 group-hover:translate-x-1 transition-transform">arrow_forward_ios</span>
+                        </a>
+                        <a href="/poznan"
+                            class="bg-white/5 hover:bg-white/10 p-5 rounded-xl border border-white/5 group transition-all flex items-center justify-between">
+                            <div>
+                                <h3 class="text-lg font-bold text-white group-hover:text-primary transition-colors">
+                                    Poznań</h3>
+                                <p class="text-sm text-gray-400">Wielkopolskie smaki w nowoczesnym, kraftowym wydaniu.
+                                </p>
+                            </div>
+                            <span
+                                class="material-icons text-gray-500 group-hover:translate-x-1 transition-transform">arrow_forward_ios</span>
+                        </a>
+                        <a href="/gdansk"
+                            class="bg-white/5 hover:bg-white/10 p-5 rounded-xl border border-white/5 group transition-all flex items-center justify-between">
+                            <div>
+                                <h3 class="text-lg font-bold text-white group-hover:text-primary transition-colors">
+                                    Gdańsk</h3>
+                                <p class="text-sm text-gray-400">Nadmorskie kebaby idealne po spacerze na plaży.</p>
+                            </div>
+                            <span
+                                class="material-icons text-gray-500 group-hover:translate-x-1 transition-transform">arrow_forward_ios</span>
+                        </a>
+                        <a href="/katowice"
+                            class="bg-white/5 hover:bg-white/10 p-5 rounded-xl border border-white/5 group transition-all flex items-center justify-between">
+                            <div>
+                                <h3 class="text-lg font-bold text-white group-hover:text-primary transition-colors">
+                                    Katowice</h3>
+                                <p class="text-sm text-gray-400">Solidne śląskie porcje w bardzo dobrych cenach.</p>
+                            </div>
+                            <span
+                                class="material-icons text-gray-500 group-hover:translate-x-1 transition-transform">arrow_forward_ios</span>
+                        </a>
+                    </div>
+
+                    <div
+                        class="bg-gradient-to-r from-orange-600 to-red-600 rounded-xl p-6 text-center shadow-lg transform rotate-1">
+                        <p class="text-white text-lg font-bold mb-4">🗺️ Mamy rankingi dla ponad 50 miast!</p>
+                        <a href="/"
+                            class="inline-block bg-white text-orange-600 px-8 py-3 rounded-full font-black hover:scale-105 transition-transform shadow-md text-sm uppercase tracking-wide">
+                            Zobacz wszystkie miasta
+                        </a>
+                    </div>
+                </section>
+
+                <section id="godziny">
+                    <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                        <span class="material-icons text-blue-500">schedule</span> Kiedy na kebaba?
+                    </h2>
+                    <ul class="space-y-4">
+                        <li class="flex gap-4 items-start">
+                            <span class="text-primary font-bold min-w-[100px] text-right pt-1">12:00-14:00</span>
+                            <div>
+                                <strong class="text-white block">Lunch Time</strong>
+                                <p class="text-gray-400 text-sm">Świeże mięso, duży ruch, ale wszystko schodzi na
+                                    bieżąco.</p>
+                            </div>
+                        </li>
+                        <li class="flex gap-4 items-start">
+                            <span class="text-primary font-bold min-w-[100px] text-right pt-1">17:00-19:00</span>
+                            <div>
+                                <strong class="text-white block">Popołudnie</strong>
+                                <p class="text-gray-400 text-sm">Dobry moment na spokojny posiłek, mniejsze kolejki.</p>
+                            </div>
+                        </li>
+                        <li class="flex gap-4 items-start">
+                            <span class="text-primary font-bold min-w-[100px] text-right pt-1">22:00+</span>
+                            <div>
+                                <strong class="text-white block">Nocne życie</strong>
+                                <p class="text-gray-400 text-sm">Klasyka gatunku po imprezie. Wiele lokali działa do
+                                    rana.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </section>
+
+                <section id="zdrowie">
+                    <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                        <span class="material-icons text-green-500">health_and_safety</span> Kebab a Zdrowie
+                    </h2>
+                    <div class="bg-white/5 rounded-xl overflow-hidden mb-6 border border-white/5">
+                        <table class="w-full text-sm text-left">
+                            <thead class="bg-black/30 text-primary uppercase text-xs tracking-wider">
+                                <tr>
+                                    <th class="p-4">Składnik</th>
+                                    <th class="p-4">Ilość (średnia)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-gray-300 divide-y divide-white/5">
+                                <tr>
+                                    <td class="p-4">Kalorie</td>
+                                    <td class="p-4 font-mono">600-800 kcal</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-4">Białko</td>
+                                    <td class="p-4 font-mono">30-40g</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-4">Węglowodany</td>
+                                    <td class="p-4 font-mono">60-80g</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-4">Tłuszcze</td>
+                                    <td class="p-4 font-mono">25-35g</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section id="ciekawostki">
+                    <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                        <span class="material-icons text-pink-500">psychology</span> Ciekawostki
+                    </h2>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-white/5 p-4 rounded-xl text-center">
+                            <span class="text-3xl block mb-2">🇹🇷</span>
+                            <span class="text-sm font-bold text-gray-300">Pochodzenie</span>
+                            <p class="text-xs text-gray-500 mt-1">Turcja, XIX wiek</p>
+                        </div>
+                        <div class="bg-white/5 p-4 rounded-xl text-center">
+                            <span class="text-3xl block mb-2">🇵🇱</span>
+                            <span class="text-sm font-bold text-gray-300">W Polsce</span>
+                            <p class="text-xs text-gray-500 mt-1">Od 1992 (Warszawa)</p>
+                        </div>
+                        <div class="bg-white/5 p-4 rounded-xl text-center">
+                            <span class="text-3xl block mb-2">📊</span>
+                            <span class="text-sm font-bold text-gray-300">Konsumpcja</span>
+                            <p class="text-xs text-gray-500 mt-1">100 mln+ rocznie!</p>
+                        </div>
+                        <div class="bg-white/5 p-4 rounded-xl text-center">
+                            <span class="text-3xl block mb-2">⚖️</span>
+                            <span class="text-sm font-bold text-gray-300">Rekord</span>
+                            <p class="text-xs text-gray-500 mt-1">100kg kebab gigant</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Footer -->
+            <div class="mt-20 pt-10 border-t border-white/10 text-center">
+                <p class="text-gray-300 mb-8 font-light">
+                    <strong>Podsumowanie:</strong> Niezależnie od tego, gdzie jesteś w Polsce, zawsze znajdziesz dobrego
+                    kebaba.
+                </p>
+                <div class="bg-surface-dark border border-primary/30 p-8 rounded-2xl text-center">
+                    <h3 class="text-2xl font-black text-white mb-2">🥙 Znajdź najlepszego kebaba</h3>
+                    <p class="text-gray-400 mb-6 font-sm">Rankingi aktualizowane co tydzień</p>
+                    <a href="/"
+                        class="inline-block px-8 py-3 rounded-lg bg-primary hover:bg-orange-600 text-white font-bold transition-colors shadow-lg shadow-primary/30 text-base">
+                        Sprawdź Ranking Miast
+                    </a>
+                </div>
+            </div>
+        </article>
+    </div>
+
+</div>
+{% endblock %}

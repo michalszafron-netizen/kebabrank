@@ -1,0 +1,40 @@
+# Environment files
+.env
+.env.local
+.env.production
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+ENV/
+env/
+
+# Logs
+logs/
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Test files
+test_*.py
+update_*.py
+add_city.py
+
+# Local data
+*.db
+*.sqlite
+
+# Static files (if you want to keep logo private)
+# static/img/

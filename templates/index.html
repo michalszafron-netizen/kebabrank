@@ -1,0 +1,225 @@
+{% extends "base.html" %}
+
+{% block header_content %}
+<!-- Replaced by sidebar_header in base.html -->
+{% endblock %}
+
+{% block sidebar_header %}
+<!-- Search Bar -->
+<div class="relative mb-6 group">
+    <span
+        class="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors">search</span>
+    <input id="city-search" class="w-full input-premium py-3 pl-12 pr-4 transition-all placeholder-gray-500"
+        placeholder="Search for spots, flavors, or cities..." type="text"
+        value="{{ initial_city if initial_city else '' }}" autocomplete="off" oninput="filterCities(this.value)">
+
+    <!-- Dropdown for City Search -->
+    <div id="city-dropdown"
+        class="absolute left-0 right-0 top-full mt-2 bg-[#1e293b] border border-white/10 rounded-xl shadow-xl z-[1001] hidden max-h-[60vh] overflow-y-auto custom-scrollbar">
+        <!-- Populated by JS -->
+    </div>
+</div>
+
+<!-- Quick City Selector (Horizontal Scroll) -->
+<div class="flex gap-4 overflow-x-auto pb-4 custom-scrollbar snap-x px-1" id="city-selector">
+    <button class="tab-button flex flex-col items-center gap-2 group min-w-[56px] md:min-w-[72px] snap-start"
+        onclick="showTab('global')">
+        <div
+            class="tab-icon-wrapper w-12 h-12 md:w-16 md:h-16 rounded-full border border-white/10 bg-surface-dark flex items-center justify-center relative group-hover:scale-105 transition-all overflow-hidden shadow-lg interactive-card">
+            <img src="{{ url_for('static', filename='img/top10.png') }}?v=1" alt="Top 10"
+                class="w-full h-full object-cover">
+        </div>
+        <span
+            class="text-[10px] md:text-xs font-black text-gray-400 group-hover:text-primary tracking-wide uppercase text-center w-16 md:w-20 leading-tight transition-colors"
+            data-translate-html="top-poland">Top
+            10<br />W Polsce</span>
+    </button>
+
+    <div class="w-[1px] h-16 bg-gradient-to-b from-transparent via-white/10 to-transparent flex-shrink-0"></div>
+
+    <!-- Dynamic Cities will be populated here by JS -->
+</div>
+
+<!-- Controls (Kebab Count) -->
+<div class="mt-4 flex items-center justify-between text-xs text-gray-400">
+    <label for="kebab-count" class="font-medium" data-translate="show-top">Show top:</label>
+    <div class="flex items-center gap-2">
+        <input type="range" id="kebab-count" min="5" max="50" value="10" step="5" class="accent-primary w-24">
+        <span id="kebab-count-value" class="text-white font-bold">10</span>
+    </div>
+</div>
+{% endblock %}
+
+{% block sidebar_content %}
+<!-- City Rankings Container -->
+<div id="city-tab" class="tab-content active space-y-4">
+    <p class="text-center text-gray-500 py-10" data-translate="search-prompt">
+        Search for a city above to see the best kebabs.
+    </p>
+</div>
+
+<!-- Global Rankings Container -->
+<div id="global-tab" class="tab-content hidden space-y-4">
+    <!-- Populated by JS -->
+</div>
+{% endblock %}
+
+{% block map_content %}
+<!-- Map Container -->
+<div id="kebab-map" class="w-full h-full z-10"></div>
+<div id="kebab-map-global" class="w-full h-full z-10 hidden"></div>
+
+<!-- Map Overlay (AI Badge) -->
+<div
+    class="absolute bottom-24 left-1/2 -translate-x-1/2 md:bottom-auto md:top-6 md:left-1/2 md:-translate-x-1/2 z-[400] pointer-events-none w-[90%] md:w-full max-w-xl px-0 md:px-4">
+    <div
+        class="bg-surface-dark/95 backdrop-blur-xl rounded-xl md:rounded-2xl p-3 md:p-4 border border-white/10 shadow-2xl pointer-events-auto relative overflow-hidden group">
+
+        <!-- Background Gradient Glow -->
+        <div
+            class="absolute top-0 right-0 w-20 h-20 md:w-32 md:h-32 bg-primary/20 blur-[30px] md:blur-[50px] rounded-full pointer-events-none -mr-5 -mt-5 md:-mr-10 md:-mt-10">
+        </div>
+
+        <div class="flex items-start gap-3 md:gap-5 relative z-10">
+            <!-- Icon -->
+            <div
+                class="w-8 h-8 md:w-12 md:h-12 rounded-lg md:rounded-xl bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center shadow-lg shrink-0 group-hover:scale-110 transition-transform duration-500 mt-1">
+                <span class="material-icons text-white text-base md:text-2xl">auto_awesome</span>
+            </div>
+
+            <!-- Content -->
+            <div class="flex-1 min-w-0 text-left">
+                <div class="flex items-center gap-2 mb-0.5 md:mb-1">
+                    <h2 class="text-xs md:text-base font-black text-white uppercase tracking-widest flex items-center gap-2"
+                        data-translate="ai-badge-title">
+                        Kebab Rank 2026
+                    </h2>
+                    <span
+                        class="bg-white/10 text-[8px] md:text-[9px] px-1 md:px-1.5 py-0 md:py-0.5 rounded text-primary font-bold border border-primary/30">AI</span>
+                </div>
+
+                <div class="text-[9px] md:text-[11px] text-gray-300 leading-snug font-medium mb-1 md:mb-2 space-y-1">
+                    <p data-translate="ai-badge-desc">
+                        Pierwszy w Polsce ranking kebabów wspierany sztuczną inteligencją, analizujący tysiące opinii
+                        Google Maps w czasie rzeczywistym.
+                    </p>
+                    <p class="text-gray-500 font-normal hidden md:block border-l border-primary/30 pl-2 italic"
+                        data-translate="ai-badge-subdesc">
+                        Odkryj najlepsze lokale serwujące doner i rzemieślniczą tortillę na podstawie sentymentu i
+                        jakości mięsa.
+                    </p>
+                </div>
+
+                <!-- Stats / Timer -->
+                <div
+                    class="flex items-center gap-3 md:gap-4 text-[9px] md:text-[10px] text-gray-400 font-mono border-t border-white/5 pt-1 md:pt-2 mt-0.5 md:mt-1">
+                    <div class="flex items-center gap-1 md:gap-1.5">
+                        <span class="w-1 md:w-1.5 h-1 md:h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                        <span class="uppercase tracking-wider" data-translate="live-analysis">Live Analysis</span>
+                    </div>
+                    <div class="flex items-center gap-1 md:gap-1.5 text-primary">
+                        <span class="material-icons text-[9px] md:text-[10px]">timer</span>
+                        <span><span data-translate="update-in">Update:</span> <span id="countdown"
+                                class="font-bold text-white">--:--:--</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Pass initial city data from Flask template to JavaScript
+    window.initialCity = "{{ initial_city if initial_city else '' }}";
+
+    // Tab switching logic adaptation
+    /* 
+       The original logic used tabs. The new design uses a "Home/Global" button 
+       vs "City Selection". We need to map `showTab('global')` and `showTab('city')`
+       to toggle visibility of `city-rankings` + `kebab-map` VS `global-rankings` + `kebab-map-global`.
+    */
+
+    // Mobile Toggle Logic
+    // Mobile View Switcher Logic
+    const btnList = document.getElementById('mobile-view-list');
+    const btnMap = document.getElementById('mobile-view-map');
+    const mapContainer = document.getElementById('map-container');
+    const sidebarContent = document.getElementById('sidebar-content').parentElement; // aside element
+
+    function switchToMap() {
+        mapContainer.classList.remove('hidden');
+        mapContainer.classList.add('flex');
+        sidebarContent.classList.add('hidden');
+
+        // LAZY INITIALIZATION for mobile
+        if (!window.kebabMap) {
+            console.log('🗺️ Lazily initializing city map on mobile request');
+            initializeMap();
+            // We need to trigger a data fetch or at least add markers if we have data
+            if (window.rankingCache && window.currentCity) {
+                const limit = document.getElementById('kebab-count')?.value || 10;
+                const lang = window.currentLang || 'pl';
+                const cacheKey = `${window.currentCity}_${limit}_${lang}`;
+                if (window.rankingCache[cacheKey]) {
+                    addKebabMarkers(window.rankingCache[cacheKey]);
+                }
+            }
+        }
+
+        // Also handle global map if needed
+        const globalTab = document.getElementById('global-tab');
+        if (globalTab && !globalTab.classList.contains('hidden') && !window.globalKebabMap) {
+            console.log('🌍 Lazily initializing global map on mobile request');
+            initializeGlobalMap();
+            if (window.globalRankingCache) {
+                addGlobalKebabMarkers(window.globalRankingCache);
+            }
+        }
+
+        // Update Buttons
+        btnMap.classList.remove('text-gray-400', 'hover:text-white');
+        btnMap.classList.add('bg-primary', 'text-white', 'shadow-lg');
+
+        btnList.classList.add('text-gray-400', 'hover:text-white');
+        btnList.classList.remove('bg-primary', 'text-white', 'shadow-lg');
+
+        // Trigger map resize to prevent gray tiles
+        if (window.kebabMap) {
+            window.kebabMap.invalidateSize();
+            if (window.currentCityBounds) {
+                setTimeout(() => {
+                    window.kebabMap.fitBounds(window.currentCityBounds, { padding: [20, 20] });
+                }, 200);
+            }
+        }
+        if (window.globalKebabMap) {
+            window.globalKebabMap.invalidateSize();
+            if (window.globalCityBounds) {
+                setTimeout(() => {
+                    window.globalKebabMap.fitBounds(window.globalCityBounds, { padding: [50, 50], maxZoom: 8 });
+                }, 200);
+            }
+        }
+    }
+
+    function switchToList() {
+        mapContainer.classList.add('hidden');
+        mapContainer.classList.remove('flex');
+        sidebarContent.classList.remove('hidden');
+
+        // Update Buttons
+        btnList.classList.remove('text-gray-400', 'hover:text-white');
+        btnList.classList.add('bg-primary', 'text-white', 'shadow-lg');
+
+        btnMap.classList.add('text-gray-400', 'hover:text-white');
+        btnMap.classList.remove('bg-primary', 'text-white', 'shadow-lg');
+    }
+
+    if (btnList && btnMap) {
+        btnList.addEventListener('click', switchToList);
+        btnMap.addEventListener('click', switchToMap);
+    }
+</script>
+{% endblock %}

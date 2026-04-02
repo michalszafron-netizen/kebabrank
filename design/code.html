@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Kebab Rank Dashboard V1</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ff6a00",
+                        "background-light": "#f8f7f5",
+                        "background-dark": "#0b1121", 
+                        "surface-dark": "#1e293b",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(255, 106, 0, 0.3);
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 106, 0, 0.6);
+        }
+        .map-bg {
+            background-color: #0b1121;
+            background-image: 
+                radial-gradient(circle at 50% 50%, #1e293b 0.5px, transparent 0.5px);
+            background-size: 30px 30px;
+        }
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.2);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover {
+            background: rgba(30, 41, 59, 0.4);
+            border-color: rgba(255, 106, 0, 0.3);
+            transform: translateY(-2px);
+        }
+        .text-gradient {
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-image: linear-gradient(to right, #ff6a00, #ff9d00);
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .ai-border {
+            border: 1px solid transparent;
+            background: linear-gradient(#1e293b, #1e293b) padding-box,
+                        linear-gradient(to right, #ff6a00, #a855f7) border-box;
+        }
+    </style>
+</head>
+<body class="bg-[#0b1121] text-white font-display h-screen w-screen overflow-hidden flex">
+<aside class="w-[40%] h-full flex flex-col border-r border-white/5 relative z-20 bg-[#0b1121]">
+<header class="sticky top-0 z-30 bg-[#0b1121] pb-4 pt-6 px-6 flex-shrink-0">
+<div class="flex items-center justify-between mb-6">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center shadow-[0_0_15px_rgba(255,106,0,0.4)]">
+<span class="material-icons text-white text-2xl">kebab_dining</span>
+</div>
+<h1 class="text-2xl font-black tracking-tighter uppercase italic">Kebab<span class="text-primary">Rank</span></h1>
+</div>
+<div class="flex items-center gap-3">
+<div class="flex items-center bg-white/5 rounded-full p-1 border border-white/10">
+<button class="w-8 h-8 rounded-full bg-primary text-xs font-bold text-white flex items-center justify-center shadow-md">PL</button>
+<button class="w-8 h-8 rounded-full text-xs font-bold text-gray-400 hover:text-white flex items-center justify-center">EN</button>
+</div>
+<div class="w-[1px] h-6 bg-white/10 mx-1"></div>
+<button class="p-2 rounded-full hover:bg-white/5 transition-colors text-gray-400 hover:text-white relative">
+<span class="material-icons">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full"></span>
+</button>
+<button class="p-2 rounded-full hover:bg-white/5 transition-colors text-gray-400 hover:text-white">
+<span class="material-icons">person</span>
+</button>
+</div>
+</div>
+<div class="relative mb-6 group">
+<span class="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors">search</span>
+<input class="w-full bg-black/20 text-white rounded-full py-3 pl-12 pr-4 border border-white/10 focus:border-primary/50 focus:outline-none transition-all placeholder-gray-500" placeholder="Search for spots, flavors, or cities..." type="text"/>
+</div>
+<div class="flex gap-4 overflow-x-auto pb-4 custom-scrollbar snap-x px-1">
+<button class="flex flex-col items-center gap-2 group min-w-[72px] snap-start">
+<div class="w-16 h-16 rounded-full border-2 border-primary bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center relative shadow-[0_0_20px_rgba(255,106,0,0.6)] group-hover:scale-105 transition-transform">
+<span class="material-icons text-primary text-3xl">emoji_events</span>
+<div class="absolute -top-1 -right-1 w-5 h-5 bg-white text-primary rounded-full text-[10px] font-bold flex items-center justify-center shadow-lg border border-primary">PL</div>
+</div>
+<span class="text-xs font-black text-primary tracking-wide uppercase text-center w-20 leading-tight">Top 10<br/>W Polsce</span>
+</button>
+<div class="w-[1px] h-16 bg-gradient-to-b from-transparent via-white/10 to-transparent flex-shrink-0"></div>
+<button class="flex flex-col items-center gap-2 group min-w-[64px] snap-start">
+<div class="w-16 h-16 rounded-full border-2 border-green-500 p-0.5 relative group-hover:border-primary transition-colors">
+<img alt="Warsaw cityscape at night" class="w-full h-full rounded-full object-cover grayscale-0 group-hover:brightness-110 transition-all" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB3aspnv0AuU48tKvkCNqJpyVSxTzIi_g0Pjh8ywevD5iwgXDHYOkBvttDDVbI6VeRh2FaPVk9S9iF7KNdYt7xygMSj31f4cisrOQ9-satFaUnmXzCecQXxiyav1khm9uFtEp--3SauOtj_j6_Sar-uH58ZpJuS5QlxdPfTeaSJ5Aqvb2DuOvt2JKot2bfpFIURljf6beVPUaqKi17sNZcHBA77ytrwbTJ7NVeGru69qG-JhbSgaADYNEp4Yox8Y9E8WgduzMI2LEM"/>
+<div class="absolute bottom-0 right-0 w-4 h-4 bg-green-500 rounded-full border-2 border-background-dark"></div>
+</div>
+<span class="text-xs font-bold text-white tracking-wide uppercase">Warszawa</span>
+</button>
+<button class="flex flex-col items-center gap-2 group min-w-[64px] snap-start opacity-70 hover:opacity-100 transition-opacity">
+<div class="w-16 h-16 rounded-full border border-white/10 group-hover:border-primary/50 p-0.5 transition-all">
+<img alt="Krakow main square details" class="w-full h-full rounded-full object-cover grayscale hover:grayscale-0 transition-all" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB48Uijb7--zvZ3veKTYpurRMFOwrGACH5KQcqnirp5mXLskJ6X99bCfgFOjUlUhZ6MXdBS2N6KNXdbxryYHbGux6IcfOch0cHez2IAMvE1GpY2zyl4TLREsvuz70PAV66qlM6WmlJJdhTeXxxkrdLFYrY2NiF75vn87WQYO7Gk5ThcCkExZdJ6HI6UjQ7B4ZN9_WZmOaZDbrDOdgZzDa9QUeCkoN_IM-LNivNzSVoY3QbjI5lqsjRAKq3yNNOwPvsGFghYN4CeYlY"/>
+</div>
+<span class="text-xs font-medium text-gray-400 group-hover:text-white uppercase">Kraków</span>
+</button>
+<button class="flex flex-col items-center gap-2 group min-w-[64px] snap-start opacity-70 hover:opacity-100 transition-opacity">
+<div class="w-16 h-16 rounded-full border border-white/10 group-hover:border-primary/50 p-0.5 transition-all">
+<img alt="Wroclaw architecture details" class="w-full h-full rounded-full object-cover grayscale hover:grayscale-0 transition-all" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdVDw4PtnBjwen6IUz-KB2vV7bYM8pUt_poMiQo8bGbHj38ZZpQMrroHGMf4Cmv-g4Ls9jlTIU4j_S-VDIMAIkt-NVCUCkAPZkOJuAoPuCOpmZv8FYD2h0Hagv2YHvbWyaWRVBKV3xVFxBSZDlDs21gZJqUakB0cBPPczTLv9eulAMHnHk-yMGTFKoAF6xWUSSWPQBzDSZ_j_XyL6l1UUYl6h1q7YllxgaEWIzQxV7-iL5Q3lbMNYqb2yyDP9h18v7wm1ea2q8Bck"/>
+</div>
+<span class="text-xs font-medium text-gray-400 group-hover:text-white uppercase">Wrocław</span>
+</button>
+<button class="flex flex-col items-center gap-2 group min-w-[64px] snap-start opacity-70 hover:opacity-100 transition-opacity">
+<div class="w-16 h-16 rounded-full border border-white/10 group-hover:border-primary/50 p-0.5 transition-all">
+<img alt="Gdansk waterfront buildings" class="w-full h-full rounded-full object-cover grayscale hover:grayscale-0 transition-all" src="https://lh3.googleusercontent.com/aida-public/AB6AXuACgdcT_-Z0kVCv14YCZkmmKLER-0NaPeLtBBjZXPQuRWdcfCDcCtkFo0iyhzS0ip0tl8KbfLk9ZVbTev5AFm5irEybu_h5C3hQrXvqYv6cCiz6nou3S20irfvvx0mUTB1kOjp-Ao1A3OsBYBQ3NSrMnEQ-4bFzKk0u2S0EHipdBkOTi70hqYTM3oZHbsILZDBPYm6CkVOIkdK95QO35Rbk-oQG_DqCGcwn3t7DTEtjQn6YsgwwOYR9VAPnuKxFgyeRDAbVde_mdQM"/>
+</div>
+<span class="text-xs font-medium text-gray-400 group-hover:text-white uppercase">Gdańsk</span>
+</button>
+<button class="flex flex-col items-center gap-2 group min-w-[64px] snap-start opacity-70 hover:opacity-100 transition-opacity">
+<div class="w-16 h-16 rounded-full border border-white/10 group-hover:border-primary/50 p-0.5 transition-all flex items-center justify-center bg-surface-dark/50">
+<span class="material-icons text-3xl text-gray-600 group-hover:text-primary">location_city</span>
+</div>
+<span class="text-xs font-medium text-gray-400 group-hover:text-white uppercase">Poznań</span>
+</button>
+</div>
+</header>
+<div class="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-4">
+<div class="glass-card rounded-xl p-4 flex gap-4 relative overflow-hidden group">
+<div class="absolute top-4 left-4 bg-yellow-500 text-black font-black text-[10px] px-2 py-0.5 rounded flex items-center gap-1 z-20">
+<span class="material-icons text-[10px]">emoji_events</span> #1
+            </div>
+<div class="w-28 h-28 shrink-0 rounded-lg overflow-hidden shadow-lg">
+<img alt="Juicy doner kebab" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPZml7HBCvOmxHc3pErimDG6i7ruSOL6NrxB8S8CkUtAIZ9sjOe5U0TSzY4AbGN8NSPkGQZHCdrnALIQoLgGNrze3MwVl9x7OGSn2Gz7CvsUTB4izX8Xatv_tIbLYX6kiuSDVdT3HoS7MKLCnQparIKmg8UVIl7QU1CTAKEBVF9M8_NiLS2ccsanJPm-7kevE10rqP_NKMyBgiXUpcsUtj4e9eJlwKM02h-oL83bYxG2QwVRiuDKWgPfePcvFNWLVGzfpHYYn_Nl4"/>
+</div>
+<div class="flex-1 flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start">
+<h3 class="text-lg font-bold text-white group-hover:text-primary transition-colors">Sultan's Palace</h3>
+<span class="text-xs font-bold bg-primary/20 px-2 py-0.5 rounded text-primary border border-primary/20">9.8</span>
+</div>
+<p class="text-[10px] text-gray-400 mt-1 flex items-center gap-1">
+<span class="material-icons text-[10px]">place</span> Marszałkowska 14, Warsaw
+                    </p>
+</div>
+<div class="mt-2">
+<div class="flex flex-wrap gap-2 mb-2">
+<span class="text-[9px] font-bold uppercase tracking-wider text-primary bg-primary/10 px-2 py-1 rounded border border-primary/20">SPICY MEAT</span>
+<span class="text-[9px] font-bold uppercase tracking-wider text-blue-400 bg-blue-500/10 px-2 py-1 rounded border border-blue-500/20">FRESH BREAD</span>
+</div>
+<div class="flex flex-col gap-1.5">
+<div class="flex justify-between text-[9px] text-gray-400">
+<span>Wynik 98.9 • Ocena ⭐ 4.9 • Opinie 89 • Wynik AI 100.0</span>
+</div>
+<div class="w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
+<div class="bg-gradient-to-r from-yellow-400 to-primary h-full rounded-full" style="width: 98%"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="glass-card rounded-xl p-4 flex gap-4 relative overflow-hidden group">
+<div class="absolute top-4 left-4 bg-gray-400 text-black font-black text-[10px] px-2 py-0.5 rounded flex items-center gap-1 z-20">
+<span class="material-icons text-[10px]">emoji_events</span> #2
+            </div>
+<div class="w-28 h-28 shrink-0 rounded-lg overflow-hidden shadow-lg">
+<img alt="Plated kebab" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDoW-HZwdLEL_R3v38IwEthutkIO7aQqfLAd-cZQd9kDbfupYOx8m35ACOSHPWpwWynn8BGp4EFv_KoO-gfJQU3jwNfoRFlIQAXIRYt7TDhYcSGrZWOifm9TVw9xeODCnN9DCDs90WP_oElAt1ge8CGN89uyQ3lHRJDkOx27XrcrsJIlWwxL_CnemSQm4eKKKODZxRnH-IllpqOCUYzhkkH6nsg9xsOj-JhOPfIqWOi01fdpuqLUH3CzLyayE_H-DV_ZByIpC8mVBc"/>
+</div>
+<div class="flex-1 flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start">
+<h3 class="text-lg font-bold text-white group-hover:text-primary transition-colors">Kebab King</h3>
+<span class="text-xs font-bold bg-primary/20 px-2 py-0.5 rounded text-primary border border-primary/20">9.5</span>
+</div>
+<p class="text-[10px] text-gray-400 mt-1 flex items-center gap-1">
+<span class="material-icons text-[10px]">place</span> Jana Pawła II 45
+                    </p>
+</div>
+<div class="mt-2">
+<div class="flex flex-wrap gap-2 mb-2">
+<span class="text-[9px] font-bold uppercase tracking-wider text-primary bg-primary/10 px-2 py-1 rounded border border-primary/20">XXX SAUCE</span>
+<span class="text-[9px] font-bold uppercase tracking-wider text-green-400 bg-green-500/10 px-2 py-1 rounded border border-green-500/20">HUGE PORTIONS</span>
+</div>
+<div class="flex flex-col gap-1.5">
+<div class="flex justify-between text-[9px] text-gray-400">
+<span>Wynik 94.5 • Ocena ⭐ 4.7 • Opinie 124 • Wynik AI 96.0</span>
+</div>
+<div class="w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
+<div class="bg-gradient-to-r from-gray-400 to-primary h-full rounded-full" style="width: 95%"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="glass-card rounded-xl p-4 flex gap-4 relative overflow-hidden group">
+<div class="absolute top-4 left-4 bg-orange-700 text-white font-black text-[10px] px-2 py-0.5 rounded flex items-center gap-1 z-20">
+<span class="material-icons text-[10px]">emoji_events</span> #3
+            </div>
+<div class="w-28 h-28 shrink-0 rounded-lg overflow-hidden shadow-lg">
+<img alt="Kebab in pita" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuADYe3GjyS8ga2Zafkn4cidM7UbU7iC5osZD5vakOVu9D2LTx4r2SIiyx6DUiM7eXo9QwnyFPwGaM5akuPIRHMNAsxgeQOfBkEXrmt3Yg05oI2IAVKn5PCINEUWZtG1pk9ZK0AHYSbKAIP72ZQ3UVtLHwEMMmaaotGFVEYwLKmDnSDKPdyAAPT0Wr6_F1LljUVxQxm-GGfWWIQQaeSOwNZhSby31midYBTX8BTvheckhz87KgKZ5Ef1oMBgkLoDW2MDxcPL1Ydt3j0"/>
+</div>
+<div class="flex-1 flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start">
+<h3 class="text-lg font-bold text-white group-hover:text-primary transition-colors">Habibi Kebab</h3>
+<span class="text-xs font-bold bg-primary/20 px-2 py-0.5 rounded text-primary border border-primary/20">9.2</span>
+</div>
+<p class="text-[10px] text-gray-400 mt-1 flex items-center gap-1">
+<span class="material-icons text-[10px]">place</span> Chmielna 21
+                    </p>
+</div>
+<div class="mt-2">
+<div class="flex flex-col gap-1.5">
+<div class="flex justify-between text-[9px] text-gray-400">
+<span>Wynik 91.2 • Ocena ⭐ 4.5 • Opinie 64 • Wynik AI 92.5</span>
+</div>
+<div class="w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
+<div class="bg-gradient-to-r from-orange-800 to-primary/50 h-full rounded-full" style="width: 92%"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</aside>
+<main class="w-[60%] h-full relative map-bg overflow-hidden flex flex-col">
+<div class="p-6 pb-0 z-30">
+<div class="ai-border rounded-xl p-0.5 relative overflow-hidden">
+<div class="bg-surface-dark/90 backdrop-blur-xl rounded-[10px] p-4 relative z-10">
+<div class="flex items-start gap-4">
+<div class="w-12 h-12 rounded-lg bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center shadow-lg shrink-0">
+<span class="material-icons text-white text-2xl">auto_awesome</span>
+</div>
+<div class="flex-1">
+<h3 class="text-sm font-bold text-white mb-1 uppercase tracking-wide flex items-center gap-2">
+                            AI Powered Analysis
+                            <span class="bg-white/10 text-[10px] px-1.5 py-0.5 rounded text-primary font-bold border border-primary/30">BETA</span>
+</h3>
+<p class="text-xs text-gray-300 leading-relaxed font-light">
+                            Pierwszy w Polsce ranking kebabów wspierany sztuczną inteligencją. Analizujemy tysiące opinii w czasie rzeczywistym.
+                        </p>
+<div class="mt-3 flex items-center justify-between text-[10px] text-gray-400 bg-black/20 py-1.5 px-3 rounded-md border border-white/5">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-green-500"></span>
+                                Dane rankingowe odświeżane co 7 dni
+                            </div>
+<div class="flex items-center gap-2">
+<span class="material-icons text-[12px] text-primary">schedule</span>
+<span class="font-mono text-primary font-bold uppercase">Next update: 01:22:14</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="flex-1 relative">
+<div class="absolute inset-0 bg-slate-900/40 pointer-events-none"></div>
+<div class="absolute inset-0 opacity-20 mix-blend-screen pointer-events-none">
+<img class="w-full h-full object-cover grayscale brightness-50" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBVwNzkPkpTPB7Aas1A3riUsYSnjJa_8c-DheYSB63gaN9pMFR_0xSmACuC6SU3s6bzbgeaPQSck-ehGfLQyYcIDBGECwQzEL0i2gJrtEvaJ9KcpLpZjqCkItHq14zbXZIxkSH9rbSn2oHJ0zJIb6a3Lpgd8s_uktNRqR_NO63OnwjzgayOK3fJU53w2QQu05af-7pbD3djio9cvSiYEKh9xQGSvf1muQpcu0-NGtfGgoPZ2xzPdA2lnaME5AJ56rbNYXpO8isrTXs"/>
+</div>
+<div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-2 z-20 cursor-pointer">
+<div class="relative">
+<div class="absolute inset-0 bg-yellow-500/30 blur-xl rounded-full animate-pulse"></div>
+<div class="w-12 h-12 rounded-full bg-gradient-to-b from-yellow-300 to-yellow-600 border-4 border-background-dark shadow-2xl flex items-center justify-center relative z-10">
+<span class="material-icons text-background-dark text-2xl">emoji_events</span>
+</div>
+<div class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[10px] border-t-yellow-600"></div>
+</div>
+<div class="bg-black/80 backdrop-blur px-3 py-1.5 rounded-lg text-center shadow-2xl">
+<p class="text-xs font-bold text-yellow-400">#1 Sultan's Palace</p>
+<p class="text-[9px] text-gray-300">9.8 • Spicy Meat</p>
+</div>
+</div>
+<div class="absolute top-[48%] left-[65%] flex flex-col items-center gap-1 z-10 cursor-pointer">
+<div class="relative">
+<div class="w-8 h-8 rounded-full bg-primary border-2 border-white shadow-lg flex items-center justify-center">
+<span class="font-bold text-white text-xs">2</span>
+</div>
+<div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[5px] border-l-transparent border-r-[5px] border-r-transparent border-t-[7px] border-t-primary"></div>
+</div>
+<div class="bg-black/80 backdrop-blur px-2 py-1 rounded text-center">
+<p class="text-[10px] font-bold text-white">Kebab King</p>
+</div>
+</div>
+<div class="absolute bottom-24 right-8 flex flex-col gap-3 z-30">
+<button class="w-10 h-10 rounded-lg bg-surface-dark/90 hover:bg-primary text-white shadow-lg flex items-center justify-center transition-all border border-white/10">
+<span class="material-icons text-xl">my_location</span>
+</button>
+<div class="flex flex-col rounded-lg bg-surface-dark/90 border border-white/10 overflow-hidden shadow-lg">
+<button class="w-10 h-10 hover:bg-white/10 text-white flex items-center justify-center border-b border-white/10 transition-colors">
+<span class="material-icons text-xl">add</span>
+</button>
+<button class="w-10 h-10 hover:bg-white/10 text-white flex items-center justify-center transition-colors">
+<span class="material-icons text-xl">remove</span>
+</button>
+</div>
+</div>
+<div class="absolute bottom-24 left-8 z-30">
+<div class="bg-black/80 backdrop-blur-md p-4 rounded-xl flex flex-col gap-3 border border-white/5">
+<div class="flex items-center gap-3">
+<div class="w-3 h-3 rounded-full bg-yellow-500 shadow-[0_0_8px_rgba(234,179,8,0.8)]"></div>
+<span class="text-[11px] font-bold text-gray-200">#1 Champion</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-3 h-3 rounded-full bg-primary shadow-[0_0_8px_rgba(255,106,0,0.8)]"></div>
+<span class="text-[11px] font-medium text-gray-300">Top 10</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-3 h-3 rounded-full border border-gray-500"></div>
+<span class="text-[11px] font-medium text-gray-400">Others</span>
+</div>
+</div>
+</div>
+</div>
+<footer class="glass-panel border-t border-white/5 p-4 z-40 bg-background-dark/80 backdrop-blur-md">
+<div class="flex items-center justify-between px-4">
+<div class="flex items-center gap-4">
+<a class="text-gray-400 hover:text-white transition-colors" href="#">
+<svg class="w-4 h-4 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"></path></svg>
+</a>
+<a class="text-gray-400 hover:text-white transition-colors" href="#">
+<svg class="w-4 h-4 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036c-2.048 0-2.733.984-2.733 2.583v1.39h3.825l-.574 3.667h-3.251v7.98h-5.08z"></path></svg>
+</a>
+<a class="text-gray-400 hover:text-white transition-colors" href="#">
+<svg class="w-4 h-4 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.262 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16c-2.209 0-4-1.791-4-4s1.791-4 4-4 4 1.791 4 4-1.791 4-4 4zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"></path></svg>
+</a>
+<a class="text-gray-400 hover:text-white transition-colors" href="#">
+<svg class="w-4 h-4 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"></path></svg>
+</a>
+</div>
+<div class="flex gap-4 text-[11px] text-gray-500 font-medium">
+<a class="hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<span class="text-white/10">•</span>
+<a class="hover:text-primary transition-colors" href="#">Terms of Use</a>
+<span class="text-white/10">•</span>
+<span class="text-gray-600">© 2023 KebabRank</span>
+</div>
+</div>
+</footer>
+</main>
+
+</body></html>

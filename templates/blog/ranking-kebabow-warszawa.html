@@ -1,0 +1,233 @@
+{% extends "base.html" %}
+
+{# ---------- SEO overrides ---------- #}
+{% block title %}Ranking kebabów w Warszawie 2025 - TOP 10 | Kebab Rank{% endblock %}
+{% block description %}Najlepsze kebaby w Warszawie według ocen Google. Sprawdź aktualny ranking TOP 10 kebabów w
+stolicy z cenami i opiniami.{% endblock %}
+{% block keywords %}kebab warszawa ranking, najlepszy kebab warszawa, gdzie na kebaba warszawa, dobry kebab warszawa{%
+endblock %}
+
+{% block canonical %}https://kebabrank.com/blog/ranking-kebabow-warszawa{% endblock %}
+{% block og_title %}Ranking kebabów w Warszawie - TOP 10 2024{% endblock %}
+{% block og_description %}Odkryj najlepsze kebaby w Warszawie. Aktualny ranking, oceny i opinie.{% endblock %}
+{% block og_image %}https://kebabrank.com/static/img/blog/warszawa.jpg{% endblock %}
+{% block og_url %}https://kebabrank.com/blog/ranking-kebabow-warszawa{% endblock %}
+
+{# Twitter = same values #}
+{% block tw_title %}{{ self.og_title() }}{% endblock %}
+{% block tw_desc %}{{ self.og_description() }}{% endblock %}
+{% block tw_image %}{{ self.og_image() }}{% endblock %}
+{% block tw_url %}{{ self.og_url() }}{% endblock %}
+
+{% block content %}
+<!-- Main Container -->
+<div class="h-full w-full overflow-y-auto bg-background-dark flex justify-center">
+
+    <!-- Central Column: Article Content -->
+    <div class="w-full max-w-4xl bg-[#0f172a] border-x border-white/5 relative z-20 shadow-2xl min-h-screen">
+        <!-- Navbar (Sticky) -->
+        <header
+            class="sticky top-0 z-50 bg-surface-dark/95 backdrop-blur-md border-b border-white/5 px-6 py-4 flex items-center justify-between">
+            <a href="/" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
+                <div
+                    class="w-8 h-8 rounded-md bg-primary flex items-center justify-center shadow-[0_0_10px_rgba(255,106,0,0.4)]">
+                    <span class="material-icons text-white text-lg">kebab_dining</span>
+                </div>
+                <h1 class="text-xl font-black tracking-tighter uppercase italic text-white hidden sm:block">
+                    Kebab<span class="text-primary">Rank</span> <span
+                        class="text-gray-500 text-xs not-italic ml-2 font-medium">Blog</span>
+                </h1>
+            </a>
+            <a href="/blog"
+                class="text-gray-400 hover:text-white transition-colors flex items-center gap-2 font-bold text-xs uppercase tracking-wider">
+                <span class="material-icons text-sm">arrow_back</span>
+                <span data-translate="back">Wróć</span>
+            </a>
+        </header>
+
+        <article class="p-6 md:p-12 pb-24">
+            <!-- Article Header -->
+            <div class="mb-10">
+                <h1 class="text-3xl md:text-5xl font-black text-white mb-4 leading-tight">Ranking kebabów w Warszawie –
+                    TOP 10 w 2025</h1>
+                <div class="flex flex-wrap gap-4 items-center text-xs text-gray-400 font-mono">
+                    <span
+                        class="bg-primary/10 text-primary px-3 py-1 rounded-full border border-primary/20">Warszawa</span>
+                    <span class="flex items-center gap-1"><span class="material-icons text-sm">schedule</span> {{
+                        current_date }}</span>
+                    <span class="flex items-center gap-1"><span class="material-icons text-sm">visibility</span> 2.4k
+                        wyświetleń</span>
+                </div>
+            </div>
+
+            <!-- Lead Text -->
+            <p
+                class="text-lg text-gray-300 leading-relaxed mb-10 font-light border-l-4 border-primary pl-6 bg-white/5 py-4 rounded-r-lg">
+                Warszawa, jako stolica Polski, oferuje ogromny wybór kebabów. Od luksusowych restauracji po małe budki -
+                każdy znajdzie coś dla siebie. Przygotowaliśmy kompleksowy ranking najlepszych kebabów w Warszawie!
+            </p>
+
+            <!-- TOC -->
+            <div class="bg-black/40 rounded-xl p-6 mb-10 border border-white/10">
+                <h2
+                    class="text-sm font-bold text-white mb-4 flex items-center gap-2 uppercase tracking-widest text-primary/80">
+                    <span class="material-icons text-base">list</span> Spis treści
+                </h2>
+                <ul class="space-y-3 text-sm font-medium text-gray-400">
+                    <li><a href="#najlepsze"
+                            class="hover:text-white hover:translate-x-1 transition-all flex items-center gap-3"><span
+                                class="w-1.5 h-1.5 rounded-full bg-primary"></span> Najlepsze kebaby w Warszawie</a>
+                    </li>
+                    <li><a href="#dzielnice"
+                            class="hover:text-white hover:translate-x-1 transition-all flex items-center gap-3"><span
+                                class="w-1.5 h-1.5 rounded-full bg-gray-600"></span> Kebaby według dzielnic</a></li>
+                    <li><a href="#ceny"
+                            class="hover:text-white hover:translate-x-1 transition-all flex items-center gap-3"><span
+                                class="w-1.5 h-1.5 rounded-full bg-gray-600"></span> Ceny kebabów w Warszawie</a></li>
+                    <li><a href="#typy"
+                            class="hover:text-white hover:translate-x-1 transition-all flex items-center gap-3"><span
+                                class="w-1.5 h-1.5 rounded-full bg-gray-600"></span> Rodzaje kebabów</a></li>
+                    <li><a href="#porady"
+                            class="hover:text-white hover:translate-x-1 transition-all flex items-center gap-3"><span
+                                class="w-1.5 h-1.5 rounded-full bg-gray-600"></span> Porady dla smakoszy</a></li>
+                </ul>
+            </div>
+
+            <!-- Content Sections -->
+            <div class="space-y-16">
+                <section id="najlepsze" class="group">
+                    <h2
+                        class="text-2xl font-bold text-white mb-4 group-hover:text-primary transition-colors flex items-center gap-3">
+                        <span class="material-icons text-yellow-500">emoji_events</span> Najlepsze kebaby
+                    </h2>
+                    <p class="text-gray-400 leading-relaxed mb-6">
+                        Warszawa może się pochwalić różnorodnością kebabów - od tradycyjnych tureckich po nowoczesne
+                        fusion.
+                        Nasz ranking bazuje na ocenach Google i jest aktualizowany co tydzień.
+                    </p>
+                    <div class="grid gap-6 mb-10">
+                        {% for kebab in kebab_places[:3] %}
+                        <a href="/warszawa"
+                            class="bg-white/5 border border-white/10 rounded-xl p-4 flex items-center gap-4 hover:bg-white/10 transition-all hover:scale-[1.02] active:scale-[0.98] group">
+                            <div class="text-4xl">
+                                {% if loop.index == 1 %}🏆{% elif loop.index == 2 %}🥈{% else %}🥉{% endif %}
+                            </div>
+                            <div class="flex-1">
+                                <h3 class="text-xl font-bold text-white group-hover:text-primary transition-colors">{{
+                                    kebab.name }}</h3>
+                                <p class="text-gray-400 text-sm">{{ kebab.address }}</p>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-primary font-black text-2xl">{{ "%.1f"|format(kebab.rank_score) if
+                                    kebab.rank_score else "N/A" }}</div>
+                                <div class="text-xs text-gray-500 uppercase">PKT</div>
+                            </div>
+                        </a>
+                        {% endfor %}
+                    </div>
+                    class="p-6 bg-gradient-to-br from-primary/20 to-orange-600/10 border border-primary/30 rounded-xl
+                    flex items-center justify-between gap-4">
+                    <div>
+                        <h3 class="text-white font-bold text-lg">Zobacz ranking LIVE</h3>
+                        <p class="text-gray-400 text-sm">Aktualne oceny, zdjęcia i menu.</p>
+                    </div>
+                    <a href="/warszawa"
+                        class="bg-primary hover:bg-orange-600 text-white px-5 py-2.5 rounded-lg font-bold text-sm shadow-lg shadow-primary/20 transition-all transform hover:scale-105">
+                        Otwórz Ranking
+                    </a>
+            </div>
+            </section>
+
+            <section id="dzielnice">
+                <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                    <span class="material-icons text-red-500">place</span> Według Dzielnic
+                </h2>
+                <div class="grid grid-cols-1 gap-4">
+                    <div class="bg-white/5 hover:bg-white/10 p-5 rounded-xl border border-white/5 transition-all">
+                        <h3 class="text-lg font-bold text-white mb-1">Śródmieście</h3>
+                        <p class="text-sm text-gray-400">Centrum to raj dla smakoszy. Szybkie punkty i restauracje
+                            premium.</p>
+                    </div>
+                    <div class="bg-white/5 hover:bg-white/10 p-5 rounded-xl border border-white/5 transition-all">
+                        <h3 class="text-lg font-bold text-white mb-1">Mokotów</h3>
+                        <p class="text-sm text-gray-400">Biznesowe lunche i zestawy obiadowe w dobrej cenie.</p>
+                    </div>
+                    <div class="bg-white/5 hover:bg-white/10 p-5 rounded-xl border border-white/5 transition-all">
+                        <h3 class="text-lg font-bold text-white mb-1">Praga</h3>
+                        <p class="text-sm text-gray-400">Autentyczny klimat i tradycyjne smaki.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="ceny">
+                <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                    <span class="material-icons text-green-500">payments</span> Ceny (2025)
+                </h2>
+                <div class="overflow-hidden rounded-xl border border-white/10">
+                    <table class="w-full text-sm text-left">
+                        <tbody class="divide-y divide-white/5 bg-black/20">
+                            <tr class="hover:bg-white/5">
+                                <td class="p-4 text-gray-300">Mały w bułce</td>
+                                <td class="p-4 font-mono text-primary text-right font-bold">18-23 zł</td>
+                            </tr>
+                            <tr class="hover:bg-white/5">
+                                <td class="p-4 text-gray-300">Duży w bułce</td>
+                                <td class="p-4 font-mono text-primary text-right font-bold">23-30 zł</td>
+                            </tr>
+                            <tr class="hover:bg-white/5">
+                                <td class="p-4 text-gray-300">Rollo (Tortilla)</td>
+                                <td class="p-4 font-mono text-primary text-right font-bold">20-28 zł</td>
+                            </tr>
+                            <tr class="hover:bg-white/5">
+                                <td class="p-4 text-gray-300">Kebab Box</td>
+                                <td class="p-4 font-mono text-primary text-right font-bold">25-35 zł</td>
+                            </tr>
+                            <tr class="hover:bg-white/5">
+                                <td class="p-4 text-gray-300">Talerz</td>
+                                <td class="p-4 font-mono text-primary text-right font-bold">30-45 zł</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="porady">
+                <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                    <span class="material-icons text-blue-500">tips_and_updates</span> Pro Tips
+                </h2>
+                <ul class="space-y-4">
+                    <li class="flex gap-4">
+                        <span
+                            class="w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-sm shrink-0">1</span>
+                        <p class="text-gray-300 text-sm pt-1">Sprawdź świeżość pieczywa - to podstawa.</p>
+                    </li>
+                    <li class="flex gap-4">
+                        <span
+                            class="w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-sm shrink-0">2</span>
+                        <p class="text-gray-300 text-sm pt-1">Sos mieszany (ostry + łagodny) daje najlepszy balans.
+                        </p>
+                    </li>
+                </ul>
+            </section>
+    </div>
+
+    <!-- Footer -->
+    <div class="mt-20 pt-10 border-t border-white/10 text-center">
+        <h3 class="text-2xl font-black text-white mb-4">Zgłodniałeś?</h3>
+        <p class="text-gray-400 mb-8">Sprawdź, co polecają inni w Twojej okolicy.</p>
+        <div class="flex flex-col gap-3">
+            <a href="/warszawa"
+                class="w-full bg-primary hover:bg-orange-600 text-white py-4 rounded-xl font-black text-lg shadow-xl shadow-primary/20 transition-all transform hover:scale-[1.02]">
+                🔥 Zobacz Ranking Warszawa TOP 10
+            </a>
+            <a href="/"
+                class="w-full bg-white/5 hover:bg-white/10 text-gray-300 py-4 rounded-xl font-bold transition-colors">
+                Inne miasta
+            </a>
+        </div>
+    </div>
+    </article>
+</div>
+
+</div>
+{% endblock %}

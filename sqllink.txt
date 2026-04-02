@@ -1,0 +1,5 @@
+postgresql://postgres:Jebacsql@23@db.shimhhadhsntguwubeiv.supabase.co:5432/postgres
+postgresql://postgres.shimhhadhsntguwubeiv:Jebacsql@23@aws-0-eu-north-1.pooler.supabase.com:5432/postgres
+
+
+docker compose -f docker-compose.prod.yml up -d pb-gateway

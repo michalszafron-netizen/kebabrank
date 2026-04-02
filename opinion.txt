@@ -1,0 +1,19 @@
+Based on an analysis of the scraped content from https://www.kebabrank.com/, here are three significant SEO areas you can realistically improve in one day:
+
+**1. Add a Compelling Meta Description**
+The page is missing a meta description. This is a critical SEO element that directly impacts click-through rates from search results.
+*   **Problem:** Search engines will likely pull a random snippet of text from your page, which may not be compelling or relevant to a user's search for "kebab ranking Poland".
+*   **One-Day Fix:** Write a concise, engaging meta description (around 155-160 characters) that includes your primary keywords. Example: "Odkryj najlepsze kebaby w Polsce! Kebab Rank 2026 to pierwszy w kraju ranking kebabów wspierany przez sztuczn? inteligencj?. Znajd? swój ulubiony lokal!" Add this to the `<head>` section of your homepage's HTML.
+
+**2. Optimize On-Page Content and Headings**
+The visible text content is extremely sparse, making it difficult for Google to understand what the page is about and rank it for relevant keywords.
+*   **Problem:** The homepage relies almost entirely on a map and has very little indexable text content. There is no `<h1>` tag, and the content lacks depth and keyword relevance.
+*   **One-Day Fix:**
+    *   Add an `<h1>` tag to the page, such as "Ranking Najlepszych Kebabów w Polsce 2026".
+    *   Write a short introductory paragraph (150-200 words) below the H1. Explain what Kebab Rank is, how the AI-powered analysis works, and what users can find on the site. Naturally use keywords like "ranking kebabów", "najlepszy kebab", and "Polska".
+    *   Ensure the page title (`<title>` tag) is optimized and unique, for example: "Kebab Rank 2026 - Ranking Najlepszych Kebabów w Polsce | Wspierany AI".
+
+**3. Implement Structured Data (Schema.org)**
+The page lacks structured data, which is a missed opportunity to enhance how your site appears in search results with rich snippets.
+*   **Problem:** Without structured data, Google can't easily understand the context of your rankings. You're missing the chance to appear with star ratings, location details, or other rich features directly in the search results page.
+*   **One-Day Fix:** Add `LocalBusiness` or `Restaurant` schema markup for the kebab joints you rank. Even a basic implementation for a few top-ranked locations would be a huge step. You can use Google's Rich Results Test to validate the markup. This tells search engines explicitly that your content is a list of businesses with ratings and locations, significantly improving your visibility.

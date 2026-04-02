@@ -1,0 +1,19 @@
+{
+  "timestamp": "2025-09-24T19:10:01.428529",
+  "backup_file": "kebab_places_backup_20250924_191001.json",
+  "issues_fixed": 1,
+  "issues_skipped": 0,
+  "errors": [],
+  "fixed_issues": [
+    {
+      "kebab_id": 524,
+      "kebab_name": "Bafra Kebab",
+      "address": "Wrocławska 15, 15-644 Białystok, Poland",
+      "assigned_city": "Wrocław",
+      "assigned_city_id": 4,
+      "mentioned_city": "Białystok",
+      "mentioned_city_id": 10,
+      "confidence": "medium"
+    }
+  ]
+}

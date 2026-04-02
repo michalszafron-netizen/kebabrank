@@ -1,0 +1,142 @@
+{
+  "timestamp": "2025-09-24T19:06:27.781994",
+  "stats": {
+    "total_kebabs": 1000,
+    "total_issues": 12,
+    "affected_cities": 5,
+    "most_common_mixes": {
+      "Wrocław → Kraków": 2,
+      "Poznań → Wrocław": 2,
+      "Bydgoszcz → Gdańsk": 2,
+      "Włocławek → Toruń": 1,
+      "Wrocław → Poznań": 1,
+      "Białystok → Wrocław": 1,
+      "Legnica → Wrocław": 1,
+      "Radom → Toruń": 1,
+      "Rzeszów → Gdańsk": 1
+    }
+  },
+  "issues": [
+    {
+      "kebab_id": 72,
+      "kebab_name": "Maas Kebab",
+      "address": "Wrocławska 31, 30-011 Kraków, Poland",
+      "assigned_city": "Kraków",
+      "assigned_city_id": 2,
+      "mentioned_city": "Wrocław",
+      "mentioned_city_id": 4,
+      "confidence": "medium"
+    },
+    {
+      "kebab_id": 89,
+      "kebab_name": "Moza kebab",
+      "address": "Wrocławska 76, 30-017 Kraków, Poland",
+      "assigned_city": "Kraków",
+      "assigned_city_id": 2,
+      "mentioned_city": "Wrocław",
+      "mentioned_city_id": 4,
+      "confidence": "medium"
+    },
+    {
+      "kebab_id": 1280,
+      "kebab_name": "LUX-KEBAB",
+      "address": "Toruńska 46, 87-816 Włocławek, Poland",
+      "assigned_city": "Toruń",
+      "assigned_city_id": 17,
+      "mentioned_city": "Włocławek",
+      "mentioned_city_id": 35,
+      "confidence": "medium"
+    },
+    {
+      "kebab_id": 200,
+      "kebab_name": "Kebab 365",
+      "address": "Poznańska 20C, 53-630 Wrocław, Poland",
+      "assigned_city": "Poznań",
+      "assigned_city_id": 5,
+      "mentioned_city": "Wrocław",
+      "mentioned_city_id": 4,
+      "confidence": "medium"
+    },
+    {
+      "kebab_id": 268,
+      "kebab_name": "Kura Warzyw Gemüse Kebab",
+      "address": "Wrocławska 20, 61-838 Poznań, Poland",
+      "assigned_city": "Wrocław",
+      "assigned_city_id": 4,
+      "mentioned_city": "Poznań",
+      "mentioned_city_id": 5,
+      "confidence": "medium"
+    },
+    {
+      "kebab_id": 271,
+      "kebab_name": "Zahir Kebab",
+      "address": "Wrocławska 14, 61-838 Poznań, Poland",
+      "assigned_city": "Wrocław",
+      "assigned_city_id": 4,
+      "mentioned_city": "Poznań",
+      "mentioned_city_id": 5,
+      "confidence": "medium"
+    },
+    {
+      "kebab_id": 427,
+      "kebab_name": "Kebab King",
+      "address": "Gdańska 19, 85-005 Bydgoszcz, Poland",
+      "assigned_city": "Gdańsk",
+      "assigned_city_id": 6,
+      "mentioned_city": "Bydgoszcz",
+      "mentioned_city_id": 8,
+      "confidence": "medium"
+    },
+    {
+      "kebab_id": 414,
+      "kebab_name": "Kebab Center",
+      "address": "Gdańska 24, 85-006 Bydgoszcz, Poland",
+      "assigned_city": "Gdańsk",
+      "assigned_city_id": 6,
+      "mentioned_city": "Bydgoszcz",
+      "mentioned_city_id": 8,
+      "confidence": "medium"
+    },
+    {
+      "kebab_id": 524,
+      "kebab_name": "Bafra Kebab",
+      "address": "Wrocławska 15, 15-644 Białystok, Poland",
+      "assigned_city": "Wrocław",
+      "assigned_city_id": 4,
+      "mentioned_city": "Białystok",
+      "mentioned_city_id": 10,
+      "confidence": "medium"
+    },
+    {
+      "kebab_id": 1395,
+      "kebab_name": "AM AM Kebab",
+      "address": "Wrocławska 155, 59-220 Legnica, Poland",
+      "assigned_city": "Wrocław",
+      "assigned_city_id": 4,
+      "mentioned_city": "Legnica",
+      "mentioned_city_id": 40,
+      "confidence": "medium"
+    },
+    {
+      "kebab_id": 708,
+      "kebab_name": "KEBAB U PAJDY",
+      "address": "Toruńska 1, 26-612 Radom, Poland",
+      "assigned_city": "Toruń",
+      "assigned_city_id": 17,
+      "mentioned_city": "Radom",
+      "mentioned_city_id": 14,
+      "confidence": "medium"
+    },
+    {
+      "kebab_id": 732,
+      "kebab_name": "Dara Kebab",
+      "address": "Obrońców Poczty Gdańskiej 14, 35-509 Rzeszów, Poland",
+      "assigned_city": "Gdańsk",
+      "assigned_city_id": 6,
+      "mentioned_city": "Rzeszów",
+      "mentioned_city_id": 15,
+      "confidence": "medium"
+    }
+  ],
+  "cities_analyzed": 62
+}

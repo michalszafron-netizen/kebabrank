@@ -1,0 +1,1012 @@
+2026-03-10 17:42:53 +0000] [1] [INFO] Starting gunicorn 21.2.0
+[2026-03-10 17:42:53 +0000] [1] [INFO] Listening at: http://0.0.0.0:5000 (1)
+[2026-03-10 17:42:53 +0000] [1] [INFO] Using worker: sync
+[2026-03-10 17:42:53 +0000] [7] [INFO] Booting worker with pid: 7
+[2026-03-10 17:42:53 +0000] [8] [INFO] Booting worker with pid: 8
+[2026-03-10 17:42:53 +0000] [9] [INFO] Booting worker with pid: 9
+
+=== DEBUG: Getting last update ===
+No last_update found - but auto-update is disabled.
+
+=== DEBUG: Getting last update ===
+No last_update found - but auto-update is disabled.
+
+=== DEBUG: Getting last update ===
+No last_update found - but auto-update is disabled.
+
+=== DEBUG: Getting last update ===
+No last_update found - but auto-update is disabled.
+
+=== DEBUG: Getting last update ===
+No last_update found - but auto-update is disabled.
+
+=== DEBUG: Getting last update ===
+No last_update found - but auto-update is disabled.
+
+=== DEBUG: Getting last update ===
+No last_update found - but auto-update is disabled.
+
+=== DEBUG: Getting last update ===
+No last_update found - but auto-update is disabled.
+
+=== DEBUG: Getting last update ===
+No last_update found - but auto-update is disabled.
+
+=== DEBUG: Getting last update ===
+No last_update found - but auto-update is disabled.
+
+=== DEBUG: Getting last update ===
+No last_update found - but auto-update is disabled.
+
+=== DEBUG: Getting last update ===
+No last_update found - but auto-update is disabled.
+
+=== DEBUG: Getting last update ===
+No last_update found - but auto-update is disabled.
+
+=== DEBUG: Getting last update ===
+No last_update found - but auto-update is disabled.
+Error getting rankings for Kraków: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?filter=kebab_place.city%3D%22d9ubg7dc4ynonvw%22&sort=-created&expand=kebab_place&page=1&perPage=500
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting global rankings: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Traceback (most recent call last):
+  File "/app/services/pocketbase_db.py", line 243, in get_global_rankings
+    latest_record = self.client.collection('ratings').get_first_list_item(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 102, in get_first_list_item
+    result = self.get_list(1, 1, query_params)
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 50, in get_list
+    response_data = self.client.send(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/client.py", line 116, in send
+    raise ClientResponseError(
+pocketbase.errors.ClientResponseError: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting rankings for Katowice: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?filter=kebab_place.city%3D%2235n2000jm56831e%22&sort=-created&expand=kebab_place&page=1&perPage=500
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting cities: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/cities/records?page=1&perPage=100
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting global rankings: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Traceback (most recent call last):
+  File "/app/services/pocketbase_db.py", line 243, in get_global_rankings
+    latest_record = self.client.collection('ratings').get_first_list_item(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 102, in get_first_list_item
+    result = self.get_list(1, 1, query_params)
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 50, in get_list
+    response_data = self.client.send(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/client.py", line 116, in send
+    raise ClientResponseError(
+pocketbase.errors.ClientResponseError: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting global rankings: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Traceback (most recent call last):
+  File "/app/services/pocketbase_db.py", line 243, in get_global_rankings
+    latest_record = self.client.collection('ratings').get_first_list_item(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 102, in get_first_list_item
+    result = self.get_list(1, 1, query_params)
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 50, in get_list
+    response_data = self.client.send(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/client.py", line 116, in send
+    raise ClientResponseError(
+pocketbase.errors.ClientResponseError: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+
+=== DEBUG: Getting last update ===
+Error getting global rankings: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Traceback (most recent call last):
+  File "/app/services/pocketbase_db.py", line 243, in get_global_rankings
+    latest_record = self.client.collection('ratings').get_first_list_item(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 102, in get_first_list_item
+    result = self.get_list(1, 1, query_params)
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 50, in get_list
+    response_data = self.client.send(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/client.py", line 116, in send
+    raise ClientResponseError(
+pocketbase.errors.ClientResponseError: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+No last_update found - but auto-update is disabled.
+Error getting cities: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/cities/records?page=1&perPage=100
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting rankings for Kraków: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?filter=kebab_place.city%3D%22d9ubg7dc4ynonvw%22&sort=-created&expand=kebab_place&page=1&perPage=500
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting cities: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/cities/records?page=1&perPage=100
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting cities: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/cities/records?page=1&perPage=100
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting rankings for Kraków: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?filter=kebab_place.city%3D%22d9ubg7dc4ynonvw%22&sort=-created&expand=kebab_place&page=1&perPage=500
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Traceback (most recent call last):
+  File "/app/services/pocketbase_db.py", line 243, in get_global_rankings
+    latest_record = self.client.collection('ratings').get_first_list_item(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 102, in get_first_list_item
+    result = self.get_list(1, 1, query_params)
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 50, in get_list
+    response_data = self.client.send(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/client.py", line 116, in send
+    raise ClientResponseError(
+pocketbase.errors.ClientResponseError: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting global rankings: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting cities: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/cities/records?page=1&perPage=100
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting global rankings: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Traceback (most recent call last):
+  File "/app/services/pocketbase_db.py", line 243, in get_global_rankings
+    latest_record = self.client.collection('ratings').get_first_list_item(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 102, in get_first_list_item
+    result = self.get_list(1, 1, query_params)
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 50, in get_list
+    response_data = self.client.send(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/client.py", line 116, in send
+    raise ClientResponseError(
+pocketbase.errors.ClientResponseError: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting cities: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/cities/records?page=1&perPage=100
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting rankings for Kraków: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?filter=kebab_place.city%3D%22d9ubg7dc4ynonvw%22&sort=-created&expand=kebab_place&page=1&perPage=500
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting rankings for Kraków: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?filter=kebab_place.city%3D%22d9ubg7dc4ynonvw%22&sort=-created&expand=kebab_place&page=1&perPage=500
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting rankings for Kraków: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?filter=kebab_place.city%3D%22d9ubg7dc4ynonvw%22&sort=-created&expand=kebab_place&page=1&perPage=500
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting global rankings: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Traceback (most recent call last):
+  File "/app/services/pocketbase_db.py", line 243, in get_global_rankings
+    latest_record = self.client.collection('ratings').get_first_list_item(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 102, in get_first_list_item
+    result = self.get_list(1, 1, query_params)
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 50, in get_list
+    response_data = self.client.send(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/client.py", line 116, in send
+    raise ClientResponseError(
+pocketbase.errors.ClientResponseError: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting global rankings: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Traceback (most recent call last):
+  File "/app/services/pocketbase_db.py", line 243, in get_global_rankings
+    latest_record = self.client.collection('ratings').get_first_list_item(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 102, in get_first_list_item
+    result = self.get_list(1, 1, query_params)
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 50, in get_list
+    response_data = self.client.send(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/client.py", line 116, in send
+    raise ClientResponseError(
+pocketbase.errors.ClientResponseError: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting rankings for Warszawa: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?filter=kebab_place.city%3D%2209885n11wq5e34p%22&sort=-created&expand=kebab_place&page=1&perPage=500
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting cities: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/cities/records?page=1&perPage=100
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting rankings for Kraków: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?filter=kebab_place.city%3D%22d9ubg7dc4ynonvw%22&sort=-created&expand=kebab_place&page=1&perPage=500
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting cities: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/cities/records?page=1&perPage=100
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting rankings for Kraków: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?filter=kebab_place.city%3D%22d9ubg7dc4ynonvw%22&sort=-created&expand=kebab_place&page=1&perPage=500
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting global rankings: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Traceback (most recent call last):
+  File "/app/services/pocketbase_db.py", line 243, in get_global_rankings
+    latest_record = self.client.collection('ratings').get_first_list_item(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 102, in get_first_list_item
+    result = self.get_list(1, 1, query_params)
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 50, in get_list
+    response_data = self.client.send(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/client.py", line 116, in send
+    raise ClientResponseError(
+pocketbase.errors.ClientResponseError: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting rankings for Kraków: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?filter=kebab_place.city%3D%22d9ubg7dc4ynonvw%22&sort=-created&expand=kebab_place&page=1&perPage=500
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting cities: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/cities/records?page=1&perPage=100
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting global rankings: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Traceback (most recent call last):
+  File "/app/services/pocketbase_db.py", line 243, in get_global_rankings
+    latest_record = self.client.collection('ratings').get_first_list_item(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 102, in get_first_list_item
+    result = self.get_list(1, 1, query_params)
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 50, in get_list
+    response_data = self.client.send(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/client.py", line 116, in send
+    raise ClientResponseError(
+pocketbase.errors.ClientResponseError: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+
+=== DEBUG: Getting last update ===
+Error getting cities: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/cities/records?page=1&perPage=100
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting global rankings: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Traceback (most recent call last):
+  File "/app/services/pocketbase_db.py", line 243, in get_global_rankings
+    latest_record = self.client.collection('ratings').get_first_list_item(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 102, in get_first_list_item
+    result = self.get_list(1, 1, query_params)
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 50, in get_list
+    response_data = self.client.send(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/client.py", line 116, in send
+    raise ClientResponseError(
+pocketbase.errors.ClientResponseError: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+No last_update found - but auto-update is disabled.
+Error getting rankings for Kraków: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?filter=kebab_place.city%3D%22d9ubg7dc4ynonvw%22&sort=-created&expand=kebab_place&page=1&perPage=500
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting global rankings: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Traceback (most recent call last):
+  File "/app/services/pocketbase_db.py", line 243, in get_global_rankings
+    latest_record = self.client.collection('ratings').get_first_list_item(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 102, in get_first_list_item
+    result = self.get_list(1, 1, query_params)
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 50, in get_list
+    response_data = self.client.send(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/client.py", line 116, in send
+    raise ClientResponseError(
+pocketbase.errors.ClientResponseError: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Original Error: N/A
+Error getting global rankings: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Traceback (most recent call last):
+  File "/app/services/pocketbase_db.py", line 243, in get_global_rankings
+    latest_record = self.client.collection('ratings').get_first_list_item(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 102, in get_first_list_item
+    result = self.get_list(1, 1, query_params)
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 50, in get_list
+    response_data = self.client.send(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/client.py", line 116, in send
+    raise ClientResponseError(
+pocketbase.errors.ClientResponseError: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+
+=== DEBUG: Getting last update ===
+No last_update found - but auto-update is disabled.
+Error getting global rankings: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Traceback (most recent call last):
+  File "/app/services/pocketbase_db.py", line 243, in get_global_rankings
+    latest_record = self.client.collection('ratings').get_first_list_item(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 102, in get_first_list_item
+    result = self.get_list(1, 1, query_params)
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 50, in get_list
+    response_data = self.client.send(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/client.py", line 116, in send
+    raise ClientResponseError(
+pocketbase.errors.ClientResponseError: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting cities: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/cities/records?page=1&perPage=100
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting cities: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/cities/records?page=1&perPage=100
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting cities: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/cities/records?page=1&perPage=100
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting rankings for Warszawa: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?filter=kebab_place.city%3D%2209885n11wq5e34p%22&sort=-created&expand=kebab_place&page=1&perPage=500
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting rankings for Warszawa: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?filter=kebab_place.city%3D%2209885n11wq5e34p%22&sort=-created&expand=kebab_place&page=1&perPage=500
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting rankings for Kraków: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?filter=kebab_place.city%3D%22d9ubg7dc4ynonvw%22&sort=-created&expand=kebab_place&page=1&perPage=500
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting global rankings: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Traceback (most recent call last):
+  File "/app/services/pocketbase_db.py", line 243, in get_global_rankings
+    latest_record = self.client.collection('ratings').get_first_list_item(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 102, in get_first_list_item
+    result = self.get_list(1, 1, query_params)
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 50, in get_list
+    response_data = self.client.send(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/client.py", line 116, in send
+    raise ClientResponseError(
+pocketbase.errors.ClientResponseError: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting global rankings: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Traceback (most recent call last):
+  File "/app/services/pocketbase_db.py", line 243, in get_global_rankings
+    latest_record = self.client.collection('ratings').get_first_list_item(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 102, in get_first_list_item
+    result = self.get_list(1, 1, query_params)
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 50, in get_list
+    response_data = self.client.send(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/client.py", line 116, in send
+    raise ClientResponseError(
+pocketbase.errors.ClientResponseError: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting global rankings: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Traceback (most recent call last):
+  File "/app/services/pocketbase_db.py", line 243, in get_global_rankings
+    latest_record = self.client.collection('ratings').get_first_list_item(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 102, in get_first_list_item
+    result = self.get_list(1, 1, query_params)
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 50, in get_list
+    response_data = self.client.send(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/client.py", line 116, in send
+    raise ClientResponseError(
+pocketbase.errors.ClientResponseError: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting cities: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/cities/records?page=1&perPage=100
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting rankings for Kraków: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?filter=kebab_place.city%3D%22d9ubg7dc4ynonvw%22&sort=-created&expand=kebab_place&page=1&perPage=500
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting rankings for ?ód?: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?filter=kebab_place.city%3D%22yw925o42e3g06i7%22&sort=-created&expand=kebab_place&page=1&perPage=500
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting cities: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/cities/records?page=1&perPage=100
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting cities: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/cities/records?page=1&perPage=100
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting rankings for Szczecin: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?filter=kebab_place.city%3D%22xcrys4y1h9f444e%22&sort=-created&expand=kebab_place&page=1&perPage=500
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting cities: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/cities/records?page=1&perPage=100
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting cities: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/cities/records?page=1&perPage=100
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting cities: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/cities/records?page=1&perPage=100
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting cities: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/cities/records?page=1&perPage=100
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting cities: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/cities/records?page=1&perPage=100
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting global rankings: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Traceback (most recent call last):
+  File "/app/services/pocketbase_db.py", line 243, in get_global_rankings
+    latest_record = self.client.collection('ratings').get_first_list_item(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 102, in get_first_list_item
+    result = self.get_list(1, 1, query_params)
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 50, in get_list
+    response_data = self.client.send(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/client.py", line 116, in send
+    raise ClientResponseError(
+pocketbase.errors.ClientResponseError: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting cities: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/cities/records?page=1&perPage=100
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting global rankings: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Traceback (most recent call last):
+  File "/app/services/pocketbase_db.py", line 243, in get_global_rankings
+    latest_record = self.client.collection('ratings').get_first_list_item(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 102, in get_first_list_item
+    result = self.get_list(1, 1, query_params)
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 50, in get_list
+    response_data = self.client.send(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/client.py", line 116, in send
+    raise ClientResponseError(
+pocketbase.errors.ClientResponseError: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting cities: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/cities/records?page=1&perPage=100
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting cities: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/cities/records?page=1&perPage=100
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting cities: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/cities/records?page=1&perPage=100
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting cities: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/cities/records?page=1&perPage=100
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting cities: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/cities/records?page=1&perPage=100
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting cities: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/cities/records?page=1&perPage=100
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting global rankings: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Traceback (most recent call last):
+  File "/app/services/pocketbase_db.py", line 243, in get_global_rankings
+    latest_record = self.client.collection('ratings').get_first_list_item(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 102, in get_first_list_item
+    result = self.get_list(1, 1, query_params)
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 50, in get_list
+    response_data = self.client.send(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/client.py", line 116, in send
+    raise ClientResponseError(
+pocketbase.errors.ClientResponseError: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting rankings for Kraków: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?filter=kebab_place.city%3D%22d9ubg7dc4ynonvw%22&sort=-created&expand=kebab_place&page=1&perPage=500
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+
+=== DEBUG: Getting last update ===
+Error getting global rankings: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Traceback (most recent call last):
+  File "/app/services/pocketbase_db.py", line 243, in get_global_rankings
+    latest_record = self.client.collection('ratings').get_first_list_item(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 102, in get_first_list_item
+    result = self.get_list(1, 1, query_params)
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 50, in get_list
+    response_data = self.client.send(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/client.py", line 116, in send
+    raise ClientResponseError(
+pocketbase.errors.ClientResponseError: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting cities: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/cities/records?page=1&perPage=100
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+No last_update found - but auto-update is disabled.
+Error getting rankings for Kraków: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?filter=kebab_place.city%3D%22d9ubg7dc4ynonvw%22&sort=-created&expand=kebab_place&page=1&perPage=500
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Traceback (most recent call last):
+  File "/app/services/pocketbase_db.py", line 243, in get_global_rankings
+    latest_record = self.client.collection('ratings').get_first_list_item(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 102, in get_first_list_item
+    result = self.get_list(1, 1, query_params)
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 50, in get_list
+    response_data = self.client.send(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/client.py", line 116, in send
+    raise ClientResponseError(
+Error getting global rankings: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+pocketbase.errors.ClientResponseError: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting rankings for Kraków: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?filter=kebab_place.city%3D%22d9ubg7dc4ynonvw%22&sort=-created&expand=kebab_place&page=1&perPage=500
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting global rankings: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Traceback (most recent call last):
+  File "/app/services/pocketbase_db.py", line 243, in get_global_rankings
+    latest_record = self.client.collection('ratings').get_first_list_item(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 102, in get_first_list_item
+    result = self.get_list(1, 1, query_params)
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 50, in get_list
+    response_data = self.client.send(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/client.py", line 116, in send
+    raise ClientResponseError(
+pocketbase.errors.ClientResponseError: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+
+=== DEBUG: Getting last update ===
+No last_update found - but auto-update is disabled.
+Error getting global rankings: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Traceback (most recent call last):
+  File "/app/services/pocketbase_db.py", line 243, in get_global_rankings
+    latest_record = self.client.collection('ratings').get_first_list_item(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 102, in get_first_list_item
+    result = self.get_list(1, 1, query_params)
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 50, in get_list
+    response_data = self.client.send(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/client.py", line 116, in send
+    raise ClientResponseError(
+pocketbase.errors.ClientResponseError: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting rankings for Kraków: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?filter=kebab_place.city%3D%22d9ubg7dc4ynonvw%22&sort=-created&expand=kebab_place&page=1&perPage=500
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting rankings for Kraków: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?filter=kebab_place.city%3D%22d9ubg7dc4ynonvw%22&sort=-created&expand=kebab_place&page=1&perPage=500
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting global rankings: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Traceback (most recent call last):
+  File "/app/services/pocketbase_db.py", line 243, in get_global_rankings
+    latest_record = self.client.collection('ratings').get_first_list_item(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 102, in get_first_list_item
+    result = self.get_list(1, 1, query_params)
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 50, in get_list
+    response_data = self.client.send(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/client.py", line 116, in send
+    raise ClientResponseError(
+pocketbase.errors.ClientResponseError: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting global rankings: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Traceback (most recent call last):
+  File "/app/services/pocketbase_db.py", line 243, in get_global_rankings
+    latest_record = self.client.collection('ratings').get_first_list_item(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 102, in get_first_list_item
+    result = self.get_list(1, 1, query_params)
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 50, in get_list
+    response_data = self.client.send(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/client.py", line 116, in send
+    raise ClientResponseError(
+pocketbase.errors.ClientResponseError: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting global rankings: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Traceback (most recent call last):
+  File "/app/services/pocketbase_db.py", line 243, in get_global_rankings
+    latest_record = self.client.collection('ratings').get_first_list_item(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 102, in get_first_list_item
+    result = self.get_list(1, 1, query_params)
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 50, in get_list
+    response_data = self.client.send(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/client.py", line 116, in send
+    raise ClientResponseError(
+pocketbase.errors.ClientResponseError: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting cities: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/cities/records?page=1&perPage=100
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting global rankings: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Traceback (most recent call last):
+  File "/app/services/pocketbase_db.py", line 243, in get_global_rankings
+    latest_record = self.client.collection('ratings').get_first_list_item(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 102, in get_first_list_item
+    result = self.get_list(1, 1, query_params)
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 50, in get_list
+    response_data = self.client.send(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/client.py", line 116, in send
+    raise ClientResponseError(
+pocketbase.errors.ClientResponseError: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+
+=== DEBUG: Getting last update ===
+Error getting global rankings: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Traceback (most recent call last):
+  File "/app/services/pocketbase_db.py", line 243, in get_global_rankings
+    latest_record = self.client.collection('ratings').get_first_list_item(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 102, in get_first_list_item
+    result = self.get_list(1, 1, query_params)
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/services/utils/crud_service.py", line 50, in get_list
+    response_data = self.client.send(
+  File "/usr/local/lib/python3.9/site-packages/pocketbase/client.py", line 116, in send
+    raise ClientResponseError(
+pocketbase.errors.ClientResponseError: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?sort=-created&filter=&%24cancelKey=one_by_filter_%2Fapi%2Fcollections%2Fratings%2Frecords_&page=1&perPage=1
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+No last_update found - but auto-update is disabled.
+Error getting cities: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/cities/records?page=1&perPage=100
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting rankings for Kraków: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/ratings/records?filter=kebab_place.city%3D%22d9ubg7dc4ynonvw%22&sort=-created&expand=kebab_place&page=1&perPage=500
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+Error getting cities: Message: Response error. Status code:403
+URL: https://pb.kebabrank.com/api/collections/cities/records?page=1&perPage=100
+Status: 403
+Data: {'data': {}, 'message': 'Only superusers can perform this action.', 'status': 403}
+Is Abort: False
+Original Error: N/A
+root@srv856418:~# 

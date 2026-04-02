@@ -1,0 +1,39 @@
+{
+  "timestamp": "2025-09-24T19:09:32.888164",
+  "backup_file": "kebab_places_backup_20250924_190932.json",
+  "issues_fixed": 3,
+  "issues_skipped": 0,
+  "errors": [],
+  "fixed_issues": [
+    {
+      "kebab_id": 427,
+      "kebab_name": "Kebab King",
+      "address": "Gdańska 19, 85-005 Bydgoszcz, Poland",
+      "assigned_city": "Bydgoszcz",
+      "assigned_city_id": 8,
+      "mentioned_city": "Gdańsk",
+      "mentioned_city_id": 6,
+      "confidence": "medium"
+    },
+    {
+      "kebab_id": 414,
+      "kebab_name": "Kebab Center",
+      "address": "Gdańska 24, 85-006 Bydgoszcz, Poland",
+      "assigned_city": "Bydgoszcz",
+      "assigned_city_id": 8,
+      "mentioned_city": "Gdańsk",
+      "mentioned_city_id": 6,
+      "confidence": "medium"
+    },
+    {
+      "kebab_id": 732,
+      "kebab_name": "Dara Kebab",
+      "address": "Obrońców Poczty Gdańskiej 14, 35-509 Rzeszów, Poland",
+      "assigned_city": "Rzeszów",
+      "assigned_city_id": 15,
+      "mentioned_city": "Gdańsk",
+      "mentioned_city_id": 6,
+      "confidence": "medium"
+    }
+  ]
+}

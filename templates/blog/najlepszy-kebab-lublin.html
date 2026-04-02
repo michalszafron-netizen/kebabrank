@@ -1,0 +1,240 @@
+{% extends "base.html" %}
+
+{% block title %}Najlepszy kebab w Lublinie – Ranking TOP 10 (2025/2026) | Kebab Rank{% endblock %}
+{% block description %}Odkryj najlepsze kebaby w Lublinie! Od legendarnych "Piri-Piri" i studenckich klasyków po
+nowoczesny kraft. Sprawdź aktualny ranking wspierany przez AI.{% endblock %}
+{% block keywords %}najlepszy kebab Lublin, Piri-Piri Lublin, Damaszek Kebab Lublin, Tendur Kebab Lublin, kraft kebab
+Lublin, kebab miasteczko akademickie lublin, ranking kebabów Lublin{% endblock %}
+{% block canonical %}https://www.kebabrank.com/blog/najlepszy-kebab-lublin{% endblock %}
+
+{% block og_title %}Najlepszy kebab w Lublinie – Ranking TOP 10 (2025/2026){% endblock %}
+{% block og_description %}Lubelska rewolucja kraftowa! Zobacz, które lokale serwują autorskie mięso i wygrywają w
+obiektywnym rankingu opinii Google.{% endblock %}
+{% block og_image %}https://www.kebabrank.com/static/img/blog/lublin.png{% endblock %}
+{% block og_url %}https://www.kebabrank.com/blog/najlepszy-kebab-lublin{% endblock %}
+
+{% block content %}
+<!-- Main Container -->
+<div class="h-full w-full overflow-y-auto bg-background-dark flex justify-center">
+
+    <!-- Central Column: Article Content -->
+    <div class="w-full max-w-4xl bg-[#0f172a] border-x border-white/5 relative z-20 shadow-2xl min-h-screen">
+
+        <!-- Sticky Header / Navbar -->
+        <header
+            class="sticky top-0 z-50 bg-surface-dark/95 backdrop-blur-md border-b border-white/5 px-6 py-4 flex items-center justify-between">
+            <a href="/" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
+                <div
+                    class="w-8 h-8 rounded-md bg-primary flex items-center justify-center shadow-[0_0_10px_rgba(255,106,0,0.4)]">
+                    <span class="material-icons text-white text-lg">kebab_dining</span>
+                </div>
+                <h1 class="text-xl font-black tracking-tighter uppercase italic text-white hidden sm:block">
+                    Kebab<span class="text-primary">Rank</span> <span
+                        class="text-gray-500 text-xs not-italic ml-2 font-medium">Blog</span>
+                </h1>
+            </a>
+            <a href="/blog"
+                class="text-gray-400 hover:text-white transition-colors flex items-center gap-2 font-bold text-xs uppercase tracking-wider">
+                <span class="material-icons text-sm">arrow_back</span>
+                <span>Powrót</span>
+            </a>
+        </header>
+
+        <article class="p-6 md:p-12 pb-24">
+            <!-- Hero Section -->
+            <div class="mb-10">
+                <div class="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-[0.2em] mb-4">
+                    <span class="w-8 h-[1px] bg-primary"></span>
+                    Rankingi Miast
+                </div>
+                <h1 class="text-3xl md:text-5xl font-black text-white mb-6 leading-tight">
+                    Kebabowa Transformacja w Lublinie: <span class="text-primary italic">Kraft, Studenci i Nocne
+                        Życie</span>
+                </h1>
+
+                <div class="flex flex-wrap gap-4 items-center text-xs text-gray-400 font-mono mb-8">
+                    <span class="bg-white/5 px-3 py-1 rounded-full border border-white/10 flex items-center gap-1">
+                        <span class="material-icons text-sm">location_on</span> Lublin
+                    </span>
+                    <span class="flex items-center gap-1"><span class="material-icons text-sm">schedule</span> {{
+                        current_date }}</span>
+                    <span class="flex items-center gap-1 text-green-500 font-bold uppercase tracking-tighter">
+                        Aktualizacja LIVE
+                    </span>
+                </div>
+
+                <img src="/static/img/blog/lublin.png" alt="Najlepszy Kebab w Lublinie"
+                    class="w-full h-[300px] md:h-[450px] object-cover rounded-2xl shadow-2xl border border-white/5 mb-10">
+            </div>
+
+            <!-- Content Bridge -->
+            <div class="prose prose-invert max-w-none">
+                <p
+                    class="text-xl text-gray-300 leading-relaxed mb-8 font-light italic border-l-4 border-primary pl-6 py-2">
+                    Lubelski sektor gastronomiczny przeszedł fundamentalną metamorfozę. Kebab, niegdyś tania opcja
+                    regeneracyjna dla studentów, ewoluował w złożony ekosystem, gdzie rzemieślnicza jakość spotyka się z
+                    nocnym życiem miasta.
+                </p>
+
+                <!-- TOP 3 DYNAMIC SECTION -->
+                <section class="mb-16">
+                    <div class="flex items-center justify-between mb-8">
+                        <h2 class="text-2xl font-black text-white uppercase tracking-tighter italic">
+                            Aktualne <span class="text-primary">TOP 3</span> w Lublinie
+                        </h2>
+                        <div class="text-[10px] text-gray-500 font-mono uppercase">Na podstawie opinii Google</div>
+                    </div>
+
+                    <div class="grid gap-6">
+                        {% if top_kebabs %}
+                        {% for kebab in top_kebabs[:3] %}
+                        <a href="/lublin"
+                            class="bg-white/5 border border-white/10 rounded-xl p-4 flex items-center gap-4 hover:bg-white/10 transition-all hover:scale-[1.02] active:scale-[0.98] group">
+                            <div class="text-4xl">
+                                {% if loop.index == 1 %}🏆{% elif loop.index == 2 %}🥈{% else %}🥉{% endif %}
+                            </div>
+                            <div class="flex-1">
+                                <h3 class="text-xl font-bold text-white group-hover:text-primary transition-colors">{{
+                                    kebab.name }}</h3>
+                                <p class="text-gray-400 text-sm">{{ kebab.address }}</p>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-primary font-black text-2xl">{{ "%.1f"|format(kebab.rank_score) if
+                                    kebab.rank_score else "N/A" }}</div>
+                                <div class="text-xs text-gray-500 uppercase">PKT</div>
+                            </div>
+                        </a>
+                        {% endfor %}
+                        {% else %}
+                        <div class="bg-white/5 border border-white/10 rounded-xl p-8 text-center text-gray-400 italic">
+                            Pobieranie aktualnych liderów rankingu...
+                        </div>
+                        {% endif %}
+                    </div>
+                </section>
+
+                <h2 class="text-2xl font-bold text-white mb-6">Rewolucja Kraftowa: Koniec Ery "Kuli Mocy"</h2>
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    Mrożone "kule mocy" odchodzą w niepamięć. Lublin stawia na kebab kraftowy – ręczne płatowanie mięsa,
+                    autorskie marynaty i rzemieślnicze pieczywo.
+                </p>
+
+                <div class="space-y-4 mb-12">
+                    <div class="flex gap-4 items-start bg-white/5 p-4 rounded-xl border border-white/5">
+                        <div class="bg-primary/20 p-2 rounded-lg text-primary"><span class="material-icons">star</span>
+                        </div>
+                        <div>
+                            <strong class="text-white">Piri-Piri Kebab</strong>
+                            <p class="text-gray-400 text-sm">Pionier od 2014 roku. Słyną z oryginalnych syryjskich
+                                przypraw i własnej produkcji mięsa wołowo-baraniego bez wypełniaczy.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 items-start bg-white/5 p-4 rounded-xl border border-white/5">
+                        <div class="bg-primary/20 p-2 rounded-lg text-primary"><span
+                                class="material-icons">restaurant</span></div>
+                        <div>
+                            <strong class="text-white">Damaszek i Tendur</strong>
+                            <p class="text-gray-400 text-sm">Lokale chwalone za wyjątkowe sosy, autorskie kompozycje
+                                przypraw oraz świetnej jakości lawasz.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h2 class="text-2xl font-bold text-white mb-6 font-display uppercase tracking-tight">Klastry
+                    Gastronomiczne i Nocne Gastro</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+                    <div class="bg-white/5 p-6 rounded-2xl border border-white/10">
+                        <h3 class="text-primary font-bold mb-2 flex items-center gap-2"><span
+                                class="material-icons text-sm">school</span> Miasteczko Akademickie</h3>
+                        <p class="text-sm text-gray-400 leading-snug">
+                            Ulica Nadbystrzycka to strefa walki o studenta. Dominują tu giganci jak <strong>Zahir
+                                Kebab</strong> czy <strong>Dostana Kebab</strong>, dostosowani do rytmu uczelni.
+                        </p>
+                    </div>
+                    <div class="bg-white/5 p-6 rounded-2xl border border-white/10">
+                        <h3 class="text-primary font-bold mb-2 flex items-center gap-2"><span
+                                class="material-icons text-sm">nightlife</span> Nocne Życie</h3>
+                        <p class="text-sm text-gray-400 leading-snug">
+                            Gdy głód dopada w nocy, ratunkiem są <strong>Ankara Kebab</strong>, <strong>Pizza
+                                Company</strong> czy <strong>Shawarma</strong>, działające w weekendy nawet do 2:00.
+                        </p>
+                    </div>
+                </div>
+
+                <h2 class="text-2xl font-bold text-white mb-6">Ekonomia i Opcje Roślinne</h2>
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    Wzrost kosztów energii i składników wpływa na ceny (od 16 zł za małą pitę do niemal 100 zł za
+                    giganty). Jednak jakość rośnie także w opcjach wege – <strong>Dostana Kebab</strong> serwuje
+                    wysokiej klasy falafel, który jest smaczną i tańszą alternatywą dla mięsa.
+                </p>
+
+                <!-- Call to Action Section -->
+                <div
+                    class="relative bg-gradient-to-br from-primary to-orange-700 rounded-3xl p-10 overflow-hidden shadow-2xl">
+                    <div class="relative z-10 text-center">
+                        <h3 class="text-3xl font-black text-white mb-4 uppercase italic">Kto ma rację? Sprawdźmy to!
+                        </h3>
+                        <p class="text-white/80 mb-8 max-w-lg mx-auto">
+                            Influencerzy chwalą jedno, znajomi drugie. Kebab Rank analizuje tysiące opinii, by dać Ci
+                            obiektywną odpowiedź, gdzie zjesz najlepiej w Lublinie.
+                        </p>
+                        <a href="/lublin"
+                            class="inline-block bg-white text-primary px-10 py-4 rounded-full font-black hover:scale-105 transition-transform shadow-xl uppercase tracking-wider">
+                            Zobacz Pełny Ranking Lublina
+                        </a>
+                    </div>
+                    <!-- Decorative element -->
+                    <div class="absolute -right-20 -bottom-20 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+                </div>
+
+                <!-- FAQ Section -->
+                <div class="mt-20">
+                    <h2 class="text-2xl font-black text-white mb-8 border-b border-white/10 pb-4">Często Zadawane
+                        Pytania (FAQ)</h2>
+                    <div class="space-y-6">
+                        <details class="group bg-white/5 rounded-xl border border-white/10 p-4">
+                            <summary
+                                class="text-white font-bold cursor-pointer list-none flex justify-between items-center group-open:text-primary transition-colors">
+                                Gdzie zjem najlepszy kebab rzemieślniczy?
+                                <span
+                                    class="material-icons group-open:rotate-180 transition-transform">expand_more</span>
+                            </summary>
+                            <p class="text-gray-400 text-sm mt-4 leading-relaxed">
+                                Koniecznie sprawdź Piri-Piri Kebab (własna produkcja mięsa) oraz Tendur Kebab. To
+                                liderzy jakości w Lublinie.
+                            </p>
+                        </details>
+                        <details class="group bg-white/5 rounded-xl border border-white/10 p-4">
+                            <summary
+                                class="text-white font-bold cursor-pointer list-none flex justify-between items-center group-open:text-primary transition-colors">
+                                Gdzie na kebaba po imprezie w Lublinie?
+                                <span
+                                    class="material-icons group-open:rotate-180 transition-transform">expand_more</span>
+                            </summary>
+                            <p class="text-gray-400 text-sm mt-4 leading-relaxed">
+                                W weekendy do późnych godzin nocnych (ok. 2:00) otwarte są m.in. Ankara Kebab oraz Pizza
+                                Company.
+                            </p>
+                        </details>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <!-- Newsletter / Socials Footer -->
+        <footer class="bg-black/30 border-t border-white/5 p-12 text-center">
+            <h4 class="text-white font-bold mb-4">Śledź Kebab Rank na Social Mediach</h4>
+            <div class="flex justify-center gap-6 mb-8 text-gray-500">
+                <a href="https://www.youtube.com/@kebabrank" class="hover:text-red-600 transition-colors"><span
+                        class="material-icons">play_circle</span></a>
+                <a href="https://www.instagram.com/kebabrank/" class="hover:text-pink-500 transition-colors"><span
+                        class="material-icons">camera_alt</span></a>
+                <a href="https://www.tiktok.com/@kebabrank" class="hover:text-white transition-colors"><span
+                        class="material-icons">music_video</span></a>
+            </div>
+            <p class="text-[10px] text-gray-600 uppercase tracking-widest">&copy; 2026 KebabRank - Obiektywny Głos
+                Konsumentów</p>
+        </footer>
+    </div>
+</div>
+{% endblock %}

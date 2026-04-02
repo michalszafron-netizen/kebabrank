@@ -1,0 +1,29 @@
+{
+  "timestamp": "2025-09-24T18:48:29.427545",
+  "backup_file": "kebab_places_backup_20250924_184828.json",
+  "issues_fixed": 2,
+  "issues_skipped": 0,
+  "errors": [],
+  "fixed_issues": [
+    {
+      "kebab_id": 65,
+      "kebab_name": "Kebab Soltan",
+      "address": "Warszawska 14, 31-155 Kraków, Poland",
+      "assigned_city": "Częstochowa",
+      "assigned_city_id": 13,
+      "mentioned_city": "Kraków",
+      "mentioned_city_id": 2,
+      "confidence": "medium"
+    },
+    {
+      "kebab_id": 68,
+      "kebab_name": "Znowu Kebab",
+      "address": "Władysława Łokietka 152, 31-334 Kraków, Poland",
+      "assigned_city": "Częstochowa",
+      "assigned_city_id": 13,
+      "mentioned_city": "Kraków",
+      "mentioned_city_id": 2,
+      "confidence": "medium"
+    }
+  ]
+}

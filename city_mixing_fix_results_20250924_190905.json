@@ -1,0 +1,39 @@
+{
+  "timestamp": "2025-09-24T19:09:05.134980",
+  "backup_file": "kebab_places_backup_20250924_190904.json",
+  "issues_fixed": 3,
+  "issues_skipped": 0,
+  "errors": [],
+  "fixed_issues": [
+    {
+      "kebab_id": 200,
+      "kebab_name": "Kebab 365",
+      "address": "Poznańska 20C, 53-630 Wrocław, Poland",
+      "assigned_city": "Poznań",
+      "assigned_city_id": 5,
+      "mentioned_city": "Wrocław",
+      "mentioned_city_id": 4,
+      "confidence": "medium"
+    },
+    {
+      "kebab_id": 268,
+      "kebab_name": "Kura Warzyw Gemüse Kebab",
+      "address": "Wrocławska 20, 61-838 Poznań, Poland",
+      "assigned_city": "Wrocław",
+      "assigned_city_id": 4,
+      "mentioned_city": "Poznań",
+      "mentioned_city_id": 5,
+      "confidence": "medium"
+    },
+    {
+      "kebab_id": 271,
+      "kebab_name": "Zahir Kebab",
+      "address": "Wrocławska 14, 61-838 Poznań, Poland",
+      "assigned_city": "Wrocław",
+      "assigned_city_id": 4,
+      "mentioned_city": "Poznań",
+      "mentioned_city_id": 5,
+      "confidence": "medium"
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "timestamp": "2025-09-24T18:49:22.997485",
+  "backup_file": "kebab_places_backup_20250924_184922.json",
+  "issues_fixed": 6,
+  "issues_skipped": 0,
+  "errors": [],
+  "fixed_issues": [
+    {
+      "kebab_id": 89,
+      "kebab_name": "Moza kebab",
+      "address": "Wrocławska 76, 30-017 Kraków, Poland",
+      "assigned_city": "Kraków",
+      "assigned_city_id": 2,
+      "mentioned_city": "Wrocław",
+      "mentioned_city_id": 4,
+      "confidence": "medium"
+    },
+    {
+      "kebab_id": 72,
+      "kebab_name": "Maas Kebab",
+      "address": "Wrocławska 31, 30-011 Kraków, Poland",
+      "assigned_city": "Kraków",
+      "assigned_city_id": 2,
+      "mentioned_city": "Wrocław",
+      "mentioned_city_id": 4,
+      "confidence": "medium"
+    },
+    {
+      "kebab_id": 65,
+      "kebab_name": "Kebab Soltan",
+      "address": "Warszawska 14, 31-155 Kraków, Poland",
+      "assigned_city": "Częstochowa",
+      "assigned_city_id": 13,
+      "mentioned_city": "Kraków",
+      "mentioned_city_id": 2,
+      "confidence": "medium"
+    },
+    {
+      "kebab_id": 68,
+      "kebab_name": "Znowu Kebab",
+      "address": "Władysława Łokietka 152, 31-334 Kraków, Poland",
+      "assigned_city": "Częstochowa",
+      "assigned_city_id": 13,
+      "mentioned_city": "Kraków",
+      "mentioned_city_id": 2,
+      "confidence": "medium"
+    },
+    {
+      "kebab_id": 62,
+      "kebab_name": "Ciro Grill Kebab & Turkish Restaurant",
+      "address": "Szpitalna 38, 31-024 Kraków, Poland",
+      "assigned_city": "Zakopane",
+      "assigned_city_id": 58,
+      "mentioned_city": "Kraków",
+      "mentioned_city_id": 2,
+      "confidence": "medium"
+    },
+    {
+      "kebab_id": 1956,
+      "kebab_name": "Hozat Kebab Kraków",
+      "address": "Leonida Teligi 1, 30-835 Kraków, Poland",
+      "assigned_city": "Wieliczka",
+      "assigned_city_id": 59,
+      "mentioned_city": "Kraków",
+      "mentioned_city_id": 2,
+      "confidence": "medium"
+    }
+  ]
+}

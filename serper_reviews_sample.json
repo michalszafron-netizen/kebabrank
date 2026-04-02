@@ -1,0 +1,417 @@
+{
+  "searchParameters": {
+    "gl": "pl",
+    "hl": "pl",
+    "type": "reviews",
+    "num": 10,
+    "page": 1,
+    "sortBy": "newest",
+    "placeId": "ChIJs42-7-LzFUcRGaoCfh1eU0E",
+    "engine": "google"
+  },
+  "reviews": [
+    {
+      "rating": 5,
+      "date": "2 godziny temu",
+      "isoDate": "2026-03-01T20:58:31.715Z",
+      "snippet": "Świetny kebab i spoko właściciel, który zna się na rzeczy i robi to z pasją. Warto było przelecieć szybko całe miasto żeby zdążyć przed zamknięciem 😆",
+      "likes": 0,
+      "user": {
+        "name": "Suska",
+        "thumbnail": "https://lh3.googleusercontent.com/a-/ALV-UjU8twJppJKj0i4lXfUfQKk9cqFi54qQa9WGMDfup3JfDZwx4BNJ=s64-c-rp-mo-br100",
+        "link": "https://www.google.com/maps/contrib/106306043371874028879/reviews?hl=pl",
+        "reviews": 9,
+        "photos": 3
+      },
+      "response": {
+        "date": "2 godziny temu",
+        "snippet": "Dziękujemy zapraszamy ponownie 🌯🔥🔥🔥"
+      },
+      "link": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT2tkU1NqZEpSbkpvY25acFh6Qk9iMlZVYTJocFZsRRAB!2m1!1s0x0:0x41535e1d7e02aa19!3m1!1s2@1:CAIQACodChtycF9oOkdSSjdJRnJocnZpXzBOb2VUa2hpVlE%7C0dd9Wred4bt%7C?hl=pl",
+      "id": "Ci9DQUlRQUNvZENodHljRjlvT2tkU1NqZEpSbkpvY25acFh6Qk9iMlZVYTJocFZsRRAB"
+    },
+    {
+      "rating": 5,
+      "date": "3 godziny temu",
+      "isoDate": "2026-03-01T20:24:03.414Z",
+      "snippet": "Fajny ziomek dobry kebab jeszcze grzańcem poczęstował gratis",
+      "likes": 0,
+      "user": {
+        "name": "Holak",
+        "thumbnail": "https://lh3.googleusercontent.com/a-/ALV-UjVDjagxInIv36JHTu_98nVJj8rwNIO7UFOaj5rZSyJ9W_f2Sts=s64-c-rp-mo-br100",
+        "link": "https://www.google.com/maps/contrib/111656936268946621233/reviews?hl=pl",
+        "reviews": 1,
+        "photos": 0
+      },
+      "response": {
+        "date": "2 godziny temu",
+        "snippet": "Dziękujemy zapraszamy ponownie 🌯🔥🌯🔥"
+      },
+      "link": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT2pGNmNHUklZbEpIWW5ZellUQnljalEyWldoWGFXYxAB!2m1!1s0x0:0x41535e1d7e02aa19!3m1!1s2@1:CAIQACodChtycF9oOjF6cGRIYlJHYnYzYTBycjQ2ZWhXaWc%7C0dd90YNgL7A%7C?hl=pl",
+      "id": "Ci9DQUlRQUNvZENodHljRjlvT2pGNmNHUklZbEpIWW5ZellUQnljalEyWldoWGFXYxAB"
+    },
+    {
+      "rating": 5,
+      "date": "15 godzin temu",
+      "isoDate": "2026-03-01T08:00:46.776Z",
+      "snippet": "Best kabab in town!",
+      "translatedSnippet": "Najlepszy kebab w mieście!",
+      "likes": 0,
+      "user": {
+        "name": "Chloe Hood",
+        "thumbnail": "https://lh3.googleusercontent.com/a/ACg8ocIAHbV1ms6Th2FLo9hzu4SkbS96SZEyvSEWxOkLcIe__Qr8lQ=s64-c-rp-mo-br100",
+        "link": "https://www.google.com/maps/contrib/111669009740949631471/reviews?hl=pl",
+        "reviews": 1,
+        "photos": 1
+      },
+      "media": [
+        {
+          "type": "image",
+          "imageUrl": "https://lh3.googleusercontent.com/geougc-cs/ABOP9pvQkvNexsI8gMfPT2z28FRorqniAEZOWzFv8SjdWO00odmpAPE3vJpQhhm3HpzbWVqA-BodlE_jDdKKE01FM0ooL-b1aflMP0AOmoSnCHoQXC47hsnGaUwQO3chks0wYjBQQvlLpL-JOvdT"
+        }
+      ],
+      "response": {
+        "date": "15 godzin temu",
+        "snippet": "Dziękujemy zapraszamy ponownie 🌯🔥🌯🌯🔥👍🏿👍🏿👍🏿👍🏿👍🏿👍🏿👍🏿👍🏿👍🏿💪🏿💪🏿💪🏿💪🏿💪🏿"
+      },
+      "link": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT2xSQmNsQmhXV3QzUVVGbVpXOXlXblpXUVhwUFFrRRAB!2m1!1s0x0:0x41535e1d7e02aa19!3m1!1s2@1:CAIQACodChtycF9oOlRBclBhWWt3QUFmZW9yWnZWQXpPQkE%7C0dcz7iiG-Wn%7C?hl=pl",
+      "id": "Ci9DQUlRQUNvZENodHljRjlvT2xSQmNsQmhXV3QzUVVGbVpXOXlXblpXUVhwUFFrRRAB"
+    },
+    {
+      "rating": 5,
+      "date": "wczoraj",
+      "isoDate": "2026-02-28T20:33:57.155Z",
+      "likes": 0,
+      "user": {
+        "name": "Michał Tokarz",
+        "thumbnail": "https://lh3.googleusercontent.com/a/ACg8ocI0yD4TozKTz8pvo_9PS9aAqQ7_UxZ2IXqUQwegX5F5f1tTHw=s64-c-rp-mo-br100",
+        "link": "https://www.google.com/maps/contrib/101825133395579188814/reviews?hl=pl",
+        "reviews": 11,
+        "photos": 1
+      },
+      "response": {
+        "date": "wczoraj",
+        "snippet": "Dziękujemy zapraszamy ponownie 🌯🔥🔥🔥🌯"
+      },
+      "link": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT21WRFYxUlpWMnRmWldGWGVWVllUWGxpYUdVeWIxRRAB!2m1!1s0x0:0x41535e1d7e02aa19!3m1!1s2@1:CAIQACodChtycF9oOmVDV1RZV2tfZWFXeVVYTXliaGUyb1E%7C0dcp3p8GYmc%7C?hl=pl",
+      "id": "Ci9DQUlRQUNvZENodHljRjlvT21WRFYxUlpWMnRmWldGWGVWVllUWGxpYUdVeWIxRRAB"
+    },
+    {
+      "rating": 5,
+      "date": "wczoraj",
+      "isoDate": "2026-02-28T14:02:49.863Z",
+      "snippet": "Po prostu najlepszy kebab który jadłem w Polsce pan który sprzedaje jest po prostu super",
+      "likes": 0,
+      "user": {
+        "name": "Андрій Стрілець",
+        "thumbnail": "https://lh3.googleusercontent.com/a/ACg8ocIYrAbv-2bRSHwPenIFMzVtmuIfPnOCKDjzRZtU0CCXjp-LTg=s64-c-rp-mo-br100",
+        "link": "https://www.google.com/maps/contrib/105023540564033196055/reviews?hl=pl",
+        "reviews": 5,
+        "photos": 0
+      },
+      "response": {
+        "date": "wczoraj",
+        "snippet": "Dziękujemy zapraszamy ponownie 🌯🔥🌯🔥"
+      },
+      "link": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT21OcVZURlpVMkpRTFc0MFNFTlhkVU13ZFZKbVlVRRAB!2m1!1s0x0:0x41535e1d7e02aa19!3m1!1s2@1:CAIQACodChtycF9oOmNqVTFZU2JQLW40SENXdUMwdVJmYUE%7C0dcjL8nUjPE%7C?hl=pl",
+      "id": "Ci9DQUlRQUNvZENodHljRjlvT21OcVZURlpVMkpRTFc0MFNFTlhkVU13ZFZKbVlVRRAB"
+    },
+    {
+      "rating": 5,
+      "date": "wczoraj",
+      "isoDate": "2026-02-28T09:25:13.483Z",
+      "snippet": "Rewelacja! Widać pasję włożoną w kebaba.\nBardzo przemyślana kompozycja.\n\nPozdrawiamy!",
+      "likes": 0,
+      "user": {
+        "name": "Mateusz M",
+        "thumbnail": "https://lh3.googleusercontent.com/a/ACg8ocLU4oaOf-ZD2LFHgVS1H4rrH0NF7xgz_ZUsa0NMt3EP4J9RJQ=s64-c-rp-mo-br100",
+        "link": "https://www.google.com/maps/contrib/113940013653282157019/reviews?hl=pl",
+        "reviews": 6,
+        "photos": 0
+      },
+      "response": {
+        "date": "wczoraj",
+        "snippet": "Bardzo dziękujemy zapraszamy ponownie 🌯 jest moc💪🏿💪🏿💪🏿👍🏿"
+      },
+      "link": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT25SR2FERnNNVUZRYTNGRFdGWTVTMDVMTUdSNVlVRRAB!2m1!1s0x0:0x41535e1d7e02aa19!3m1!1s2@1:CAIQACodChtycF9oOnRGaDFsMUFQa3FDWFY5S05LMGR5YUE%7C0dcfGtRoY17%7C?hl=pl",
+      "id": "Ci9DQUlRQUNvZENodHljRjlvT25SR2FERnNNVUZRYTNGRFdGWTVTMDVMTUdSNVlVRRAB"
+    },
+    {
+      "rating": 5,
+      "date": "wczoraj",
+      "isoDate": "2026-02-28T08:16:59.359Z",
+      "likes": 0,
+      "user": {
+        "name": "Lukasz Kijakowski",
+        "thumbnail": "https://lh3.googleusercontent.com/a/ACg8ocLvdd2PjYTp0u6SQC1_JMREij-rhnzqUqQNTWgQJfWTp74ZBw=s64-c-rp-mo-br100",
+        "link": "https://www.google.com/maps/contrib/105928952585201793050/reviews?hl=pl",
+        "reviews": 5,
+        "photos": 3
+      },
+      "response": {
+        "date": "wczoraj",
+        "snippet": "Dziękujemy zapraszamy ponownie 🌯🔥🌯🔥🔥"
+      },
+      "link": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT2pNeGNGZERaMWRNVTFOSVQxQmZYMWxIUjNsUVQzYxAB!2m1!1s0x0:0x41535e1d7e02aa19!3m1!1s2@1:CAIQACodChtycF9oOjMxcFdDZ1dMU1NIT1BfX1lHR3lQT3c%7C0dceGvKPv-X%7C?hl=pl",
+      "id": "Ci9DQUlRQUNvZENodHljRjlvT2pNeGNGZERaMWRNVTFOSVQxQmZYMWxIUjNsUVQzYxAB"
+    },
+    {
+      "rating": 5,
+      "date": "3 dni temu",
+      "isoDate": "2026-02-26T18:35:06.808Z",
+      "snippet": "Lawasz bardzo dobry mięso wyśmienite , świeże warzywa sosy extra. Na pewno wrócę 💪",
+      "likes": 0,
+      "user": {
+        "name": "zba Przemek",
+        "thumbnail": "https://lh3.googleusercontent.com/a/ACg8ocJcs2n8zVk4SzfdxxAvF_TAAE-sZbpcRVywFRR9nJS3-LmvRw=s64-c-rp-mo-br100",
+        "link": "https://www.google.com/maps/contrib/103481039499494620155/reviews?hl=pl",
+        "reviews": 4,
+        "photos": 1
+      },
+      "response": {
+        "date": "3 dni temu",
+        "snippet": "Żółwik 👊🏿👊🏿 dziękujemy zapraszamy ponownie 🌯"
+      },
+      "link": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT2toU1RrUTNlWFJGYkU5cmNsTm5aMnRDV2s1dk9IYxAB!2m1!1s0x0:0x41535e1d7e02aa19!3m1!1s2@1:CAIQACodChtycF9oOkhSTkQ3eXRFbE9rclNnZ2tCWk5vOHc%7C0dc88PkBz3W%7C?hl=pl",
+      "id": "Ci9DQUlRQUNvZENodHljRjlvT2toU1RrUTNlWFJGYkU5cmNsTm5aMnRDV2s1dk9IYxAB"
+    },
+    {
+      "rating": 5,
+      "date": "3 dni temu",
+      "isoDate": "2026-02-26T15:10:59.043Z",
+      "likes": 0,
+      "user": {
+        "name": "Franek Wawrzak",
+        "thumbnail": "https://lh3.googleusercontent.com/a/ACg8ocJheMq18mEVJe-SI-nL5fp5ynKbJA6sDL-j6Z8MUtRbKsYsiJs=s64-c-rp-mo-br100",
+        "link": "https://www.google.com/maps/contrib/108735691678488205998/reviews?hl=pl",
+        "reviews": 0,
+        "photos": 0
+      },
+      "response": {
+        "date": "3 dni temu",
+        "snippet": "Dziękujemy zapraszamy ponownie 🌯🔥🔥🔥🌯🔥"
+      },
+      "link": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT2xkUVZXRTViazkxVUdWdFJsZEZaM1ZWWXpjMldsRRAB!2m1!1s0x0:0x41535e1d7e02aa19!3m1!1s2@1:CAIQACodChtycF9oOldQVWE5bk91UGVtRldFZ3VVYzc2WlE%7C0dc5921ZIP2%7C?hl=pl",
+      "id": "Ci9DQUlRQUNvZENodHljRjlvT2xkUVZXRTViazkxVUdWdFJsZEZaM1ZWWXpjMldsRRAB"
+    },
+    {
+      "rating": 5,
+      "date": "4 dni temu",
+      "isoDate": "2026-02-25T20:28:41.696Z",
+      "snippet": "Kebab bardzo dobry, dobrze doprawione mięso, świerze warzywa, smaczne sosy i sympatyczny właściciel. Polecam serdecznie ☺️",
+      "likes": 0,
+      "user": {
+        "name": "Natalia",
+        "thumbnail": "https://lh3.googleusercontent.com/a/ACg8ocJQpBcGjDXjUkiFf2cNGGM9yuWkrkWcehKDZdv5HW4hnKK_eg=s64-c-rp-mo-br100",
+        "link": "https://www.google.com/maps/contrib/108443241868724176875/reviews?hl=pl",
+        "reviews": 8,
+        "photos": 0
+      },
+      "response": {
+        "date": "4 dni temu",
+        "snippet": "Dziękujemy zapraszamy ponownie 🌯🔥🌯🔥🔥🌯🌯🔥"
+      },
+      "link": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT2tkUWNWZGtTMHhOT1hOSFMzUlhTVGxMUmpKWk5rRRAB!2m1!1s0x0:0x41535e1d7e02aa19!3m1!1s2@1:CAIQACodChtycF9oOkdQcVdkS0xNOXNHS3RXSTlLRjJZNkE%7C0dbphtdVcwi%7C?hl=pl",
+      "id": "Ci9DQUlRQUNvZENodHljRjlvT2tkUWNWZGtTMHhOT1hOSFMzUlhTVGxMUmpKWk5rRRAB"
+    },
+    {
+      "rating": 5,
+      "date": "4 dni temu",
+      "isoDate": "2026-02-25T19:17:32.905Z",
+      "snippet": "Jeden z najlepszych kebabów jakie jadłem w życiu. Pan właściciel przemiły, proponował dolewkę sosu jeśli będzie za mało. Dużo mięsa naprawdę przepyszny i warty ceny.",
+      "likes": 1,
+      "user": {
+        "name": "dj michas",
+        "thumbnail": "https://lh3.googleusercontent.com/a/ACg8ocJUJrHXOJ9TmBTU0XjHWOIn1gBgT0l680KA_P2PuqKIXHf7ow=s64-c-rp-mo-br100",
+        "link": "https://www.google.com/maps/contrib/113830580999917792542/reviews?hl=pl",
+        "reviews": 1,
+        "photos": 0
+      },
+      "response": {
+        "date": "4 dni temu",
+        "snippet": "Ok bardzo dziękuję pozdrawiam serdecznie i zapraszamy ponownie 🌯🔥🌯🔥🔥 jest ogień 🔥 jest moc🌯🌯🌯"
+      },
+      "link": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT2t0emRrWTNkVGRJVG1ab1FVMWZZMHd3TVhscGIwRRAB!2m1!1s0x0:0x41535e1d7e02aa19!3m1!1s2@1:CAIQACodChtycF9oOktzdkY3dTdITmZoQU1fY0wwMXlpb0E%7C0dbofBpy8GD%7C?hl=pl",
+      "id": "Ci9DQUlRQUNvZENodHljRjlvT2t0emRrWTNkVGRJVG1ab1FVMWZZMHd3TVhscGIwRRAB"
+    },
+    {
+      "rating": 5,
+      "date": "4 dni temu",
+      "isoDate": "2026-02-25T17:37:11.290Z",
+      "likes": 0,
+      "user": {
+        "name": "Podziooo",
+        "thumbnail": "https://lh3.googleusercontent.com/a/ACg8ocK4Hq3DL0ZGjFXc5fVuDSz0a6LR01a5FNP42Zl6erR7PlX-YA=s64-c-rp-mo-br100",
+        "link": "https://www.google.com/maps/contrib/113058072069439777240/reviews?hl=pl",
+        "reviews": 0,
+        "photos": 0
+      },
+      "response": {
+        "date": "4 dni temu",
+        "snippet": "Dziękujemy zapraszamy ponownie 🌯🔥🌯🔥🔥 ogień 💪🏿💪🏿💪🏿💪🏿💪🏿💪🏿💪🏿"
+      },
+      "link": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT2xkT1Nrb3lhMVU0VkdwYU5WUlVURzlLVmxrek5GRRAB!2m1!1s0x0:0x41535e1d7e02aa19!3m1!1s2@1:CAIQACodChtycF9oOldOSkoya1U4VGpaNVRUTG9KVlkzNFE%7C0dbnC6GKCHV%7C?hl=pl",
+      "id": "Ci9DQUlRQUNvZENodHljRjlvT2xkT1Nrb3lhMVU0VkdwYU5WUlVURzlLVmxrek5GRRAB"
+    },
+    {
+      "rating": 5,
+      "date": "4 dni temu",
+      "isoDate": "2026-02-25T15:40:15.421Z",
+      "snippet": "dawno nie jadlam lepszego kebaba!! byl na prawde przepyszny do tego bardzo miły pan ktory widac ze robi to z pasji!! miejsce super bardzo polecam razem z moim chlopakiem",
+      "likes": 0,
+      "user": {
+        "name": "Julia Litwińczuk",
+        "thumbnail": "https://lh3.googleusercontent.com/a/ACg8ocLWOhkXF1kS7zqaJ2qTgAxo6gWC18qmkdxFU4Otvopt1vbG-u8=s64-c-rp-mo-br100",
+        "link": "https://www.google.com/maps/contrib/106090840325642431651/reviews?hl=pl",
+        "reviews": 1,
+        "photos": 0
+      },
+      "response": {
+        "date": "4 dni temu",
+        "snippet": "Dziękujemy zapraszamy ponownie 🌯🔥🔥🔥"
+      },
+      "link": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT25OWGVGTlZWMmg0ZEdaSFJraDVOVVZ0WTBkZmNIYxAB!2m1!1s0x0:0x41535e1d7e02aa19!3m1!1s2@1:CAIQACodChtycF9oOnNXeFNVV2h4dGZHRkh5NUVtY0dfcHc%7C0dblUUO7qG-%7C?hl=pl",
+      "id": "Ci9DQUlRQUNvZENodHljRjlvT25OWGVGTlZWMmg0ZEdaSFJraDVOVVZ0WTBkZmNIYxAB"
+    },
+    {
+      "rating": 5,
+      "date": "4 dni temu",
+      "isoDate": "2026-02-25T15:38:38.467Z",
+      "likes": 0,
+      "user": {
+        "name": "Swider",
+        "thumbnail": "https://lh3.googleusercontent.com/a/ACg8ocKd3_B7kUrevYHgFQOeesMTt2xKNMWHkXUfDj-4SCjARAfKKxA=s64-c-rp-mo-br100",
+        "link": "https://www.google.com/maps/contrib/105803513455465504362/reviews?hl=pl",
+        "reviews": 1,
+        "photos": 0
+      },
+      "response": {
+        "date": "4 dni temu",
+        "snippet": "Dziękujemy zapraszamy ponownie 🌯🔥🌯🔥🔥"
+      },
+      "link": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT2poclZEUmFSMUV3YkVoWWRtUjRXRVZWY0VaeE5sRRAB!2m1!1s0x0:0x41535e1d7e02aa19!3m1!1s2@1:CAIQACodChtycF9oOjhrVDRaR1EwbEhYdmR4WEVVcEZxNlE%7C0dblSyQqYKQ%7C?hl=pl",
+      "id": "Ci9DQUlRQUNvZENodHljRjlvT2poclZEUmFSMUV3YkVoWWRtUjRXRVZWY0VaeE5sRRAB"
+    },
+    {
+      "rating": 5,
+      "date": "4 dni temu",
+      "isoDate": "2026-02-25T13:46:08.644Z",
+      "snippet": "Super kebaby!!",
+      "translatedSnippet": "Super kebab!!",
+      "likes": 1,
+      "user": {
+        "name": "Bernard Przeor",
+        "thumbnail": "https://lh3.googleusercontent.com/a/ACg8ocL0Tb-4jup16Qw3dKpNW1YhXMweVAG3PaTlQtoKBTq_vBTD=s64-c-rp-mo-br100",
+        "link": "https://www.google.com/maps/contrib/113509308879368399898/reviews?hl=pl",
+        "reviews": 9,
+        "photos": 2
+      },
+      "response": {
+        "date": "4 dni temu",
+        "snippet": "Dziękujemy zapraszamy ponownie 🌯🔥🌯🔥💪🏿💪🏿jest moc"
+      },
+      "link": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT21WQ1lrbFFZV2RrVDBGcVkwNU5OR0p5Wm1WVlMwRRAB!2m1!1s0x0:0x41535e1d7e02aa19!3m1!1s2@1:CAIQACodChtycF9oOmVCYklQYWdkT0FqY05NNGJyZmVVS0E%7C0dbjoVaOtNP%7C?hl=pl",
+      "id": "Ci9DQUlRQUNvZENodHljRjlvT21WQ1lrbFFZV2RrVDBGcVkwNU5OR0p5Wm1WVlMwRRAB"
+    },
+    {
+      "rating": 5,
+      "date": "5 dni temu",
+      "isoDate": "2026-02-24T21:46:07.172Z",
+      "snippet": "Kebab bardzo dobry, byliśmy na zamknięcie a i tak dostaliśmy dopieszczone kebaby , prawdziwy lawasz, mięsko wygląda i smakuje bardzo dobrze, sosy bardzo przyjemnie.",
+      "likes": 1,
+      "user": {
+        "name": "kanszi",
+        "thumbnail": "https://lh3.googleusercontent.com/a/ACg8ocJR03dap04R3-AGRBO-JAYkKeLs2_eU6fKVw30Ca_TTIAE5Xg=s64-c-rp-mo-ba2-br100",
+        "link": "https://www.google.com/maps/contrib/114360742008346942365/reviews?hl=pl",
+        "reviews": 4,
+        "photos": 0
+      },
+      "response": {
+        "date": "5 dni temu",
+        "snippet": "Dziękujemy zapraszamy ponownie 🌯 🔥🌯🔥🔥💪🏿💪🏿😘😘"
+      },
+      "link": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT21WRGJWZFlZeTB3Tm1KaFJGQklhekZ3ZEVKTGExRRAB!2m1!1s0x0:0x41535e1d7e02aa19!3m1!1s2@1:CAIQACodChtycF9oOmVDbVdYYy0wNmJhRFBIazFwdEJLa1E%7C0dbWkU9GgIC%7C?hl=pl",
+      "id": "Ci9DQUlRQUNvZENodHljRjlvT21WRGJWZFlZeTB3Tm1KaFJGQklhekZ3ZEVKTGExRRAB"
+    },
+    {
+      "rating": 5,
+      "date": "5 dni temu",
+      "isoDate": "2026-02-24T19:32:22.004Z",
+      "likes": 0,
+      "user": {
+        "name": "Jakub Kaczyński",
+        "thumbnail": "https://lh3.googleusercontent.com/a/ACg8ocI-M8B_yiCSjK3iWjX1rvRoVGlBEsLNSiLv2stNntpuRAZhjkY=s64-c-rp-mo-br100",
+        "link": "https://www.google.com/maps/contrib/106252496585619028310/reviews?hl=pl",
+        "reviews": 1,
+        "photos": 0
+      },
+      "response": {
+        "date": "5 dni temu",
+        "snippet": "Dziękujemy zapraszamy ponownie 🌯🔥🌯🔥🔥"
+      },
+      "link": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT25KMVlsZElVbHBmTjBsUmJrVkpVMFJXTUVOUWEzYxAB!2m1!1s0x0:0x41535e1d7e02aa19!3m1!1s2@1:CAIQACodChtycF9oOnJ1YldIUlpfN0lRbkVJU0RWMENQa3c%7C0dbUn5-HYoG%7C?hl=pl",
+      "id": "Ci9DQUlRQUNvZENodHljRjlvT25KMVlsZElVbHBmTjBsUmJrVkpVMFJXTUVOUWEzYxAB"
+    },
+    {
+      "rating": 5,
+      "date": "5 dni temu",
+      "isoDate": "2026-02-24T17:15:12.657Z",
+      "snippet": "To jest najlepszy kebab, jaki jadłam w życiu! 🌯🔥\n\nMięso jest idealnie doprawione, soczyste i świeże, warzywa chrupiące, a sosy… po prostu obłędne! Wszystko perfekcyjnie zbalansowane – czuć jakość w każdym kęsie. Porcje są naprawdę duże, więc wychodzi się najedzonym i szczęśliwym 😍\n\nObsługa bardzo miła i szybka, lokal czysty i przyjemny. Widać, że robią to z pasją i dbają o klienta.\n\nJeśli ktoś się jeszcze zastanawia – nie ma nad czym! To miejsce zdecydowanie warte odwiedzenia. Na pewno będę wracać i polecać wszystkim znajomym ❤️",
+      "likes": 1,
+      "user": {
+        "name": "Анастасія Крук",
+        "thumbnail": "https://lh3.googleusercontent.com/a/ACg8ocKA69gSgUuT8XbJKYzjEdfRuatOtA6Hrv_LtBaulc4VZ3I6IA=s64-c-rp-mo-br100",
+        "link": "https://www.google.com/maps/contrib/104307462943047211575/reviews?hl=pl",
+        "reviews": 3,
+        "photos": 0
+      },
+      "response": {
+        "date": "5 dni temu",
+        "snippet": "❤️❤️❤️❤️ dla cb serduszko dziękujemy zapraszamy ponownie 🌯 🔥🌯🔥🔥🔥💪🏿💪🏿jest moc 😘😘😘😘😘"
+      },
+      "link": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT2sxMFFUaHhlbWRVTWt3elZsSm9lSGRwWlRoU1FVRRAB!2m1!1s0x0:0x41535e1d7e02aa19!3m1!1s2@1:CAIQACodChtycF9oOk10QThxemdUMkwzVlJoeHdpZThSQUE%7C0dbSmVbBqfc%7C?hl=pl",
+      "id": "Ci9DQUlRQUNvZENodHljRjlvT2sxMFFUaHhlbWRVTWt3elZsSm9lSGRwWlRoU1FVRRAB"
+    },
+    {
+      "rating": 5,
+      "date": "5 dni temu",
+      "isoDate": "2026-02-24T15:53:42.117Z",
+      "likes": 0,
+      "user": {
+        "name": "Piotr Najda",
+        "thumbnail": "https://lh3.googleusercontent.com/a/ACg8ocKh2xA1CNThmxgL92ZX39P0FvyFBv10X0sQt1vltcVrbNK8pg=s64-c-rp-mo-br100",
+        "link": "https://www.google.com/maps/contrib/102512239570720844197/reviews?hl=pl",
+        "reviews": 0,
+        "photos": 0
+      },
+      "response": {
+        "date": "5 dni temu",
+        "snippet": "Dziękujemy zapraszamy ponownie 🌯🔥🌯🔥🔥"
+      },
+      "link": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT21Wd1VubFFiVE5mZVV3d1pUWldOekp5UjIxUVQwRRAB!2m1!1s0x0:0x41535e1d7e02aa19!3m1!1s2@1:CAIQACodChtycF9oOmVwUnlQbTNfeUwwZTZWNzJyR21QT0E%7C0dbRa55yScl%7C?hl=pl",
+      "id": "Ci9DQUlRQUNvZENodHljRjlvT21Wd1VubFFiVE5mZVV3d1pUWldOekp5UjIxUVQwRRAB"
+    },
+    {
+      "rating": 5,
+      "date": "5 dni temu",
+      "isoDate": "2026-02-24T14:20:43.027Z",
+      "snippet": "super kebab i super pan",
+      "likes": 1,
+      "user": {
+        "name": "Jakub",
+        "thumbnail": "https://lh3.googleusercontent.com/a-/ALV-UjXUYbf-yvO3fqA1RpiW8xFn3obp5wPmssJLrdq2f1dI4n_H1GZ1=s64-c-rp-mo-br100",
+        "link": "https://www.google.com/maps/contrib/118419744528440850213/reviews?hl=pl",
+        "reviews": 2,
+        "photos": 0
+      },
+      "response": {
+        "date": "5 dni temu",
+        "snippet": "Dziękujemy zapraszamy ponownie 🌯🔥🌯🔥🔥"
+      },
+      "link": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT2xSSk1tazJhV1I2WmtkNlp6UXlaRnBpV25SeVFYYxAB!2m1!1s0x0:0x41535e1d7e02aa19!3m1!1s2@1:CAIQACodChtycF9oOlRJMmk2aWR6Zkd6ZzQyZFpiWnRyQXc%7C0dbQDv0ekwa%7C?hl=pl",
+      "id": "Ci9DQUlRQUNvZENodHljRjlvT2xSSk1tazJhV1I2WmtkNlp6UXlaRnBpV25SeVFYYxAB"
+    }
+  ],
+  "nextPageToken": "OowBQ0FFU1kwTkJSVkZHUW5CRlVUSndSbE5WUmxOVFdFSkVXakk1UWxWRVkzbFNNRFV5VEZkVmVHTXhPV1pTVjJoRllsVlJNbE5XVGs1VlJHeHlZbGhPZDJKc1JrWldWVVpDVVZWR1FsSXlaSFZQVkVveFdUQk9XazFzT0RGT01XUXpWMVZHUkZOVlJRPT1CAEoA",
+  "credits": 1
+}

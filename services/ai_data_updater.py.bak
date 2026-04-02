@@ -1,0 +1,270 @@
+# services/ai_data_updater.py
+import os
+import time
+from datetime import datetime, timedelta
+from typing import List, Dict, Optional
+import asyncio
+from services.ai_service import AIKebabAnalyzer
+from services.google_places_enhanced import GooglePlacesEnhancedService
+from services.pocketbase_db import PocketbaseService
+
+class AIDataUpdater:
+    def __init__(self, db_service: PocketbaseService, google_service: GooglePlacesEnhancedService, 
+                 openai_api_key: str):
+        self.db_service = db_service
+        self.google_service = google_service
+        self.ai_analyzer = AIKebabAnalyzer(openai_api_key)
+        
+    def update_ai_analysis_for_city(self, city_name: str, limit: int = 10):
+        """Update AI analysis for top kebabs in a city"""
+        print(f"--- Starting AI analysis for {city_name}---")
+        
+        # First clear all AI scores for this city
+        self._clear_ai_scores_for_city(city_name)
+        
+        # Get top kebabs in the city
+        rankings = self.db_service.get_city_rankings(city_name)[:limit]
+        
+        for kebab in rankings:
+            try:
+                print(f"\nAnalysis for: {kebab['name']}")
+                self._analyze_single_kebab(kebab)
+                time.sleep(2)  # Rate limiting
+            except Exception as e:
+                print(f"Error analyzing {kebab['name']}: {e}")
+                continue
+        
+        print(f"\nAI analysis complete for {city_name}")
+    
+    def _analyze_single_kebab(self, kebab_data: Dict):
+        """Analyze a single kebab place"""
+        place_id = kebab_data['google_place_id']
+        
+        # Fetch reviews from Google
+        reviews = self.google_service.get_place_reviews(place_id, max_reviews=100)
+        
+        if not reviews:
+            print(f"  Warning: No reviews found for {kebab_data['name']}")
+            return
+        
+        print(f"  - Found {len(reviews)} reviews")
+        
+        # Cache reviews in database
+        self._cache_reviews(kebab_data, reviews)
+        
+        # Run AI analysis
+        ai_analysis = self.ai_analyzer.analyze_reviews_batch(reviews)
+        
+        # Calculate AI-adjusted score
+        ai_adjusted_score = self._calculate_ai_adjusted_score(
+            kebab_data['rank_score'],
+            ai_analysis
+        )
+        
+        # Generate AI summary
+        ai_summary = self._generate_summary(kebab_data['name'], ai_analysis)
+        
+        # Store AI analysis in database
+        self._store_ai_analysis(kebab_data, ai_analysis, ai_adjusted_score, ai_summary)
+        
+        print(f"  - AI Score: {ai_adjusted_score:.1f} (was {kebab_data['rank_score']:.1f})")
+        print(f"  - Sentiment: {ai_analysis['sentiment_analysis']['average_sentiment']:.2f}")
+        print(f"  - Authenticity: {ai_analysis['authenticity_analysis']['authenticity_score']:.1f}%")
+        print(f"  - Trend: {ai_analysis['trend_analysis']['trend']}")
+    
+    def _cache_reviews(self, kebab_data: Dict, reviews: List[Dict]):
+        """Cache reviews in database"""
+        for review in reviews:
+            try:
+                author_hash = hash(review['author_name'])
+                # Handle review_time which might be str or datetime
+                raw_time = review.get('time', '')
+                if isinstance(raw_time, datetime):
+                    iso_time = raw_time.isoformat()
+                elif isinstance(raw_time, str) and raw_time:
+                    iso_time = raw_time # Assume it's already usable or ISO
+                else:
+                    iso_time = datetime.now().isoformat()
+
+                self.db_service.upsert_cached_review({
+                    'kebab_place': self._get_kebab_place_id(kebab_data),
+                    'google_place_id': kebab_data['google_place_id'],
+                    'author_name': review['author_name'][:100],
+                    'author_id': str(author_hash),
+                    'rating': review['rating'],
+                    'review_text': review['text'][:1000],
+                    'review_time': iso_time,
+                    'language': review.get('language', 'pl'),
+                    'is_suspicious': False,
+                    'fetched_at': datetime.now().isoformat()
+                })
+            except Exception as e:
+                print(f"    Error caching review: {e}")
+                continue
+
+    def _calculate_ai_adjusted_score(self, base_score: float, ai_analysis: Dict) -> float:
+        """Calculate AI-adjusted score based on analysis"""
+        # Start with base score
+        ai_score = base_score
+        
+        # Sentiment adjustment (±5 points max)
+        sentiment = ai_analysis['sentiment_analysis']['average_sentiment']
+        ai_score += sentiment * 5
+        
+        # Authenticity adjustment (±10 points max)
+        authenticity = ai_analysis['authenticity_analysis']['authenticity_score']
+        if authenticity < 70:  # Suspicious reviews
+            ai_score -= (100 - authenticity) / 10
+        
+        # Trend adjustment (±5 points max)
+        momentum = ai_analysis['trend_analysis']['momentum']
+        ai_score += momentum / 20
+        
+        # Customer satisfaction adjustment (±5 points max)
+        satisfaction = ai_analysis['customer_insights']['customer_satisfaction_index']
+        ai_score += (satisfaction - 50) / 10
+        
+        # Ensure score stays within bounds
+        return float(max(0, min(100, ai_score)))
+    
+    def _generate_summary(self, kebab_name: str, ai_analysis: Dict) -> str:
+        """Generate human-readable summary"""
+        sentiment = ai_analysis['sentiment_analysis']['average_sentiment']
+        trend = ai_analysis['trend_analysis']['trend']
+        best_aspect = ai_analysis['aspect_analysis']['best_aspect']
+        satisfaction = ai_analysis['customer_insights']['customer_satisfaction_index']
+        
+        # Build summary parts
+        parts = []
+        
+        # Sentiment part
+        if sentiment > 0.5:
+            parts.append("Klienci są bardzo zadowoleni")
+        elif sentiment > 0:
+            parts.append("Klienci są generalnie zadowoleni")
+        elif sentiment < -0.5:
+            parts.append("Klienci wyrażają niezadowolenie")
+        else:
+            parts.append("Opinie są mieszane")
+        
+        # Best aspect
+        if best_aspect:
+            aspect_names = {
+                'meat': 'mięso',
+                'sauce': 'sosy',
+                'vegetables': 'warzywa',
+                'service': 'obsługa',
+                'portion': 'porcje',
+                'price': 'ceny'
+            }
+            parts.append(f"szczególnie chwalą {aspect_names.get(best_aspect, best_aspect)}")
+        
+        # Trend
+        if trend == 'improving':
+            parts.append("📈 jakość się poprawia")
+        elif trend == 'declining':
+            parts.append("📉 jakość spada")
+        
+        # Join parts
+        summary = f"{kebab_name}: {', '.join(parts)}. "
+        summary += f"Wskaźnik satysfakcji: {satisfaction:.0f}%"
+        
+        return summary
+    
+    def _store_ai_analysis(self, kebab_data: Dict, ai_analysis: Dict, 
+                          ai_score: float, ai_summary: str):
+        """Store AI analysis in database"""
+        try:
+            kebab_place_id = self._get_kebab_place_id(kebab_data)
+            
+            # Upsert AI analysis
+            self.db_service.upsert_ai_analysis(
+                kebab_place_id=kebab_place_id,
+                ai_analysis=ai_analysis,
+                ai_score=ai_score,
+                ai_summary=ai_summary
+            )
+            
+            # Update latest rating with AI score
+            self.db_service.update_rating_ai_data(
+                kebab_place_id=kebab_place_id,
+                ai_score=ai_score,
+                ai_confidence=ai_analysis.get('ai_confidence_score', 0)
+            )
+            
+        except Exception as e:
+            print(f"Error storing AI analysis: {e}")
+    
+    def _clear_ai_scores_for_city(self, city_name: str):
+        """Clear all AI scores for kebabs in a city"""
+        try:
+            city_id = self.db_service.get_city_id(city_name)
+            if not city_id:
+                print(f"  ❌ City not found: {city_name}")
+                return
+            
+            self.db_service.delete_ai_analysis_for_city(city_id)
+            print(f"  ✅ Cleared AI scores for {city_name}")
+        except Exception as e:
+            print(f"  ❌ Error clearing AI scores: {e}")
+
+    def _get_kebab_place_id(self, kebab_data: Dict) -> str:
+        """Get kebab place ID from database"""
+        place_id = self.db_service.get_place_id(kebab_data['google_place_id'])
+        if place_id:
+            return place_id
+        raise ValueError(f"Kebab place not found: {kebab_data['name']}")
+    
+    def get_ai_insights_for_display(self, kebab_place_id: int) -> Dict:
+        """Get AI insights formatted for display"""
+        try:
+            response = self.db_service.client.table('ai_analysis').select('*').eq(
+                'kebab_place_id', kebab_place_id
+            ).order('created_at', desc=True).limit(1).execute()
+            
+            if not response.data:
+                return None
+            
+            analysis = response.data[0]
+            data = analysis['analysis_data']
+            
+            # Format for frontend display
+            return {
+                'ai_score': round(analysis['ai_score'], 1),
+                'ai_summary': analysis['ai_summary'],
+                'confidence': round(analysis['confidence_score'], 1),
+                'sentiment': {
+                    'score': data['sentiment_analysis']['average_sentiment'],
+                    'label': self._get_sentiment_label(data['sentiment_analysis']['average_sentiment']),
+                    'distribution': data['sentiment_analysis']['sentiment_distribution']
+                },
+                'authenticity': {
+                    'score': data['authenticity_analysis']['authenticity_score'],
+                    'suspicious_count': data['authenticity_analysis']['suspicious_count']
+                },
+                'trends': {
+                    'direction': data['trend_analysis']['trend'],
+                    'momentum': data['trend_analysis']['momentum']
+                },
+                'best_features': data['aspect_analysis']['best_aspect'],
+                'worst_features': data['aspect_analysis']['worst_aspect'],
+                'customer_type': data['customer_insights']['primary_customer_type'],
+                'satisfaction_index': data['customer_insights']['customer_satisfaction_index'],
+                'last_updated': analysis['updated_at']
+            }
+        except Exception as e:
+            print(f"Error getting AI insights: {e}")
+            return None
+    
+    def _get_sentiment_label(self, score: float) -> str:
+        """Convert sentiment score to label"""
+        if score > 0.5:
+            return 'bardzo pozytywne'
+        elif score > 0.2:
+            return 'pozytywne'
+        elif score < -0.5:
+            return 'bardzo negatywne'
+        elif score < -0.2:
+            return 'negatywne'
+        else:
+            return 'neutralne'

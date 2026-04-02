@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CMSKM4X7XD"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-CMSKM4X7XD');
+    </script>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>{% if page_title %}{{ page_title }}{% else %}{% block title %}🥙 Kebab Rank Poland - Ranking najlepszych kebabów w Polsce{% endblock %}{% endif %}</title>
+    <meta name="description"
+          content="{% if page_description %}{{ page_description }}{% else %}{% block description %}Odkryj najlepsze kebaby w Polsce na podstawie ocen Google. Ranking kebabów w ponad 50 miastach, aktualizowany co tydzień.{% endblock %}{% endif %}">
+    <meta name="keywords"
+          content="{% if page_keywords %}{{ page_keywords }}{% else %}{% block keywords %}kebab, Poland, ranking, najlepszy kebab, ranking kebabów, kebab ranking, kebab Kraków, kebab Warszawa, kebab Gdańsk, kebab Wrocław{% endblock %}{% endif %}">
+
+    <!-- canonical -->
+    <link rel="canonical" href="{% block canonical %}https://www.kebabrank.com{{ request.path }}{% endblock %}">
+
+    <!-- Open Graph -->
+    <meta property="og:type"        content="article">
+    <meta property="og:title"       content="{% block og_title %}🥙 Kebab Rank Poland - Ranking najlepszych kebabów w Polsce{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Discover the best kebabs in Poland based on Google reviews. Updated weekly across major cities.{% endblock %}">
+    <meta property="og:image"       content="{% block og_image %}https://www.kebabrank.com/static/img/logo.png{% endblock %}">
+    <meta property="og:url"         content="{% block og_url %}https://www.kebabrank.com{{ request.path }}{% endblock %}">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card"        content="summary_large_image">
+    <meta name="twitter:title"       content="{% block tw_title %}🥙 Kebab Rank Poland - Ranking najlepszych kebabów w Polsce{% endblock %}">
+    <meta name="twitter:description" content="{% block tw_desc %}Discover the best kebabs in Poland based on Google reviews. Updated weekly across major cities.{% endblock %}">
+    <meta name="twitter:image"       content="{% block tw_image %}https://www.kebabrank.com/static/img/logo.png{% endblock %}">
+    <meta name="twitter:url"         content="{% block tw_url %}https://www.kebabrank.com{{ request.path }}{% endblock %}">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=3">
+    
+    <!-- Leaflet.js CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" 
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" 
+          crossorigin=""/>
+   
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+<header>
+    <!-- Desktop Header -->
+    <div class="desktop-header">
+        <!-- Blog pill visible on every page -->
+        <nav class="top-nav">
+            <a href="/blog" class="nav-link blog-link" data-translate="nav-blog">📝 Blog</a>
+        </nav>
+        <div class="header-right">
+            <div class="language-switcher">
+                <img src="https://flagcdn.com/pl.svg" alt="Polski" class="lang-flag" data-lang="pl" title="Polski">
+                <img src="https://flagcdn.com/gb.svg" alt="English" class="lang-flag active" data-lang="en" title="English">
+            </div>
+            <!-- Social icons -->
+            <div class="social-links">
+            <a href="mailto:kebabrank@gmail.com"    class="soc" aria-label="E-mail"><svg viewBox="0 0 24 24"><path d="M2 4h20v16H2z" fill="#fff"/><path d="M2 6l10 7 10-7" fill="#e67e22"/></svg></a>
+            <a href="https://www.instagram.com/kebabrank/"  class="soc" aria-label="Instagram"  target="_blank"><svg viewBox="0 0 24 24"><path d="M7 2h10a5 5 0 015 5v10a5 5 0 01-5 5H7a5 5 0 01-5-5V7a5 5 0 015-5zm5 5a5 5 0 100 10 5 5 0 000-10zm6.5-.5a1 1 0 100 2 1 1 0 000-2z" fill="#fff"/></svg></a>
+            <a href="https://www.tiktok.com/@kebabrank"     class="soc" aria-label="TikTok"     target="_blank"><svg viewBox="0 0 24 24"><path d="M9 2h4c.1 3 2 5 5 5v4c-1 0-2-.2-3-.6v4.6a7 7 0 11-7-7V9a3 3 0 103 3v-3h-2V2z" fill="#fff"/></svg></a>
+            <a href="https://www.facebook.com/profile.php?id=61577128095107" class="soc" aria-label="Facebook"  target="_blank"><svg viewBox="0 0 24 24"><path d="M9 8H7v4h2v12h5V12h3.6l.4-4H14V6c0-1 .3-1.4 1.5-1.4H18V1h-3c-3 0-6 1-6 5v2z" fill="#fff"/></svg></a>
+            </div>
+        </div>
+
+
+        <div class="header-content">
+            <a href="/" style="text-decoration:none;color:inherit">
+                <img src="/static/img/logo.png" alt="Kebab Rank Logo" class="logo">
+                <div class="header-title">
+                    <h1 data-translate="header-title">Kebab Rank Polska</h1>
+                    <span class="ai-header-badge" title="Ranking wspierany analizą AI recenzji Google">🔮 AI-Powered Ranking</span>
+                </div>
+            </a>
+            <div class="header-subtitles">
+                <p data-translate="header-subtitle-1">Pierwszy w Polsce ranking kebabów wspierany sztuczną inteligencją</p>
+                <p data-translate="header-subtitle-2">Zapraszamy do zapoznania się z naszymi artykułami</p>
+                <p data-translate="header-subtitle-3">Dane rankingowe odświeżane co 7 dni</p>
+            </div>
+            <div class="update-timer">
+                <span class="timer-icon">🕐</span>
+                <span data-translate="next-update">Next update in:</span>
+                <span id="countdown" class="countdown-timer">--:--:--</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Header -->
+    <div class="mobile-header">
+        <div class="mobile-header-line-1">
+            <div class="mobile-social-flags-container">
+                <div class="language-switcher">
+                    <img src="https://flagcdn.com/pl.svg" alt="Polski" class="lang-flag" data-lang="pl" title="Polski">
+                    <img src="https://flagcdn.com/gb.svg" alt="English" class="lang-flag active" data-lang="en" title="English">
+                </div>
+                <!-- Social icons -->
+                <div class="social-links">
+                <a href="mailto:kebabrank@gmail.com"    class="soc" aria-label="E-mail"><svg viewBox="0 0 24 24"><path d="M2 4h20v16H2z" fill="#fff"/><path d="M2 6l10 7 10-7" fill="#e67e22"/></svg></a>
+                <a href="https://www.instagram.com/kebabrank/"  class="soc" aria-label="Instagram"  target="_blank"><svg viewBox="0 0 24 24"><path d="M7 2h10a5 5 0 015 5v10a5 5 0 01-5 5H7a5 5 0 01-5-5V7a5 5 0 015-5zm5 5a5 5 0 100 10 5 5 0 000-10zm6.5-.5a1 1 0 100 2 1 1 0 000-2z" fill="#fff"/></svg></a>
+                <a href="https://www.tiktok.com/@kebabrank"     class="soc" aria-label="TikTok"     target="_blank"><svg viewBox="0 0 24 24"><path d="M9 2h4c.1 3 2 5 5 5v4c-1 0-2-.2-3-.6v4.6a7 7 0 11-7-7V9a3 3 0 103 3v-3h-2V2z" fill="#fff"/></svg></a>
+                <a href="https://www.facebook.com/profile.php?id=61577128095107" class="soc" aria-label="Facebook"  target="_blank"><svg viewBox="0 0 24 24"><path d="M9 8H7v4h2v12h5V12h3.6l.4-4H14V6c0-1 .3-1.4 1.5-1.4H18V1h-3c-3 0-6 1-6 5v2z" fill="#fff"/></svg></a>
+                </div>
+            </div>
+        </div>
+        <div class="mobile-header-line-2">
+            <span class="ai-header-badge" title="AI-Powered Kebab Ranking">🔮 AI-Powered-Kebab-Ranking</span>
+        </div>
+    </div>
+</header>
+
+<main>
+    {% block content %}{% endblock %}
+</main>
+
+<footer>
+    <p>© 2025 kebabrank.com all rights reserved.</p>
+</footer>
+
+<!-- Leaflet.js JavaScript -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" 
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" 
+        crossorigin=""></script>
+
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

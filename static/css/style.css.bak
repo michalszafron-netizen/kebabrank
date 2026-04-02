@@ -1,0 +1,2231 @@
+/* static/css/style.css */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+    line-height: 1.6;
+}
+
+header {
+    background-color: #2c3e50;
+    color: white;
+    text-align: center;
+    padding: 2rem 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    position: relative;
+}
+
+/* Default header visibility - desktop header visible, mobile header hidden */
+.desktop-header {
+    display: block;
+}
+
+.mobile-header {
+    display: none;
+}
+
+/* Logo positioned absolutely on the left */
+header .logo {
+    position: absolute;
+    left: 2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 110px;
+    width: auto;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+
+/* Header content container */
+.header-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* Header title styles */
+.header-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    margin: 0;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+/* Header subtitles container */
+.header-subtitles {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+header p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    margin: 0;
+}
+
+.subtitle {
+    font-size: 0.9rem;
+    opacity: 0.7;
+    margin-top: 0.5rem;
+}
+
+/* Update timer */
+.update-timer {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    opacity: 0.8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.timer-icon {
+    font-size: 1.1rem;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.6; }
+    50% { opacity: 1; }
+    100% { opacity: 0.6; }
+}
+
+.countdown-timer {
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    color: #f39c12;
+    font-size: 1rem;
+    min-width: 80px;
+}
+
+/* Top navigation / blog pill */
+.top-nav {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    display: flex;
+    gap: 1rem;
+    z-index: 150;
+}
+
+.nav-link {
+    background: #e67e22;
+    color: #fff;
+    padding: 0.4rem 0.9rem;
+    font-size: 0.9rem;
+    border-radius: 9999px;
+    text-decoration: none;
+    transition: transform .2s, box-shadow .2s;
+    white-space: nowrap;
+}
+
+.nav-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,.2);
+}
+
+/* Playful sparkle on desktop */
+.blog-link::after {
+    content: "✨";
+    margin-left: 0.35rem;
+    animation: twinkle 4s infinite ease-in-out;
+    font-size: 0.9em;
+}
+
+@keyframes twinkle {
+    0%, 100% { opacity: 0; transform: scale(.8); }
+    50% { opacity: 1; transform: scale(1); }
+}
+
+/* Header right section - contains language switcher and social icons */
+.header-right {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* Language switcher */
+.language-switcher {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.lang-flag {
+    width: 30px;
+    height: 20px;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.3s ease;
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 2px;
+}
+
+.lang-flag:hover {
+    opacity: 1;
+}
+
+.lang-flag.active {
+    opacity: 1;
+    box-shadow: 0 0 5px rgba(255,255,255,0.5);
+}
+
+/* Social icons */
+.social-links {
+    display: flex;
+    gap: 0.65rem;
+    z-index: 150;
+}
+
+.soc {
+    width: 32px;
+    height: 32px;
+    display: grid;
+    place-items: center;
+    background: #e67e22;
+    border-radius: 50%;
+    box-shadow: 0 2px 6px rgba(0,0,0,.25);
+    transition: transform .25s, box-shadow .25s;
+}
+
+.soc:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0,0,0,.35);
+}
+
+.soc svg {
+    width: 18px;
+    height: 18px;
+    pointer-events: none;
+    fill: #fff;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    /* MOBILE SPACING OPTIMIZATION - Update 5 */
+    
+    /* 1. Header Section - Reduce excessive padding */
+    .mobile-header {
+        padding: 12px 0.5rem;
+    }
+    
+    /* Hide desktop header on mobile */
+    .desktop-header {
+        display: none;
+    }
+    
+    /* Show mobile header on mobile */
+    .mobile-header {
+        display: block;
+        text-align: center;
+    }
+    
+    /* Mobile header line 1 - social icons and flags */
+    .mobile-header-line-1 {
+        margin-bottom: 0.75rem;
+    }
+    
+    .mobile-social-flags-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.75rem;
+        flex-wrap: nowrap;
+    }
+    
+    /* Reduce flag sizes for mobile */
+    .mobile-social-flags-container .lang-flag {
+        width: 24px;
+        height: 16px;
+    }
+    
+    /* Reduce social icon sizes for mobile */
+    .mobile-social-flags-container .soc {
+        width: 28px;
+        height: 28px;
+    }
+    
+    .mobile-social-flags-container .soc svg {
+        width: 16px;
+        height: 16px;
+    }
+    
+    /* Mobile header line 2 - AI badge */
+    .mobile-header-line-2 {
+        margin-top: 0.5rem;
+    }
+    
+    .mobile-header-line-2 .ai-header-badge {
+        display: inline-block;
+        background: linear-gradient(135deg, #6e8efb, #a777e3);
+        color: white;
+        padding: 0.3rem 0.8rem;
+        border-radius: 16px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        text-align: center;
+    }
+    
+    /* Phase 2: Mobile Main Section Optimizations */
+    
+    /* 1. City Rankings & Global Top 10 Buttons - Horizontal Layout */
+    .controls-row .controls {
+        display: flex;
+        flex-direction: row;
+        gap: 8px;
+        width: 100%;
+        justify-content: center;
+        margin-bottom: 1rem;
+    }
+    
+    .tab-button {
+        padding: 8px 12px;
+        font-size: 14px;
+        border-radius: 5px;
+        min-height: 44px; /* Ensure touch target accessibility */
+        flex: 1;
+        min-width: 0; /* Prevents overflow */
+        max-width: 150px;
+    }
+    
+    /* 2. Search Section - Horizontal Layout */
+    .controls-row .search-container {
+        display: flex;
+        flex-direction: row;
+        gap: 4px;
+        width: 100%;
+        align-items: stretch; /* Same height for all elements */
+        margin-bottom: 1rem;
+    }
+    
+    #city-search {
+        flex: 0 0 50%; /* 50% width */
+        min-width: 0;
+        padding: 8px 12px;
+        font-size: 14px;
+        min-height: 44px;
+    }
+    
+    .dropdown-arrow {
+        flex: 0 0 10%; /* 10% width */
+        min-width: 0;
+        padding: 8px;
+        font-size: 12px;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .search-button {
+        flex: 0 0 40%; /* 40% width */
+        min-width: 0;
+        padding: 8px 12px;
+        font-size: 14px;
+        min-height: 44px;
+    }
+    
+    /* 3. Popular Cities - Single Horizontal Line */
+    .controls-row .popular-cities {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 5px;
+        font-size: 13px;
+        margin-bottom: 1rem;
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .popular-cities span {
+        margin-bottom: 0;
+        margin-right: 5px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+    
+    .city-quick-link {
+        background: none;
+        border: 1px solid #ddd;
+        padding: 4px 8px;
+        margin: 0;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-size: 12px;
+        white-space: nowrap;
+        min-height: 28px;
+    }
+
+    /* TASK 1: Hide "Number of kebabs to show:" text on mobile */
+    .kebab-count-slider label {
+        display: none;
+    }
+    
+    /* TASK 2: Optimize Popular Cities Section - Smaller font for single line */
+    .controls-row .popular-cities {
+        font-size: 9px;
+        line-height: 1.1;
+    }
+    
+    .controls-row .popular-cities .city-quick-link {
+        font-size: 9px;
+        margin-right: 6px;
+        padding: 2px 6px; /* Reduce padding for more compact layout */
+    }
+    
+    .city-quick-link:hover {
+        background-color: #e67e22;
+        color: white;
+        border-color: #e67e22;
+    }
+    
+    /* Original mobile styles */
+    header .logo {
+        position: static;
+        transform: none;
+        display: block;
+        margin: 0 auto 1rem;
+        height: 60px;
+    }
+    
+    header h1 {
+        font-size: 2rem;
+    }
+    
+    .update-timer {
+        font-size: 0.8rem;
+    }
+    
+    .countdown-timer {
+        font-size: 0.9rem;
+    }
+    
+    /* Stack nav elements on mobile */
+    .top-nav {
+        top: auto;
+        bottom: 1rem;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    
+    .header-right {
+        position: static;
+        justify-content: center;
+        margin-top: 0.5rem;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .social-links {
+        margin-top: 0.5rem;
+    }
+    
+    /* Mobile search optimizations */
+    .filter-section {
+        position: relative;
+        margin-top: 1rem;
+        z-index: 1002;
+    }
+    
+    .search-container {
+        flex-direction: column;
+        gap: 0.5rem;
+        max-width: 100%;
+        padding: 0;
+        margin-bottom: 1rem;
+    }
+    
+    #city-search {
+        font-size: 16px; /* Prevents zoom on iOS */
+        padding: 1rem;
+        border-radius: 8px;
+        border: 2px solid #ddd;
+        background: white;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    .search-button {
+        padding: 1rem;
+        font-size: 1.1rem;
+        border-radius: 8px;
+        width: 100%;
+    }
+    
+    .dropdown-arrow {
+        display: block; /* Show dropdown arrow on mobile */
+        background: #e67e22;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 0 0.75rem;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        font-size: 1.2rem;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    /* Mobile dropdown positioning - positioned under search container */
+    .city-dropdown {
+        position: absolute !important;
+        top: 100% !important;
+        left: 0 !important;
+        width: 100% !important;
+        max-height: 50vh !important;
+        margin-left: 0 !important;
+        border: 2px solid #e67e22 !important;
+        border-radius: 0 0 8px 8px !important;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3) !important;
+        z-index: 10000 !important;
+        background: white;
+        transform: translateY(0);
+        transition: transform 0.3s ease;
+        display: none; /* Start hidden */
+        overflow-y: auto;
+    }
+    
+    .city-dropdown.active {
+        transform: translateY(0);
+        display: block !important; /* Show when active */
+    }
+    
+    /* Ensure search container has relative positioning for dropdown */
+    .search-container {
+        position: relative;
+        z-index: 10001;
+    }
+    
+    .city-dropdown-item {
+        padding: 1rem 1.5rem;
+        font-size: 1.1rem;
+        border-bottom: 1px solid #f0f0f0;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+    
+    .city-dropdown-item:last-child {
+        border-bottom: none;
+    }
+    
+    .city-dropdown-item:hover {
+        background-color: #f8f9fa;
+    }
+    
+/* Popular cities on mobile */
+.popular-cities {
+    margin-top: 1rem;
+    padding: 0;
+}
+
+.city-quick-link {
+    padding: 0.8rem 1rem;
+    margin: 0.3rem;
+    font-size: 1rem;
+    border-radius: 25px;
+}
+
+/* Hide desktop-only cities on mobile */
+@media (max-width: 768px) {
+    .city-quick-link.desktop-only {
+        display: none !important;
+    }
+}
+    
+    /* Kebab count slider mobile */
+    .kebab-count-slider {
+        margin: 1rem 0;
+        padding: 0;
+    }
+    
+    .kebab-count-slider input[type="range"] {
+        height: 12px;
+    }
+    
+    .kebab-count-slider input[type="range"]::-webkit-slider-thumb {
+        width: 24px;
+        height: 24px;
+    }
+}
+
+main {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem 6rem 1rem;
+}
+
+/* Compact layout for desktop */
+.controls-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-bottom: 1rem;
+}
+
+.controls {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 0;
+}
+
+/* Adjust search container for compact layout */
+.controls-row .search-container {
+    margin: 0;
+    max-width: 400px;
+    flex: 1;
+}
+
+/* Adjust popular cities for compact layout */
+.controls-row .popular-cities {
+    margin-top: 0;
+    text-align: left;
+    flex: 1;
+}
+
+.controls-row .popular-cities span {
+    display: inline;
+    margin-right: 0.5rem;
+    margin-bottom: 0;
+}
+
+/* Adjust kebab count slider for compact layout */
+.controls-row .kebab-count-slider {
+    margin: 0;
+    text-align: right;
+    flex: 1;
+    max-width: 300px;
+}
+
+.controls-row .kebab-count-slider label {
+    display: inline;
+    margin-right: 0.5rem;
+    margin-bottom: 0;
+}
+
+.tab-button {
+    padding: 0.75rem 2rem;
+    border: none;
+    background-color: #e0e0e0;
+    color: #333;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.tab-button:hover {
+    background-color: #d0d0d0;
+}
+
+.tab-button.active {
+    background-color: #e67e22;
+    color: white;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.filter-section {
+    position: relative;
+    margin-bottom: 2rem;
+    overflow: visible !important;
+    z-index: 1002;
+}
+
+.search-container {
+    display: flex;
+    gap: 0.5rem;
+    max-width: 500px;
+    margin: 0 auto 1rem;
+    padding: 0 1rem;
+    position: relative;
+    overflow: visible !important; /* Ensure dropdown isn't clipped */
+    z-index: 1001; /* Higher than dropdown */
+}
+
+.dropdown-arrow {
+    background: #e67e22;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 0 0.75rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.dropdown-arrow:hover {
+    background: #d35400;
+}
+
+#city-search {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    background-color: white;
+}
+
+#city-search:focus {
+    outline: none;
+    border-color: #e67e22;
+}
+
+.search-button {
+    padding: 0.75rem 1.5rem;
+    background-color: #e67e22;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    white-space: nowrap;
+}
+
+.search-button:hover {
+    background-color: #d35400;
+}
+
+.popular-cities {
+    text-align: center;
+    margin-top: 1rem;
+    color: #666;
+    padding: 0 1rem;
+}
+
+.popular-cities span {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.city-quick-link {
+    background: none;
+    border: 1px solid #ddd;
+    padding: 0.4rem 0.8rem;
+    margin: 0.2rem;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+    display: inline-block;
+}
+
+.city-quick-link:hover {
+    background-color: #e67e22;
+    color: white;
+    border-color: #e67e22;
+}
+
+/* Show label only on desktop */
+@media (min-width: 768px) {
+    .filter-section label {
+        display: block;
+        text-align: center;
+        margin-bottom: 1rem;
+        font-weight: 600;
+        color: #555;
+    }
+    
+    .search-container {
+        padding: 0;
+    }
+}
+
+.filter-section label {
+    display: none;
+}
+
+.city-dropdown {
+    position: absolute;
+    top: calc(100% + 5px);
+    left: 0;
+    width: calc(100% - 40px); /* Account for button width */
+    max-height: 200px;
+    overflow-y: auto;
+    background: white;
+    border: 2px solid red !important; /* Debug border */
+    border-radius: 5px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 1000;
+    opacity: 1 !important;
+    display: block !important;
+    margin-left: 40px; /* Align with input field */
+}
+
+.city-dropdown-item {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.city-dropdown-item:hover {
+    background-color: #f8f9fa;
+}
+
+.city-dropdown-item:last-child {
+    border-bottom: none;
+}
+
+/* Kebab count slider styles */
+.kebab-count-slider {
+    margin: 1.5rem auto;
+    max-width: 500px;
+    padding: 0 1rem;
+    text-align: center;
+}
+
+.kebab-count-slider label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #555;
+}
+
+.kebab-count-slider input[type="range"] {
+    width: 100%;
+    height: 8px;
+    -webkit-appearance: none;
+    background: #ddd;
+    border-radius: 4px;
+    outline: none;
+    margin: 0.5rem 0;
+}
+
+.kebab-count-slider input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #e67e22;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.kebab-count-slider input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
+    background: #d35400;
+}
+
+#kebab-count-value {
+    display: inline-block;
+    min-width: 30px;
+    padding: 0.2rem 0.5rem;
+    background: #e67e22;
+    color: white;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    .kebab-count-slider {
+        margin: 1rem auto;
+    }
+}
+
+.rankings-container {
+    display: grid;
+    gap: 1rem;
+    padding: 0.5rem; /* Additional padding for content */
+}
+
+.kebab-card {
+    background-color: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+    margin: 0.5rem; /* Add margin to create space from orange border */
+}
+
+.kebab-card.top-five {
+    border: 3px solid #1a73e8;
+    box-shadow: 0 4px 8px rgba(26, 115, 232, 0.2);
+}
+
+.kebab-card.mid-five {
+    border: 3px solid #ff9800;
+    box-shadow: 0 4px 8px rgba(255, 152, 0, 0.2);
+}
+
+/* Top 5 blue borders */
+.kebab-card.top-five {
+    border: 3px solid #1a73e8;
+    box-shadow: 0 4px 8px rgba(26, 115, 232, 0.2);
+}
+
+/* Ranks 6-10 orange borders */ 
+.kebab-card.mid-five {
+    border: 3px solid #ff9800;
+    box-shadow: 0 4px 8px rgba(255, 152, 0, 0.2);
+}
+
+/* Complete color scheme matching map markers - FORCE OVERRIDE */
+/* Gold for #1 */
+.kebab-card:nth-child(1) .rank-badge,
+.kebab-card[data-rank="1"] .rank-badge,
+.kebab-card.ai-enhanced[data-rank="1"] .rank-badge,
+.kebab-card.top-three[data-rank="1"] .rank-badge {
+    background-color: #FFD700 !important; /* Gold */
+    color: white !important;
+}
+
+/* Silver for #2 */
+.kebab-card:nth-child(2) .rank-badge,
+.kebab-card[data-rank="2"] .rank-badge,
+.kebab-card.ai-enhanced[data-rank="2"] .rank-badge,
+.kebab-card.top-three[data-rank="2"] .rank-badge {
+    background-color: #C0C0C0 !important; /* Silver */
+    color: white !important;
+}
+
+/* Bronze for #3 */
+.kebab-card:nth-child(3) .rank-badge,
+.kebab-card[data-rank="3"] .rank-badge,
+.kebab-card.ai-enhanced[data-rank="3"] .rank-badge,
+.kebab-card.top-three[data-rank="3"] .rank-badge {
+    background-color: #CD7F32 !important; /* Bronze */
+    color: white !important;
+}
+
+/* Orange for ranks 4-10 */
+.kebab-card:nth-child(4) .rank-badge,
+.kebab-card:nth-child(5) .rank-badge,
+.kebab-card:nth-child(6) .rank-badge,
+.kebab-card:nth-child(7) .rank-badge,
+.kebab-card:nth-child(8) .rank-badge,
+.kebab-card:nth-child(9) .rank-badge,
+.kebab-card:nth-child(10) .rank-badge,
+.kebab-card[data-rank="4"] .rank-badge,
+.kebab-card[data-rank="5"] .rank-badge,
+.kebab-card[data-rank="6"] .rank-badge,
+.kebab-card[data-rank="7"] .rank-badge,
+.kebab-card[data-rank="8"] .rank-badge,
+.kebab-card[data-rank="9"] .rank-badge,
+.kebab-card[data-rank="10"] .rank-badge,
+.kebab-card.ai-enhanced[data-rank="4"] .rank-badge,
+.kebab-card.ai-enhanced[data-rank="5"] .rank-badge,
+.kebab-card.ai-enhanced[data-rank="6"] .rank-badge,
+.kebab-card.ai-enhanced[data-rank="7"] .rank-badge,
+.kebab-card.ai-enhanced[data-rank="8"] .rank-badge,
+.kebab-card.ai-enhanced[data-rank="9"] .rank-badge,
+.kebab-card.ai-enhanced[data-rank="10"] .rank-badge {
+    background-color: #e67e22 !important; /* Orange */
+    color: white !important;
+}
+
+/* Blue for ranks 11+ (already set as default) */
+.kebab-card:nth-child(n+11) .rank-badge,
+.kebab-card[data-rank="11"] .rank-badge,
+.kebab-card[data-rank="12"] .rank-badge,
+.kebab-card[data-rank="13"] .rank-badge,
+.kebab-card[data-rank="14"] .rank-badge,
+.kebab-card[data-rank="15"] .rank-badge,
+.kebab-card[data-rank="16"] .rank-badge,
+.kebab-card[data-rank="17"] .rank-badge,
+.kebab-card[data-rank="18"] .rank-badge,
+.kebab-card[data-rank="19"] .rank-badge,
+.kebab-card[data-rank="20"] .rank-badge,
+.kebab-card.ai-enhanced[data-rank="11"] .rank-badge,
+.kebab-card.ai-enhanced[data-rank="12"] .rank-badge,
+.kebab-card.ai-enhanced[data-rank="13"] .rank-badge,
+.kebab-card.ai-enhanced[data-rank="14"] .rank-badge,
+.kebab-card.ai-enhanced[data-rank="15"] .rank-badge,
+.kebab-card.ai-enhanced[data-rank="16"] .rank-badge,
+.kebab-card.ai-enhanced[data-rank="17"] .rank-badge,
+.kebab-card.ai-enhanced[data-rank="18"] .rank-badge,
+.kebab-card.ai-enhanced[data-rank="19"] .rank-badge,
+.kebab-card.ai-enhanced[data-rank="20"] .rank-badge {
+    background-color: #3498db !important; /* Blue */
+    color: white !important;
+}
+
+.ai-header-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #6e8efb, #a777e3);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 16px;
+    font-size: 14px;
+    font-weight: bold;
+    margin-left: 10px;
+    vertical-align: middle;
+}
+
+.header-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.ai-icon {
+    font-size: 24px;
+    color: #a777e3;
+}
+
+.rank-badge {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    background-color: #3498db; /* Default blue for ranks 11+ */
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.champion-badge {
+    background-color: #f39c12;
+    box-shadow: 0 0 20px rgba(243, 156, 18, 0.5);
+}
+
+.medal-badge {
+    font-size: 1.8rem;
+}
+
+.champion-badge span {
+    font-size: 0.8rem;
+    color: #f39c12;
+    font-weight: bold;
+    margin-left: 0.5rem;
+    text-transform: uppercase;
+}
+
+.kebab-info {
+    margin-left: 70px;
+}
+
+.kebab-name {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 0.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.rank-change {
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    margin-left: 0.5rem;
+    transition: all 0.2s ease;
+    position: relative;
+    z-index: 10;
+}
+
+.rank-change.up {
+    color: #27ae60;
+    background-color: rgba(39, 174, 96, 0.15);
+    border: 1px solid rgba(39, 174, 96, 0.4);
+}
+
+.rank-change.down {
+    color: #e74c3c;
+    background-color: rgba(231, 76, 60, 0.15);
+    border: 1px solid rgba(231, 76, 60, 0.4);
+}
+
+.rank-change.neutral {
+    color: #7f8c8d;
+    background-color: rgba(127, 140, 141, 0.15);
+    border: 1px solid rgba(127, 140, 141, 0.4);
+}
+
+.rank-change.new {
+    color: #3498db;
+    background-color: rgba(52, 152, 219, 0.15);
+    border: 1px solid rgba(52, 152, 219, 0.4);
+    animation: pulse 2s infinite;
+    font-weight: bold;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* Tooltip for rank changes */
+.rank-change::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #2c3e50;
+    color: white;
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+    z-index: 100;
+}
+
+.rank-change:hover::after {
+    opacity: 1;
+}
+
+.kebab-address {
+    color: #7f8c8d;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.kebab-city {
+    color: #e67e22;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.kebab-stats {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.stat {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-score {
+    background-color: #f8f9fa;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    border: 2px solid #e67e22;
+}
+
+.score-value {
+    color: #e67e22;
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: #7f8c8d;
+    text-transform: uppercase;
+}
+
+.stat-value {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+/* Desktop-only single-line score layout */
+@media (min-width: 769px) {
+    .kebab-stats {
+        display: flex !important;
+        justify-content: space-between !important;
+        padding: 6px 0 !important;
+        border-top: 1px solid #e0e0e0 !important;
+        border-bottom: 1px solid #e0e0e0 !important;
+        gap: 8px !important;
+        margin: 8px 0 !important;
+    }
+    
+    .stat {
+        display: inline-flex !important;
+        align-items: baseline !important;
+        gap: 3px !important;
+        font-size: 12px !important;
+        flex-direction: row !important;
+        background: none !important;
+        border: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        flex: 1 !important;
+        min-width: 0 !important;
+        justify-content: center !important;
+    }
+    
+    .stat-score {
+        background: none !important;
+        border: none !important;
+        padding: 0 !important;
+        display: inline-flex !important;
+        align-items: baseline !important;
+        gap: 3px !important;
+    }
+    
+    .stat-label {
+        font-size: 9px !important;
+        color: #777 !important;
+        font-weight: 600 !important;
+        margin-bottom: 0 !important;
+        white-space: nowrap !important;
+    }
+    
+    /* Force uniform sizing for all score numbers */
+    .score-value,
+    .stat-value,
+    .ai-score-value {
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        color: #333 !important;
+        white-space: nowrap !important;
+    }
+    
+    /* Ensure AI SCORE matches other scores - override conflicting rules */
+    .stat-ai-score .score-value,
+    .kebab-stats .ai-score-value,
+    .kebab-stats [class*="ai"] .score-value,
+    .kebab-stats .stat:nth-child(4) .score-value {
+        font-size: 13px !important;
+        color: #667eea !important;
+    }
+    
+    /* Rating specific styling */
+    .stat:nth-child(2) .score-value {
+        color: #f39c12 !important;
+    }
+    
+    /* Optimize ranking panel padding for better score display */
+    .rankings-panel {
+        padding: 1rem !important;
+    }
+    
+    /* Reduce kebab card padding for more space */
+    .kebab-card {
+        padding: 1rem !important;
+    }
+}
+
+.rating {
+    color: #f39c12;
+}
+
+.loading {
+    text-align: center;
+    padding: 3rem;
+    color: #7f8c8d;
+}
+
+.info-message {
+    text-align: center;
+    padding: 3rem;
+    color: #7f8c8d;
+    font-size: 1.1rem;
+}
+
+.info-text {
+    text-align: center;
+    color: #7f8c8d;
+    margin-bottom: 1.5rem;
+}
+
+.info-text a {
+    color: #e67e22;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.info-text a:hover {
+    text-decoration: underline;
+}
+
+/* Desktop footer remains unchanged */
+footer {
+    background-color: #34495e;
+    color: white;
+    text-align: center;
+    padding: 2rem;
+    margin-top: 4rem;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    z-index: 100;
+}
+
+/* Mobile footer spacing reduction */
+@media (max-width: 768px) {
+    footer {
+        background-color: #34495e;
+        color: white;
+        text-align: center;
+        padding: 10px 15px !important;
+        margin: 0 !important;
+        position: fixed; /* Keep it fixed for mobile */
+        bottom: 0;
+        width: 100%;
+        z-index: 100;
+    }
+    
+    /* Compact copyright text */
+    footer p,
+    .footer p,
+    .copyright,
+    footer > * {
+        margin: 0 !important;
+        padding: 0 !important;
+        font-size: 12px !important;
+        line-height: 1.3 !important;
+    }
+    
+    /* Adjust main content padding to account for fixed footer */
+    main {
+        padding-bottom: 60px !important; /* Add space for fixed footer */
+    }
+}
+
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 2rem;
+    }
+    
+    .controls {
+        flex-direction: column;
+    }
+    
+    .tab-button {
+        width: 100%;
+    }
+    
+    .kebab-info {
+        margin-left: 0;
+        margin-top: 1rem;
+    }
+    
+    .rank-badge {
+        position: static;
+        margin: 0 auto 1rem;
+    }
+    
+    .kebab-stats {
+        gap: 1rem;
+    }
+    
+    /* Mobile responsive for compact layout */
+    .controls-row {
+        flex-direction: column;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .controls-row .controls {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .controls-row .search-container {
+        max-width: 100%;
+        width: 100%;
+    }
+    
+    .controls-row .popular-cities {
+        text-align: center;
+        width: 100%;
+    }
+    
+    .controls-row .popular-cities span {
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+    
+    .controls-row .kebab-count-slider {
+        text-align: center;
+        max-width: 100%;
+        width: 100%;
+    }
+    
+    .controls-row .kebab-count-slider label {
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* Add these styles to your style.css file */
+
+/* AI Badge */
+.ai-badge {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: normal;
+    display: inline-block;
+    margin-left: 0.5rem;
+    animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 5px rgba(102, 126, 234, 0.5); }
+    50% { box-shadow: 0 0 20px rgba(102, 126, 234, 0.8); }
+}
+
+/* AI Enhanced Card */
+.kebab-card.ai-enhanced {
+    border: 2px solid #667eea;
+    background: linear-gradient(to bottom right, #fafbff, #fff);
+}
+
+.kebab-card.ai-enhanced:hover {
+    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+}
+
+/* AI Summary */
+.ai-summary {
+    background: #f0f4ff;
+    padding: 0.75rem;
+    border-radius: 8px;
+    margin: 0.75rem 0;
+    border-left: 3px solid #667eea;
+}
+
+.ai-summary-text {
+    font-size: 0.9rem;
+    color: #4a5568;
+    margin: 0;
+    font-style: italic;
+}
+
+/* AI Insights */
+.ai-insights {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-top: 1.5rem;
+}
+
+.ai-insights-title {
+    color: #4a5568;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.insight-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.insight-card {
+    background: white;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.insight-icon {
+    font-size: 1.5rem;
+    color: #667eea;
+}
+
+.insight-content {
+    flex: 1;
+}
+
+.insight-label {
+    font-size: 0.85rem;
+    color: #718096;
+    margin-bottom: 0.25rem;
+}
+
+.insight-value {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #2d3748;
+}
+
+.insight-label {
+    font-size: 0.85rem;
+    color: #718096;
+    font-weight: 500;
+}
+
+.insight-value {
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+/* Sentiment Colors */
+.sentiment-very-positive { color: #22c55e; }
+.sentiment-positive { color: #84cc16; }
+.sentiment-neutral { color: #6b7280; }
+.sentiment-negative { color: #f59e0b; }
+.sentiment-very-negative { color: #ef4444; }
+
+/* AI Modal */
+.ai-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.ai-modal-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.close-modal {
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+    font-size: 2rem;
+    cursor: pointer;
+    color: #718096;
+    transition: color 0.2s;
+}
+
+.close-modal:hover {
+    color: #2d3748;
+}
+
+.insight-section {
+    margin: 1.5rem 0;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.insight-section h3 {
+    margin: 0 0 1rem 0;
+    color: #2d3748;
+    font-size: 1.1rem;
+}
+
+/* Sentiment Chart */
+.sentiment-chart {
+    display: flex;
+    height: 30px;
+    border-radius: 15px;
+    overflow: hidden;
+    margin: 1rem 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.sentiment-bar {
+    transition: width 0.5s ease;
+}
+
+.sentiment-bar.positive {
+    background: #22c55e;
+}
+
+.sentiment-bar.neutral {
+    background: #94a3b8;
+}
+
+.sentiment-bar.negative {
+    background: #ef4444;
+}
+
+/* Confidence Meter */
+.confidence-meter {
+    width: 100%;
+    height: 20px;
+    background: #e2e8f0;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 0.5rem 0;
+}
+
+.confidence-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    transition: width 0.5s ease;
+}
+
+/* Insight Stats */
+.insight-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.stat-icon {
+    font-size: 1.5rem;
+}
+
+.stat-text {
+    font-size: 0.9rem;
+    color: #4a5568;
+}
+
+/* AI Score Enhancement */
+.stat-score.ai-powered {
+    background: linear-gradient(135deg, #f0f4ff 0%, #e0e7ff 100%);
+    border-color: #667eea;
+    position: relative;
+}
+
+.stat-score.ai-powered .score-value {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.ai-score-badge {
+    background: #667eea;
+    color: white;
+    font-size: 0.7rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 10px;
+    font-weight: bold;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.ai-score-value {
+    font-size: 14px !important;
+}
+
+/* City ranking title styling */
+.city-ranking-title {
+    text-align: center;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 1.5rem 2rem;
+    padding: 0 1rem;
+    line-height: 1.4;
+}
+
+/* AI badge styling adjustments */
+.ai-header-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #6e8efb, #a777e3);
+    color: white;
+    padding: 3px 6px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
+    margin-left: 8px;
+    vertical-align: middle;
+}
+
+/* Split-screen layout styles */
+.split-layout {
+    display: flex;
+    gap: 1rem;
+    margin: 2rem 0;
+    min-height: 600px;
+}
+
+.rankings-panel {
+    flex: 0 0 40%;
+    background: white;
+    border-radius: 12px;
+    border: 3px solid #e67e22;
+    box-shadow: 0 4px 15px rgba(230, 126, 34, 0.2);
+    overflow-y: auto;
+    max-height: 800px;
+    position: relative;
+    padding: 1.5rem; /* Add padding inside orange frame */
+}
+
+
+.rankings-panel::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    border-radius: 15px;
+    background: linear-gradient(135deg, #e67e22, #d35400);
+    z-index: -1;
+    opacity: 0.1;
+}
+
+.map-panel {
+    flex: 0 0 60%;
+    background: white;
+    border-radius: 12px;
+    border: 3px solid #e67e22;
+    box-shadow: 0 4px 15px rgba(230, 126, 34, 0.2);
+    overflow: hidden;
+    position: relative;
+}
+
+.map-panel::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    border-radius: 15px;
+    background: linear-gradient(135deg, #e67e22, #d35400);
+    z-index: -1;
+    opacity: 0.1;
+}
+
+.map-container {
+    width: 100%;
+    height: 100%;
+    min-height: 600px;
+    position: relative;
+    z-index: 1; /* Ensure map scrolls under footer */
+}
+
+.map-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    background: #f8f9fa;
+    color: #6c757d;
+    font-size: 1.1rem;
+    text-align: center;
+    padding: 2rem;
+}
+
+/* Mobile responsive for split layout */
+@media (max-width: 768px) {
+    .split-layout {
+        flex-direction: column;
+        min-height: auto;
+        display: flex;
+    }
+    
+    .rankings-panel,
+    .map-panel {
+        flex: 1;
+        max-height: none;
+    }
+    
+    .map-container {
+        min-height: 400px;
+        position: relative;
+    }
+    
+    /* URGENT FIX: Reorder Map and Search Sections for Mobile */
+    .rankings-panel {
+        order: 2; /* Move search section to position 2 */
+    }
+    
+    .map-panel {
+        order: 1; /* Move map section to position 1 */
+    }
+    
+    /* URGENT FIX: Relocate Kebab Count Slider to Map Bottom (Mobile Only) */
+    .kebab-count-slider {
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1000;
+        background: rgba(255, 255, 255, 0.95);
+        padding: 8px 15px;
+        border-radius: 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        margin: 0;
+        width: auto;
+        max-width: 200px;
+        font-size: 12px;
+    }
+    
+    .kebab-count-slider input[type="range"] {
+        height: 6px;
+        margin: 3px 0;
+    }
+    
+    .kebab-count-slider input[type="range"]::-webkit-slider-thumb {
+        width: 16px;
+        height: 16px;
+    }
+    
+    #kebab-count-value {
+        font-size: 12px;
+        padding: 2px 6px;
+        min-width: 20px;
+    }
+
+    /* MOBILE SPACING OPTIMIZATION - Update 5 - Continued */
+    
+    /* 2. Tab Buttons - Reduce size while maintaining touch targets */
+    .tab-button {
+        font-size: 14px;
+        padding: 10px 16px;
+        min-height: 44px; /* Maintain minimum touch target */
+    }
+    
+    /* 3. Space Between Ranking Buttons and Search Section */
+    .filter-section {
+        margin-top: 16px;
+    }
+    
+    /* 4. Space Between Search Section and Popular Section */
+    .controls-row .search-container {
+        margin-bottom: 16px;
+    }
+    
+    /* 5. Space Between Popular Section and Map */
+    .controls-row .popular-cities {
+        margin-bottom: 16px;
+    }
+    
+    /* Additional spacing optimizations */
+    .split-layout {
+        margin-top: 16px;
+    }
+    
+    .city-grid-section {
+        margin-top: 16px;
+        padding: 16px 0;
+    }
+}
+
+/* City Grid Styles */
+.city-grid-section {
+    margin-top: 3rem;
+    padding: 2rem 0;
+    border-top: 1px solid #e0e0e0;
+}
+
+.city-grid-section h3 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #2c3e50;
+    font-size: 1.5rem;
+}
+
+.city-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.city-grid-item {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+    text-decoration: none;
+    color: #333;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.city-grid-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    border-color: #e67e22;
+    color: #e67e22;
+}
+
+.city-grid-item .city-name {
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+.city-grid-item .city-link {
+    font-size: 0.9rem;
+    color: #666;
+    text-decoration: none;
+}
+
+.city-grid-item:hover .city-link {
+    color: #e67e22;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .ai-modal-content {
+        padding: 1.5rem;
+        width: 95%;
+    }
+    
+    .ai-insights {
+        font-size: 0.85rem;
+    }
+    
+    .insight-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .ai-badge {
+        display: block;
+        margin: 0.5rem 0;
+    }
+    .ai-badge-small {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    font-size: 0.6rem;
+    padding: 0.1rem 0.4rem;
+    border-radius: 10px;
+    font-weight: bold;
+    display: inline-block;
+    margin-left: 0.3rem;
+    vertical-align: middle;
+    }
+    .stat-ai-score {
+    background-color: #f0f4ff;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    border: 2px solid #667eea;
+    }
+
+    .ai-score-value {
+        color: #667eea;
+        font-size: 1.1rem;
+        font-weight: 600;
+        position: relative;
+    }
+
+    /* Small AI indicator */
+    .ai-score-value::after {
+        content: "AI";
+        position: absolute;
+        top: -5px;
+        right: -15px;
+        font-size: 0.6rem;
+        background: #667eea;
+        color: white;
+        padding: 0.1rem 0.3rem;
+        border-radius: 8px;
+        font-weight: bold;
+    }
+
+    /* Mobile city grid */
+    .city-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 0.75rem;
+    }
+    
+    .city-grid-item {
+        padding: 0.75rem;
+    }
+    
+    .city-grid-item .city-name {
+        font-size: 1rem;
+    }
+    
+    /* TARGETED MOBILE SPACING FIXES - Based on actual HTML structure */
+    
+    /* 1. Header spacing - reduce padding */
+    header,
+    .mobile-header {
+        padding: 10px 15px !important;
+        margin-bottom: 0 !important;
+    }
+    
+    /* 2. Main content wrapper - remove excess padding */
+    main {
+        padding-top: 3px !important;
+        margin-top: 0 !important;
+    }
+    
+    /* 3. Buttons section - reduce spacing */
+    .controls-row .controls {
+        margin-bottom: 8px !important;
+        margin-top: 8px !important;
+    }
+    
+    /* 4. Individual buttons - smaller */
+    .tab-button {
+        font-size: 13px !important;
+        padding: 8px 12px !important;
+        min-height: 44px; /* Maintain touch target */
+    }
+    
+    /* 5. Search section - reduce spacing */
+    .controls-row .search-container {
+        margin-top: 8px !important;
+        margin-bottom: 8px !important;
+    }
+    
+    /* 6. Popular section - reduce spacing */
+    .controls-row .popular-cities {
+        margin-top: 8px !important;
+        margin-bottom: 4px !important;
+        padding: 0 !important;
+    }
+    
+    /* 7. Map section - reduce spacing */
+    .split-layout {
+        margin-top: 4px !important;
+    }
+    
+    /* 8. City grid section - reduce spacing */
+    .city-grid-section {
+        margin-top: 8px !important;
+        padding: 8px 0 !important;
+    }
+    
+    /* 9. Reduce spacing between all direct children of main content */
+    main > * {
+        margin-top: 8px !important;
+        margin-bottom: 8px !important;
+    }
+    
+    /* 10. Reduce spacing between filter section elements */
+    .filter-section > * {
+        margin-top: 8px !important;
+        margin-bottom: 8px !important;
+    }
+    
+    /* RANKING SECTION CLEANUP - Mobile Only */
+    
+    /* CHANGE 1: Title styling - smaller and centered */
+    .ranking-title,
+    h1,
+    [class*="title"],
+    .city-ranking-title,
+    #city-rankings h2 {
+        font-size: 18px !important;
+        text-align: center !important;
+        line-height: 1.3 !important;
+        margin: 8px 0 !important;
+    }
+    
+    /* CHANGE 2: Badge styling - centered with new text */
+    .ai-badge,
+    [class*="powered"] {
+        display: block !important;
+        margin: 0 auto !important;
+        text-align: center !important;
+        width: fit-content !important;
+    }
+    
+    /* CHANGE 3: Hide Google ranking text */
+    .ranking-description,
+    [class*="ranked-by"],
+    .ranking-header p,
+    .ranking-section > p,
+    .info-text {
+        display: none !important;
+    }
+    
+    /* CHANGE 4: Center ALL text in ranking section */
+    .ranking-section *,
+    #city-rankings *,
+    .tab-content.active * {
+        text-align: center !important;
+    }
+    
+    /* CHANGE 5: Collapsible Sections for Mobile */
+    .toggle-btn {
+        width: 100%;
+        padding: 10px;
+        background: #f5f5f5;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: bold;
+        text-align: left;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 8px 0;
+    }
+    
+    .arrow {
+        font-size: 12px;
+        transition: transform 0.3s;
+    }
+    
+    .collapsible-content {
+        padding: 10px;
+        font-size: 13px;
+        line-height: 1.4;
+        border: 1px solid #ddd;
+        border-top: none;
+        border-radius: 0 0 8px 8px;
+        margin-bottom: 10px;
+    }
+    
+    /* CHANGE 6: Score Optimization for Single Line */
+    /* Score containers */
+    .wynik,
+    .ocena,
+    .opinie,
+    .wynik-ai,
+    [class*="score"],
+    [class*="rating"],
+    .stat-score,
+    .stat,
+    .stat-ai-score {
+        font-size: 12px !important;
+        padding: 6px 8px !important;
+    }
+    
+    /* Score numbers */
+    .score-value,
+    .ai-score-value,
+    .stat-value {
+        font-size: 14px !important;
+        font-weight: bold !important;
+    }
+    
+    /* Score labels */
+    .stat-label {
+        font-size: 10px !important;
+        text-transform: uppercase;
+    }
+    
+    /* Container for all scores */
+    .kebab-stats {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        gap: 6px !important;
+        justify-content: space-between !important;
+    }
+    
+    /* Individual score boxes */
+    .stat {
+        flex: 1 !important;
+        min-width: 0 !important;
+        font-size: 12px !important;
+    }
+    
+    /* Specific targeting for blog links */
+    .info-text a,
+    .ranking-section a {
+        display: inline-block !important;
+        margin: 0 auto !important;
+    }
+}
+
+/* Lazy loading sentinel styles */
+.lazy-load-sentinel {
+    height: 1px;
+    width: 1px;
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    bottom: 0;
+}
+
+/* Performance optimization styles */
+.city-grid-item {
+    will-change: transform;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+}
+
+/* Loading animation for city grid */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.city-grid-item {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* Optimize scroll performance */
+.city-grid {
+    will-change: transform;
+    contain: content;
+}
+
+/* Cache indicator for debugging */
+.cache-indicator {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    z-index: 1000;
+    display: none; /* Hidden by default, can be enabled for debugging */
+}

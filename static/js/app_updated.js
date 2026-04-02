@@ -1,0 +1,1874 @@
+// static/js/app.js
+const $id = (id) => document.getElementById(id);
+
+// Translation object
+const translations = {
+    en: {
+        'header-title': 'Kebab Rank Poland',
+        'header-subtitle-1': 'First AI-powered kebab ranking in Poland',
+        'header-subtitle-2': 'Check out our articles',
+        'header-subtitle-3': 'Ranking data refreshed every 7 days',
+        'header-subtitle': 'Discover the best kebabs in Poland based on Google ratings',
+        'header-refresh': 'Data refreshed every 6 days to ensure accuracy while conserving resources',
+        'next-update': 'Next update in:',
+        'refreshing': 'Refreshing data...',
+        'tab-city': 'City Rankings',
+        'tab-global': 'Global Top 10',
+        'search-label': 'Search for a city',
+        'search-button': 'Search',
+        'popular': 'Popular:',
+        'search-prompt': 'Search for a city to see the best kebabs',
+        'global-title': 'Top 10 Kebabs in Poland',
+        'global-subtitle': 'Ranked by Google ratings and review count',
+        'loading': 'Loading...',
+        'score': 'Score',
+        'rating': 'Rating',
+        'reviews': 'Reviews',
+        'no-kebabs': 'No kebab places found.',
+        'error-loading': 'Error loading rankings. Please try again.',
+        'city-not-found': 'City not found. Try one of the available cities or contact us to add it.',
+        'top-kebabs': 'Top {count} Kebabs in {city}',
+        'ranking-subtitle': 'Ranked by Google ratings and review count',
+        'nav-blog': 'Blog',
+        'kebab-count-label': 'Number of kebabs to show:',
+        'all-cities': 'All Available Cities',
+        'loading-cities': 'Loading cities...',
+        'view-rankings': 'View rankings'
+    },
+    pl: {
+        'header-title': 'Kebab Rank Polska',
+        'header-subtitle-1': 'Pierwszy w Polsce ranking kebabów wspierany sztuczną inteligencją',
+        'header-subtitle-2': 'Zapraszamy do zapoznania się z naszymi artykułami',
+        'header-subtitle-3': 'Dane rankingowe odświeżane co 7 dni',
+        'header-subtitle': 'Odkryj najlepsze kebaby w Polsce na podstawie ocen Google',
+        'header-refresh': 'Dane odświeżane co 6 dni dla zapewnienia dokładności przy oszczędności zasobów',
+        'next-update': 'Następna aktualizacja za:',
+        'refreshing': 'Odświeżanie danych...',
+        'tab-city': 'Ranking miast',
+        'tab-global': 'Top 10 w Polsce',
+        'search-label': 'Szukaj miasta',
+        'search-button': 'Szukaj',
+        'popular': 'Popularne:',
+        'search-prompt': 'Wyszukaj miasto, aby zobaczyć najlepsze kebaby',
+        'global-title': 'Top 10 kebabów w Polsce',
+        'global-subtitle': 'Ranking według ocen Google i liczby opinii',
+        'loading': 'Ładowanie...',
+        'score': 'Wynik',
+        'rating': 'Ocena',
+        'reviews': 'Opinie',
+        'no-kebabs': 'Nie znaleziono kebabów.',
+        'error-loading': 'Błąd ładowania rankingu. Spróbuj ponownie.',
+        'city-not-found': 'Nie znaleziono miasta. Spróbuj jednego z dostępnych miast lub skontaktuj się z nami.',
+        'top-kebabs': 'Top {count} kebabów w mieście {city}',
+        'ranking-subtitle': 'Ranking według ocen Google i liczby opinii',
+        'nav-blog': 'Blog',
+        'kebab-count-label': 'Liczba kebabów do wyświetlenia:',
+        'all-cities': 'Wszystkie dostępne miasta',
+        'loading-cities': 'Ładowanie miast...',
+        'view-rankings': 'Zobacz ranking'
+    }
+};
+
+// Add AI translations
+const aiTranslations = {
+    en: {
+        'ai-powered': '🤖 AI-Powered-Kebab-Ranking',
+        'ai-score': 'AI Score',
+        'ai-insights': 'AI Insights',
+        'sentiment': 'Customer Sentiment',
+        'authenticity': 'Review Authenticity',
+        'trending': 'Trending',
+        'improving': '📈 Improving',
+        'declining': '📉 Declining',
+        'stable': '➡️ Stable',
+        'very-positive': '😍 Very Positive',
+        'positive': '😊 Positive',
+        'neutral': '😐 Neutral',
+        'negative': '😞 Negative',
+        'very-negative': '😡 Very Negative',
+        'ai-summary': 'AI Summary',
+        'confidence': 'Confidence',
+        'analyzing': 'Analyzing with AI...',
+        'no-ai-data': 'AI analysis not available yet'
+    },
+    pl: {
+        'ai-powered': '🤖 Wspierane przez AI',
+        'ai-score': 'Wynik AI',
+        'ai-insights': 'Analiza AI',
+        'sentiment': 'Nastroje klientów',
+        'authenticity': 'Autentyczność opinii',
+        'trending': 'Trend',
+        'improving': '📈 Poprawia się',
+        'declining': '📉 Spada',
+        'stable': '➡️ Stabilny',
+        'very-positive': '😍 Bardzo pozytywne',
+        'positive': '😊 Pozytywne',
+        'neutral': '😐 Neutralne',
+        'negative': '😞 Negatywne',
+        'very-negative': '😡 Bardzo negatywne',
+        'ai-summary': 'Podsumowanie AI',
+        'confidence': 'Pewność',
+        'analyzing': 'Analizowanie przez AI...',
+        'no-ai-data': 'Analiza AI jeszcze niedostępna'
+    }
+};
+
+// Merge with existing translations
+Object.keys(aiTranslations).forEach(lang => {
+    Object.assign(translations[lang], aiTranslations[lang]);
+});
+
+
+// Current language
+let currentLang = 'en';
+let countdownInterval;
+let availableCities = [];
+let allCities = []; // Global variable for city search
+
+// Map variables
+let kebabMap = null;
+let globalKebabMap = null;
+let mapMarkers = [];
+let globalMapMarkers = [];
+let currentCityBounds = null;
+
+// Search city function (moved to global scope)
+function searchCity() {
+    const cityName = $id('city-search')?.value.trim();
+    const dropdown = $id('city-dropdown');
+    
+    if (dropdown) {
+        dropdown.style.display = 'none';
+        dropdown.style.visibility = 'hidden';
+        dropdown.style.opacity = '0';
+    }
+    isDropdownOpen = false;
+    
+    if (!cityName) {
+        console.log('No city name entered');
+        return;
+    }
+    
+    // Validate if city exists in available cities (case-insensitive)
+    const normalizedCityName = cityName.toLowerCase();
+    const cityExists = allCities.some(city => 
+        city.toLowerCase() === normalizedCityName
+    );
+    
+    if (!cityExists) {
+        console.log(`City "${cityName}" not found in available cities`);
+        const container = $id('city-rankings');
+        if (container) {
+            container.innerHTML = `<p class="info-message">${translations[currentLang]['city-not-found']}</p>`;
+        }
+        return;
+    }
+    
+    console.log(`Searching for city: ${cityName}`);
+    
+    // If currently in Global Top 10, automatically switch to City Rankings
+    if ($id('global-tab')?.classList.contains('active')) {
+        console.log('Auto-switching from Global Top 10 to City Rankings');
+        // Switch to city tab programmatically
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.tab-button').forEach(button => button.classList.remove('active'));
+        $id('city-tab').classList.add('active');
+        document.querySelector('.tab-button[onclick="showTab(\'city\')"]').classList.add('active');
+        
+        // Handle map visibility
+        const cityMap = document.getElementById('kebab-map');
+        const globalMap = document.getElementById('kebab-map-global');
+        if (cityMap) cityMap.style.display = 'block';
+        if (globalMap) globalMap.style.display = 'none';
+        
+        // CRITICAL FIX: Invalidate size for city map on mobile
+        if (window.innerWidth <= 768 && kebabMap) {
+            setTimeout(() => {
+                kebabMap.invalidateSize();
+            }, 100);
+        }
+    }
+    
+    const limit = $id('kebab-count')?.value || 10;
+    checkAndLoadRankings(cityName, limit);
+    
+    // Update URL for sharing (same as in selectCity)
+    updateCityUrl(cityName);
+}
+
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', () => {
+    setupLanguageSwitcher();
+    const hasRankingWidgets = $id('global-rankings') || $id('city-rankings');
+    if (hasRankingWidgets) {
+        loadCities();
+        loadGlobalRankings();
+        startCountdown();
+        
+        // Handle URL routing and initial city
+        handleUrlRouting();
+        
+        // Auto-load Kraków as default city - fixed approach
+        setTimeout(() => {
+            console.log('🔄 Checking if Kraków should auto-load...');
+            const searchInput = $id('city-search');
+            const cityRankings = $id('city-rankings');
+            
+            // Check if we're on home page (no city-specific URL)
+            const isHomePage = window.location.pathname === '/' || window.location.pathname === '';
+            
+            // Check if rankings are empty (showing search prompt)
+            const hasEmptyRankings = cityRankings && cityRankings.innerHTML.includes('search-prompt');
+            
+            // Check if search field is empty OR contains Kraków but rankings aren't loaded
+            const searchValue = searchInput ? searchInput.value.trim() : '';
+            const hasKrakowInSearch = searchValue === 'Kraków';
+            const shouldLoadKrakow = !searchValue || (hasKrakowInSearch && hasEmptyRankings);
+            
+            console.log('📊 Auto-load conditions:', {
+                isHomePage,
+                hasEmptyRankings,
+                searchInputValue: searchValue,
+                hasKrakowInSearch,
+                shouldLoadKrakow
+            });
+            
+            if (isHomePage && shouldLoadKrakow) {
+                console.log('✅ Auto-loading Kraków as default city');
+                autoLoadKrakowAsDefault();
+            } else {
+                console.log('❌ Skipping auto-load - conditions not met');
+            }
+        }, 1000); // Wait 1 second for other initialization to complete
+    }
+    const searchInput = $id('city-search');
+    if (searchInput) {
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') searchCity();
+        });
+    }
+
+    // Initialize kebab count slider
+    const kebabCountSlider = $id('kebab-count');
+    const kebabCountValue = $id('kebab-count-value');
+    if (kebabCountSlider && kebabCountValue) {
+        let debounceTimer;
+        kebabCountSlider.addEventListener('input', (e) => {
+            const value = parseInt(e.target.value);
+            kebabCountValue.textContent = value;
+            console.log(`Slider value changed to: ${value}`);
+            
+            // Debounce API calls
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                const cityName = $id('city-search')?.value;
+                if (cityName) {
+                    console.log(`Loading ${value} kebabs for ${cityName}`);
+                    const limit = parseInt($id('kebab-count').value);
+                    checkAndLoadRankings(cityName, limit);
+                }
+            }, 500); // 500ms delay
+        });
+    }
+    
+    // Add event listener for search button
+    const searchButton = $id('search-button');
+    if (searchButton) {
+        searchButton.addEventListener('click', searchCity);
+        console.log('Search button event listener added');
+    }
+
+    // URGENT FIX: Move kebab count slider to map bottom on mobile
+    if (window.innerWidth <= 768) {
+        const slider = document.querySelector('.kebab-count-slider');
+        const mapContainer = document.querySelector('.map-container');
+        
+        if (slider && mapContainer) {
+            console.log('Moving slider to map container for mobile');
+            
+            // Move slider into map container
+            mapContainer.appendChild(slider);
+            
+            // Apply overlay styling
+            slider.style.position = 'absolute';
+            slider.style.bottom = '15px';
+            slider.style.left = '50%';
+            slider.style.transform = 'translateX(-50%)';
+            slider.style.zIndex = '1000';
+            slider.style.background = 'rgba(255,255,255,0.95)';
+            slider.style.borderRadius = '20px';
+            slider.style.padding = '10px 20px';
+            slider.style.boxShadow = '0 3px 12px rgba(0,0,0,0.25)';
+            slider.style.fontSize = '12px';
+            slider.style.width = 'auto';
+            slider.style.margin = '0';
+            slider.style.minWidth = '260px';
+            
+            // Style the slider input
+            const sliderInput = slider.querySelector('input[type="range"]');
+            if (sliderInput) {
+                sliderInput.style.height = '6px';
+                sliderInput.style.margin = '3px 0';
+            }
+            
+            // Style the value display
+            const valueDisplay = slider.querySelector('#kebab-count-value');
+            if (valueDisplay) {
+                valueDisplay.style.fontSize = '12px';
+                valueDisplay.style.padding = '2px 6px';
+                valueDisplay.style.minWidth = '20px';
+            }
+            
+            console.log('Slider successfully moved and styled for mobile');
+        } else {
+            console.log('Slider or map container not found for mobile relocation');
+        }
+    }
+// Close dropdown when clicking outside
+document.addEventListener('click', (e) => {
+    const dropdown = $id('city-dropdown');
+    const searchInput = $id('city-search');
+    const dropdownArrow = document.querySelector('.dropdown-arrow');
+    
+    if (dropdown && 
+        !searchInput.contains(e.target) && 
+        !dropdown.contains(e.target) &&
+        !dropdownArrow.contains(e.target)) {
+        dropdown.style.display = 'none';
+        dropdown.style.visibility = 'hidden';
+        dropdown.style.opacity = '0';
+        isDropdownOpen = false;
+    }
+});
+});
+
+// Countdown timer functionality
+async function startCountdown() {
+    const cd = $id('countdown');
+    if (!cd) {
+        console.warn('Countdown element not found');
+        return;
+    }
+
+    console.log('Initializing countdown timer...');
+    
+    // Try to get last update from localStorage first
+    try {
+        const storedLastUpdate = localStorage.getItem('lastUpdate');
+        const storedInterval = localStorage.getItem('updateInterval');
+        
+        if (storedLastUpdate && storedInterval) {
+            console.log('Found cached timer data in localStorage');
+            const lastUpdate = new Date(storedLastUpdate);
+            const interval = parseInt(storedInterval);
+            
+            if (!isNaN(lastUpdate.getTime()) && !isNaN(interval)) {
+                startCountdownTimer(lastUpdate, interval);
+            } else {
+                console.warn('Invalid date or interval in localStorage');
+            }
+        }
+    } catch (err) {
+        console.error('Error reading localStorage:', err);
+    }
+
+    // Always fetch fresh data from API
+    try {
+        console.log('Fetching fresh timer data from API...');
+        const res = await fetch('/api/last-update');
+        
+        if (!res.ok) {
+            throw new Error(`API request failed with status ${res.status}`);
+        }
+
+        const data = await res.json();
+        console.log('API response:', data);
+        
+        if (data.status !== 'success' || !data.last_update) {
+            throw new Error('Invalid API response format');
+        }
+
+        let lastUpdate = new Date(data.last_update);
+        const interval = data.update_interval_days || 6;
+        
+        // If the timestamp is in the future (just refreshed), use current time
+        if (lastUpdate > new Date()) {
+            lastUpdate = new Date();
+        }
+        
+        if (isNaN(lastUpdate.getTime())) {
+            throw new Error('Invalid date from API');
+        }
+
+        // Store in localStorage
+        try {
+            localStorage.setItem('lastUpdate', data.last_update);
+            localStorage.setItem('updateInterval', interval.toString());
+            console.log('Stored timer data in localStorage');
+        } catch (err) {
+            console.error('Error saving to localStorage:', err);
+        }
+
+        // If API indicates refresh was initiated, show message
+        if (data.message && data.message.includes('refresh')) {
+            console.log('Data refresh initiated by API');
+            cd.textContent = translations[currentLang]['refreshing'];
+            setTimeout(() => startCountdownTimer(lastUpdate, interval), 2000);
+        } else {
+            startCountdownTimer(lastUpdate, interval);
+        }
+    } catch (err) {
+        console.error('Error initializing countdown:', err);
+        cd.textContent = '--:--:--';
+    }
+}
+
+function startCountdownTimer(lastUpdate, intervalDays) {
+    clearInterval(countdownInterval);
+    countdownInterval = setInterval(() => updateCountdownDisplay(lastUpdate, intervalDays), 1000);
+    updateCountdownDisplay(lastUpdate, intervalDays);
+}
+
+function updateCountdownDisplay(lastUpdate, intervalDays) {
+    const cd = $id('countdown');
+    if (!cd) {
+        console.warn('Countdown element not found in update');
+        return;
+    }
+
+    try {
+        const now = new Date();
+        const nextUpdate = new Date(lastUpdate.getTime() + intervalDays * 864e5);
+        const diff = nextUpdate - now;
+
+        if (diff <= 0) {
+            cd.textContent = translations[currentLang]['refreshing'];
+            console.log('Countdown reached zero - triggering refresh');
+            // Force refresh when countdown expires
+            if ($id('global-tab')?.classList.contains('active')) {
+                loadGlobalRankings();
+            } else {
+                const cityName = $id('city-search')?.value;
+                if (cityName) checkAndLoadRankings(cityName, $id('kebab-count')?.value || 10);
+            }
+            // Restart countdown after 2 seconds
+            setTimeout(() => {
+                const now = new Date();
+                const nextUpdate = new Date(now.getTime() + intervalDays * 864e5);
+                startCountdownTimer(now, intervalDays);
+            }, 2000);
+            return;
+        }
+
+        const d = Math.floor(diff / 864e5);
+        const h = Math.floor((diff % 864e5) / 36e5);
+        const m = Math.floor((diff % 36e5) / 6e4);
+        
+        // Always show days:hours:minutes format
+        const days = d.toString().padStart(2, '0');
+        const hours = h.toString().padStart(2, '0');
+        const minutes = m.toString().padStart(2, '0');
+        cd.textContent = `${days}:${hours}:${minutes}`;
+    } catch (err) {
+        console.error('Error updating countdown display:', err);
+        cd.textContent = '--:--:--';
+    }
+}
+
+// Setup language switcher
+function setupLanguageSwitcher() {
+    document.querySelectorAll('.lang-flag').forEach(f =>
+        f.addEventListener('click', () => switchLanguage(f.dataset.lang))
+    );
+}
+
+// Switch language
+function switchLanguage(lang) {
+    currentLang = lang;
+    document.querySelectorAll('.lang-flag').forEach(f => f.classList.remove('active'));
+    document.querySelector(`.lang-flag[data-lang="${lang}"]`)?.classList.add('active');
+    document.querySelectorAll('[data-translate]').forEach(el => {
+        const key = el.dataset.translate;
+        if (translations[lang][key]) el.textContent = translations[lang][key];
+    });
+    const searchInput = $id('city-search');
+    if (searchInput) {
+        searchInput.placeholder =
+            searchInput.dataset[`placeholder${lang.charAt(0).toUpperCase() + lang.slice(1)}`];
+    }
+    
+    // Refresh city grid with new language
+    if (allCities && allCities.length > 0) {
+        populateCityGrid();
+    }
+    
+    if ($id('city-rankings')?.querySelector('.kebab-card')) {
+        const cityName = $id('city-search')?.value;
+        if (cityName) {
+            const limit = $id('kebab-count')?.value || 10;
+            checkAndLoadRankings(cityName, limit);
+        }
+    }
+    if ($id('global-tab')?.classList.contains('active')) loadGlobalRankings();
+}
+
+// Tab switching
+function showTab(tabName) {
+    document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+    document.querySelectorAll('.tab-button').forEach(button => button.classList.remove('active'));
+    $id(tabName + '-tab').classList.add('active');
+    event.target.classList.add('active');
+    
+    // Handle map visibility based on active tab
+    if (tabName === 'global') {
+        // Hide city map, show global map
+        const cityMap = document.getElementById('kebab-map');
+        const globalMap = document.getElementById('kebab-map-global');
+        if (cityMap) cityMap.style.display = 'none';
+        if (globalMap) globalMap.style.display = 'block';
+        
+        // CRITICAL FIX: Invalidate size for global map on mobile
+        if (window.innerWidth <= 768 && globalKebabMap) {
+            setTimeout(() => {
+                globalKebabMap.invalidateSize();
+                // Set proper bounds for Poland view
+                const polandBounds = [
+                    [49.0, 14.1],  // Southwest corner
+                    [54.8, 24.1]   // Northeast corner
+                ];
+                globalKebabMap.fitBounds(polandBounds, {
+                    padding: [20, 20],
+                    maxZoom: 7
+                });
+            }, 100);
+        }
+        
+        // Load global rankings
+        loadGlobalRankings();
+    } else {
+        // Show city map, hide global map
+        const cityMap = document.getElementById('kebab-map');
+        const globalMap = document.getElementById('kebab-map-global');
+        if (cityMap) cityMap.style.display = 'block';
+        if (globalMap) globalMap.style.display = 'none';
+        
+        // CRITICAL FIX: Invalidate size for city map on mobile
+        if (window.innerWidth <= 768 && kebabMap) {
+            setTimeout(() => {
+                kebabMap.invalidateSize();
+            }, 100);
+        }
+        
+        // Clear city rankings if no city is selected
+        const cityName = $id('city-search')?.value;
+        if (!cityName) {
+            $id('city-rankings').innerHTML = `<p class="info-message">${translations[currentLang]['search-prompt']}</p>`;
+        }
+    }
+}
+
+// Load cities for autocomplete and city grid with caching
+async function loadCities() {
+    try {
+        console.log('Loading cities from API with caching...');
+        
+        // Check if we have cached cities in localStorage
+        const cachedCities = localStorage.getItem('cachedCities');
+        const cacheTimestamp = localStorage.getItem('citiesCacheTimestamp');
+        const cacheExpiry = 3600000; // 1 hour in milliseconds
+        
+        // Use cached data if it's fresh
+        if (cachedCities && cacheTimestamp) {
+            const age = Date.now() - parseInt(cacheTimestamp);
+            if (age < cacheExpiry) {
+                console.log('Using cached cities data (age:', age, 'ms)');
+                const data = JSON.parse(cachedCities);
+                processCitiesData(data);
+                return;
+            } else {
+                console.log('Cache expired, fetching fresh data');
+            }
+        }
+        
+        // Fetch fresh data from API
+        const response = await fetch('/api/cities');
+        const data = await response.json();
+        
+        if (data.status === 'success') {
+            console.log('Successfully loaded', data.data.length, 'cities');
+            
+            // Cache the data
+            try {
+                localStorage.setItem('cachedCities', JSON.stringify(data));
+                localStorage.setItem('citiesCacheTimestamp', Date.now().toString());
+                console.log('Cities data cached in localStorage');
+            } catch (err) {
+                console.error('Error caching cities data:', err);
+            }
+            
+            processCitiesData(data);
+        } else {
+            console.log('Failed to load cities:', data.message);
+        }
+    } catch (error) {
+        console.error('Error loading cities:', error);
+        
+        // Try to use cached data as fallback even if expired
+        const cachedCities = localStorage.getItem('cachedCities');
+        if (cachedCities) {
+            console.log('Using expired cached data as fallback');
+            const data = JSON.parse(cachedCities);
+            processCitiesData(data);
+        }
+    }
+}
+
+// Process cities data and update UI
+function processCitiesData(data) {
+    availableCities = data.data.map(city => city.name);
+    allCities = [...availableCities]; // Initialize allCities
+    availableCities.sort((a, b) => a.localeCompare(b, 'pl'));
+    console.log('Cities initialized and sorted');
+    
+    // Populate city grid
+    populateCityGrid();
+}
+
+// Populate city grid with all available cities using lazy loading
+function populateCityGrid() {
+    const cityGrid = document.getElementById('city-grid');
+    if (!cityGrid) {
+        console.log('City grid element not found');
+        return;
+    }
+    
+    if (!allCities || allCities.length === 0) {
+        console.log('No cities available for grid');
+        cityGrid.innerHTML = '<div class="loading">No cities available</div>';
+        return;
+    }
+    
+    console.log(`Populating city grid with ${allCities.length} cities using lazy loading`);
+    
+    // Sort cities alphabetically
+    const sortedCities = [...allCities].sort((a, b) => a.localeCompare(b, 'pl'));
+    
+    // Clear the grid first
+    cityGrid.innerHTML = '';
+    
+    // Create a document fragment for better performance
+    const fragment = document.createDocumentFragment();
+    
+    // Create initial batch of cities (first 20)
+    const initialBatchSize = Math.min(20, sortedCities.length);
+    
+    for (let i = 0; i < initialBatchSize; i++) {
+        const city = sortedCities[i];
+        const cityElement = createCityGridItem(city);
+        fragment.appendChild(cityElement);
+    }
+    
+    // Add the initial batch to the grid
+    cityGrid.appendChild(fragment);
+    
+    // If there are more cities, set up lazy loading
+    if (sortedCities.length > initialBatchSize) {
+        setupLazyLoading(cityGrid, sortedCities, initialBatchSize);
+    }
+    
+    console.log('City grid populated successfully with lazy loading');
+}
+
+// Create a single city grid item element
+function createCityGridItem(city) {
+    const citySlug = city.toLowerCase()
+        .replace(/ /g, '-')
+        .replace(/ł/g, 'l')
+        .replace(/ó/g, 'o')
+        .replace(/ą/g, 'a')
+        .replace(/ę/g, 'e')
+        .replace(/ć/g, 'c')
+        .replace(/ń/g, 'n')
+        .replace(/ś/g, 's')
+        .replace(/ź/g, 'z')
+        .replace(/ż/g, 'z');
+    
+    const item = document.createElement('div');
+    item.className = 'city-grid-item';
+    item.onclick = () => selectCity(city);
+    
+    const nameDiv = document.createElement('div');
+    nameDiv.className = 'city-name';
+    nameDiv.textContent = city;
+    
+    const link = document.createElement('a');
+    link.href = `/${citySlug}`;
+    link.className = 'city-link';
+    link.textContent = currentLang === 'en' ? 'View rankings' : 'Zobacz ranking';
+    link.onclick = (e) => {
+        e.stopPropagation();
+        selectCity(city);
+        return false;
+    };
+    
+    item.appendChild(nameDiv);
+    item.appendChild(link);
+    
+    return item;
+}
+
+// Set up lazy loading for remaining cities
+function setupLazyLoading(cityGrid, sortedCities, loadedCount) {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting && loadedCount < sortedCities.length) {
+                // Load next batch of cities
+                const batchSize = 10;
+                const endIndex = Math.min(loadedCount + batchSize, sortedCities.length);
+                
+                const fragment = document.createDocumentFragment();
+                for (let i = loadedCount; i < endIndex; i++) {
+                    const city = sortedCities[i];
+                    const cityElement = createCityGridItem(city);
+                    fragment.appendChild(cityElement);
+                }
+                
+                cityGrid.appendChild(fragment);
+                loadedCount = endIndex;
+                
+                // If all cities are loaded, disconnect the observer
+                if (loadedCount >= sortedCities.length) {
+                    observer.disconnect();
+                    console.log('All cities loaded via lazy loading');
+                }
+            }
+        });
+    }, {
+        rootMargin: '100px', // Start loading when within 100px of viewport
+        threshold: 0.1
+    });
+    
+    // Create a sentinel element at the end of the grid
+    const sentinel = document.createElement('div');
+    sentinel.className = 'lazy-load-sentinel';
+    sentinel.style.height = '1px';
+    sentinel.style.width = '1px';
+    sentinel.style.opacity = '0';
+    sentinel.style.pointerEvents = 'none';
+    cityGrid.appendChild(sentinel);
+    
+    // Observe the sentinel
+    observer.observe(sentinel);
+}
+
+// Filter cities as user types
+let isDropdownOpen = false;
+
+function toggleCityDropdown() {
+    console.log('Toggling dropdown...');
+    const dropdown = document.getElementById('city-dropdown');
+    const searchInput = document.getElementById('city-search');
+    
+    if (!dropdown || !searchInput) {
+        console.error('Dropdown or search input elements not found');
+        return;
+    }
+
+    // Force load cities if not loaded
+    if (!allCities || allCities.length === 0) {
+        console.log('Cities not loaded, loading...');
+        loadCities();
+        return;
+    }
+
+    // Check current state
+    const isCurrentlyOpen = dropdown.style.display === 'block';
+    console.log('Current state:', isCurrentlyOpen ? 'open' : 'closed');
+    
+    if (!isCurrentlyOpen) {
+        console.log('Opening dropdown with', allCities.length, 'cities');
+        dropdown.innerHTML = '';
+        allCities.sort().forEach(city => {
+            const item = document.createElement('div');
+            item.className = 'city-dropdown-item';
+            item.textContent = city;
+            item.onclick = () => {
+                console.log('Selected city:', city);
+                selectCity(city);
+            };
+            dropdown.appendChild(item);
+        });
+        dropdown.style.display = 'block';
+        dropdown.style.visibility = 'visible';
+        dropdown.style.opacity = '1';
+        searchInput.focus();
+    } else {
+        console.log('Closing dropdown');
+        dropdown.style.display = 'none';
+        dropdown.style.visibility = 'hidden';
+        dropdown.style.opacity = '0';
+    }
+    
+    // Update global state
+    isDropdownOpen = !isCurrentlyOpen;
+    console.log('New state:', isDropdownOpen ? 'open' : 'closed');
+}
+
+function filterCities(searchTerm) {
+    console.log(`Filtering cities for: "${searchTerm}"`);
+    const dropdown = document.getElementById('city-dropdown');
+    
+    if (!dropdown) {
+        console.error('City dropdown element not found');
+        return;
+    }
+    
+    dropdown.innerHTML = '';
+    
+    // Check if allCities is available
+    if (!allCities || allCities.length === 0) {
+        console.log('Cities not loaded yet, loading...');
+        loadCities();
+        return;
+    }
+    
+    console.log(`Searching through ${allCities.length} cities`);
+    
+    const filtered = allCities.filter(city => 
+        city.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    
+    console.log(`Found ${filtered.length} matching cities`);
+    
+    if (filtered.length > 0) {
+        filtered.forEach(city => {
+            const item = document.createElement('div');
+            item.className = 'city-dropdown-item';
+            item.textContent = city;
+            item.onclick = () => {
+                console.log(`Selected city: ${city}`);
+                selectCity(city);
+            };
+            dropdown.appendChild(item);
+        });
+        
+        // Mobile-specific dropdown handling
+        if (window.innerWidth <= 768) {
+            dropdown.classList.add('active');
+            console.log('Mobile dropdown activated');
+        } else {
+            dropdown.style.display = 'block';
+            dropdown.style.visibility = 'visible';
+            dropdown.style.opacity = '1';
+        }
+        console.log('Dropdown shown with filtered cities');
+    } else {
+        dropdown.style.display = 'none';
+        dropdown.classList.remove('active');
+        console.log('No matching cities found, hiding dropdown');
+    }
+}
+
+// --- START: UPDATED AND NEW FUNCTIONS ---
+
+// Update your existing selectCity function
+function selectCity(cityName) {
+    const dropdown = $id('city-dropdown');
+    $id('city-search').value = cityName;
+    
+    // Hide dropdown on both desktop and mobile
+    if (dropdown) {
+        if (window.innerWidth <= 768) {
+            // Mobile: remove active class AND set display to none
+            dropdown.classList.remove('active');
+            dropdown.style.display = 'none';
+            dropdown.style.visibility = 'hidden';
+            dropdown.style.opacity = '0';
+        } else {
+            // Desktop: use CSS properties
+            dropdown.style.display = 'none';
+            dropdown.style.visibility = 'hidden';
+            dropdown.style.opacity = '0';
+        }
+    }
+    
+    isDropdownOpen = false;
+    
+    // If currently in Global Top 10, automatically switch to City Rankings
+    if ($id('global-tab')?.classList.contains('active')) {
+        console.log('Auto-switching from Global Top 10 to City Rankings');
+        // Switch to city tab programmatically
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.tab-button').forEach(button => button.classList.remove('active'));
+        $id('city-tab').classList.add('active');
+        document.querySelector('.tab-button[onclick="showTab(\'city\')"]').classList.add('active');
+        
+        // Handle map visibility
+        const cityMap = document.getElementById('kebab-map');
+        const globalMap = document.getElementById('kebab-map-global');
+        if (cityMap) cityMap.style.display = 'block';
+        if (globalMap) globalMap.style.display = 'none';
+        
+        // CRITICAL FIX: Invalidate size for city map on mobile
+        if (window.innerWidth <= 768 && kebabMap) {
+            setTimeout(() => {
+                kebabMap.invalidateSize();
+            }, 100);
+        }
+    }
+    
+    const limit = $id('kebab-count')?.value || 10;
+    checkAndLoadRankings(cityName, limit);
+    
+    // Update URL for sharing
+    updateCityUrl(cityName);
+}
+
+// Load rankings with AI insights but preserve rank_score ordering
+async function checkAndLoadRankings(cityName, limit = 10) {
+    console.log(`Loading rankings for ${cityName} with limit: ${limit}`);
+    const container = $id('city-rankings');
+    container.innerHTML = `<div class="loading">${translations[currentLang]['loading']}</div>`;
+    
+    try {
+        // First get regular rankings with rank_change data
+        const baseUrl = `/api/rankings/${encodeURIComponent(cityName)}?limit=${limit}`;
+        console.log(`Making base API call to: ${baseUrl}`);
+        const baseResponse = await fetch(baseUrl);
+        const baseData = await baseResponse.json();
+        
+        if (baseData.status !== 'success') {
+            throw new Error('Failed to load base rankings');
+        }
+
+        // Then get AI insights
+        const aiUrl = `/api/rankings/${encodeURIComponent(cityName)}/ai?lang=${currentLang}&limit=${limit}`;
+        console.log(`Making AI API call to: ${aiUrl}`);
+        const aiResponse = await fetch(aiUrl);
+        const aiData = await aiResponse.json();
+        
+        if (aiData.status !== 'success') {
+            throw new Error('Failed to load AI data');
+        }
+
+        // Merge the data - preserve rank_change from baseData
+        const mergedData = baseData.data.map(baseKebab => {
+            const aiKebab = aiData.data.find(k => k.google_place_id === baseKebab.google_place_id);
+            return {
+                ...baseKebab,  // Keep all base data including rank_change
+                ...aiKebab     // Overlay AI data
+            };
+        });
+
+        // Update last refresh time in localStorage
+        try {
+            localStorage.setItem('lastUpdate', new Date().toISOString());
+            localStorage.setItem('updateInterval', '6');
+            console.log('Updated manual refresh time in localStorage');
+        } catch (err) {
+            console.error('Error updating localStorage:', err);
+        }
+        
+        displayAIRankings(mergedData, container, cityName, limit);
+    } catch (error) {
+        console.error('Error loading rankings:', error);
+        container.innerHTML = `<p class="info-message">${translations[currentLang]['error-loading']}</p>`;
+    }
+}
+
+// Load rankings for selected city (used as a fallback)
+async function loadCityRankings(cityName) {
+    if (!cityName) {
+        $id('city-rankings').innerHTML = `<p class="info-message">${translations[currentLang]['search-prompt']}</p>`;
+        return;
+    }
+    const container = $id('city-rankings');
+    container.innerHTML = `<div class="loading">${translations[currentLang]['loading']}</div>`;
+    try {
+        const response = await fetch(`/api/rankings/${encodeURIComponent(cityName)}`);
+        const data = await response.json();
+        if (data.status === 'success') {
+            displayRankings(data.data, container, cityName);
+        } else {
+            container.innerHTML = `<p class="info-message">${translations[currentLang]['error-loading']}</p>`;
+        }
+    } catch (error) {
+        console.error('Error loading rankings:', error);
+        container.innerHTML = `<p class="info-message">${translations[currentLang]['error-loading']}</p>`;
+    }
+}
+
+// Load global top 10 rankings
+async function loadGlobalRankings() {
+    const container = $id('global-rankings');
+    try {
+        const response = await fetch('/api/rankings/global');
+        const data = await response.json();
+        if (data.status === 'success') {
+            displayRankings(data.data, container, null, true);
+            // Update global map with markers
+            updateGlobalMapWithKebabs(data.data);
+        } else {
+            container.innerHTML = '<p class="info-message">Error loading global rankings. Please try again.</p>';
+        }
+    } catch (error) {
+        console.error('Error loading global rankings:', error);
+        container.innerHTML = '<p class="info-message">Error loading global rankings. Please try again.</p>';
+    }
+}
+
+// Update global map when global rankings are loaded
+function updateGlobalMapWithKebabs(kebabPlaces) {
+    if (!globalKebabMap) {
+        initializeGlobalMap();
+    }
+    addGlobalKebabMarkers(kebabPlaces);
+}
+
+// --- New Helper Functions for AI display ---
+function getSentimentLabel(sentiment) {
+    if (!sentiment) return translations[currentLang]['neutral'];
+    const key = sentiment.label || 'neutral';
+    return translations[currentLang][key] || sentiment.label;
+}
+
+function getSentimentClass(sentiment) {
+    if (!sentiment) return 'neutral';
+    return sentiment.label || 'neutral';
+}
+
+function getTrendLabel(trend) {
+    if (!trend) return translations[currentLang]['stable'];
+    const key = trend.trend || 'stable';
+    return translations[currentLang][key] || trend.trend;
+}
+
+
+
+// --- URL ROUTING FUNCTIONS ---
+
+// Handle URL routing for city-specific pages
+function handleUrlRouting() {
+    console.log('🔄 handleUrlRouting() called');
+    
+    // Check if we have an initial city from the Flask template
+    if (window.initialCity && window.initialCity.trim() !== '') {
+        console.log(`✅ Loading initial city from Flask template: ${window.initialCity}`);
+        // Set the search input value
+        const searchInput = $id('city-search');
+        if (searchInput) {
+            searchInput.value = window.initialCity;
+        }
+        // Load the rankings for this city
+        const limit = $id('kebab-count')?.value || 10;
+        checkAndLoadRankings(window.initialCity, limit);
+        return;
+    }
+    
+    // Check if we're on a city-specific URL
+    const path = window.location.pathname;
+    console.log(`🔍 Current path: ${path}`);
+    
+    if (path !== '/' && path !== '/blog' && !path.startsWith('/blog/')) {
+        // Extract city slug from URL (remove leading slash)
+        const citySlug = path.substring(1);
+        console.log(`📍 Detected city slug in URL: ${citySlug}`);
+        
+        // Handle kebab- prefix URLs
+        let actualCitySlug = citySlug;
+        if (citySlug.startsWith('kebab-')) {
+            actualCitySlug = citySlug.substring(6); // Remove 'kebab-' prefix
+            console.log(`🥙 Removed 'kebab-' prefix, actual slug: ${actualCitySlug}`);
+        }
+        
+        // Wait for cities to load, then try to match
+        if (allCities && allCities.length > 0) {
+            handleCitySlug(actualCitySlug);
+        } else {
+            console.log('⏳ Cities not loaded yet, waiting...');
+            // If cities aren't loaded yet, wait for them
+            const checkCities = setInterval(() => {
+                if (allCities && allCities.length > 0) {
+                    clearInterval(checkCities);
+                    console.log('✅ Cities loaded, now handling slug');
+                    handleCitySlug(actualCitySlug);
+                }
+            }, 100);
+        }
+    } else {
+        console.log('🏠 Home page or blog, no city-specific routing needed');
+    }
+}
+
+// Handle city slug from URL
+function handleCitySlug(citySlug) {
+    // Try to find matching city
+    const matchingCity = allCities.find(city => {
+        // Try direct match
+        if (city.toLowerCase() === citySlug.toLowerCase()) {
+            return true;
+        }
+        // Try slugified match
+        const slugifiedCity = city.toLowerCase()
+            .replace(/ /g, '-')
+            .replace(/ł/g, 'l')
+            .replace(/ó/g, 'o')
+            .replace(/ą/g, 'a')
+            .replace(/ę/g, 'e')
+            .replace(/ć/g, 'c')
+            .replace(/ń/g, 'n')
+            .replace(/ś/g, 's')
+            .replace(/ź/g, 'z')
+            .replace(/ż/g, 'z');
+        return slugifiedCity === citySlug.toLowerCase();
+    });
+    
+    if (matchingCity) {
+        console.log(`Found matching city: ${matchingCity}`);
+        // Set the search input value
+        const searchInput = $id('city-search');
+        if (searchInput) {
+            searchInput.value = matchingCity;
+        }
+        // Load the rankings for this city
+        const limit = $id('kebab-count')?.value || 10;
+        checkAndLoadRankings(matchingCity, limit);
+        
+        // Update page title for SEO
+        document.title = `🥙 Kebab Rank ${matchingCity} - Najlepsze kebaby w ${matchingCity}`;
+    } else {
+        console.log(`No matching city found for slug: ${citySlug}`);
+    }
+}
+
+
+// Update URL when city is selected
+function updateCityUrl(cityName) {
+    if (!cityName) return;
+    
+    // Create slug for the city
+    const citySlug = cityName.toLowerCase()
+        .replace(/ /g, '-')
+        .replace(/ł/g, 'l')
+        .replace(/ó/g, 'o')
+        .replace(/ą/g, 'a')
+        .replace(/ę/g, 'e')
+        .replace(/ć/g, 'c')
+        .replace(/ń/g, 'n')
+        .replace(/ś/g, 's')
+        .replace(/ź/g, 'z')
+        .replace(/ż/g, 'z');
+    
+    // Update URL without page reload
+    const newUrl = `/${citySlug}`;
+    window.history.pushState({ city: cityName }, '', newUrl);
+    
+    // Update page title for SEO
+    document.title = `🥙 Kebab Rank ${cityName} - Najlepsze kebaby w ${cityName}`;
+}
+
+// Handle browser back/forward buttons
+window.addEventListener('popstate', (event) => {
+    if (event.state && event.state.city) {
+        console.log(`Browser navigation to city: ${event.state.city}`);
+        const searchInput = $id('city-search');
+        if (searchInput) {
+            searchInput.value = event.state.city;
+        }
+        const limit = $id('kebab-count')?.value || 10;
+        checkAndLoadRankings(event.state.city, limit);
+    } else {
+        // If going back to home page
+        console.log('Returning to home page');
+        const searchInput = $id('city-search');
+        if (searchInput) {
+            searchInput.value = '';
+        }
+        $id('city-rankings').innerHTML = `<p class="info-message">${translations[currentLang]['search-prompt']}</p>`;
+        document.title = '🥙 Kebab Rank Poland';
+    }
+});
+
+// Auto-load Kraków immediately on page load
+function autoLoadKrakowImmediately() {
+    console.log('🚀 Auto-loading Kraków immediately');
+    
+    // Check if Kraków is already set as default value
+    const searchInput = $id('city-search');
+    if (searchInput && searchInput.value === 'Kraków') {
+        console.log('✅ Kraków is default value, loading rankings immediately');
+        
+        // Switch to City Rankings tab
+        const cityTabButton = document.querySelector('.tab-button[onclick*="city"]');
+        if (cityTabButton) {
+            cityTabButton.click();
+        }
+        
+        // Load Kraków rankings
+        const limit = $id('kebab-count')?.value || 10;
+        checkAndLoadRankings('Kraków', limit);
+        
+        // Update URL for sharing
+        updateCityUrl('Kraków');
+    } else {
+        console.log('❌ Kraków not found as default value, using fallback');
+        autoLoadKrakowAsDefault();
+    }
+}
+
+// Robust auto-load function for Kraków as default city
+function autoLoadKrakowAsDefault() {
+    console.log('🚀 autoLoadKrakowAsDefault() function called');
+    
+    // Wait a bit for other initialization to complete
+    setTimeout(() => {
+        console.log('🔍 Starting auto-load check after timeout');
+        
+        // Check desktop version first
+        const searchInput = $id('city-search');
+        const cityRankings = $id('city-rankings');
+        console.log('📝 Desktop search input found:', !!searchInput);
+        if (searchInput) {
+            console.log('📝 Current search input value:', searchInput.value);
+        }
+        
+        // Check if search field is empty OR contains Kraków but rankings aren't loaded
+        const searchValue = searchInput ? searchInput.value.trim() : '';
+        const hasKrakowInSearch = searchValue === 'Kraków';
+        const hasEmptyRankings = cityRankings && cityRankings.innerHTML.includes('search-prompt');
+        const shouldLoadKrakow = !searchValue || (hasKrakowInSearch && hasEmptyRankings);
+        
+        console.log('📊 Auto-load Kraków conditions:', {
+            searchInputValue: searchValue,
+            hasKrakowInSearch,
+            hasEmptyRankings,
+            shouldLoadKrakow
+        });
+        
+        if (searchInput && shouldLoadKrakow) {
+            console.log('✅ Auto-loading Kraków as default city');
+            
+            // Set Kraków as default value in search field if empty
+            if (!searchValue) {
+                searchInput.value = 'Kraków';
+                console.log('✅ Set search input value to "Kraków"');
+            } else {
+                console.log('ℹ️ Search field already has "Kraków"');
+            }
+            
+            // Switch to City Rankings tab if not already there
+            const cityTabButton = document.querySelector('.tab-button[onclick*="city"]');
+            console.log('📝 City tab button found:', !!cityTabButton);
+            if (cityTabButton) {
+                console.log('📝 City tab button active status:', cityTabButton.classList.contains('active'));
+                if (!cityTabButton.classList.contains('active')) {
+                    console.log('✅ Switching to City Rankings tab');
+                    cityTabButton.click();
+                } else {
+                    console.log('ℹ️ City tab already active');
+                }
+            }
+            
+            // Load Kraków rankings
+            const limit = $id('kebab-count')?.value || 10;
+            console.log('📝 Loading Kraków rankings with limit:', limit);
+            checkAndLoadRankings('Kraków', limit);
+            
+            // Update URL for sharing
+            console.log('✅ Updating URL to /krakow');
+            updateCityUrl('Kraków');
+        } else {
+            console.log('❌ Skipping auto-load - conditions not met');
+        }
+        
+        console.log('🏁 Auto-load check completed');
+    }, 1000); // 1 second delay to ensure other initialization completes
+}
+
+// Update the displayRankings function to ALWAYS show the score
+function displayAIRankings(rankings, container, cityName, limit = 10) {
+    if (rankings.length === 0) {
+        container.innerHTML = `<p class="text-center text-gray-500 py-4">${translations[currentLang]['no-kebabs']}</p>`;
+        return;
+    }
+    
+    let html = '';
+    
+    // Create Header for City Rankings (hidden now as we have sidebar header, but good to keep structured)
+    // We can inject a title if needed, but let's stick to the cards for the list view
+    
+    // Rankings with AI enhancements
+    rankings.slice(0, limit).forEach((kebab, index) => {
+        const rank = kebab.ai_rank || kebab.city_rank || index + 1;
+        const isTopThree = rank <= 3;
+        const hasAI = kebab.has_ai_analysis === true;
+        
+        // Rank Colors/Styles
+        let rankBadgeClass = "bg-surface-dark text-gray-400"; // default
+        if (rank === 1) rankBadgeClass = "bg-yellow-500 text-black";
+        else if (rank === 2) rankBadgeClass = "bg-gray-400 text-black";
+        else if (rank === 3) rankBadgeClass = "bg-orange-700 text-white";
+
+        // Rank change indicator
+        let rankChangeHtml = '';
+        if (kebab.rank_change_indicator) {
+            // Adapt to new design cues if needed, currently just text
+             if (kebab.rank_change_indicator === 'up') rankChangeHtml = `<span class="text-green-500 text-[10px] ml-1">▲</span>`;
+             else if (kebab.rank_change_indicator === 'down') rankChangeHtml = `<span class="text-red-500 text-[10px] ml-1">▼</span>`;
+             else if (kebab.rank_change_indicator === 'new') rankChangeHtml = `<span class="text-blue-500 text-[10px] ml-1 font-bold">NEW</span>`;
+        }
+
+        // Image handling (Placeholder or real image if available)
+        // Using a generic kebab image for now as per design mockup, or specific if available in data
+        const kebabImage = kebab.image_url || "https://lh3.googleusercontent.com/aida-public/AB6AXuAPZml7HBCvOmxHc3pErimDG6i7ruSOL6NrxB8S8CkUtAIZ9sjOe5U0TSzY4AbGN8NSPkGQZHCdrnALIQoLgGNrze3MwVl9x7OGSn2Gz7CvsUTB4izX8Xatv_tIbLYX6kiuSDVdT3HoS7MKLCnQparIKmg8UVIl7QU1CTAKEBVF9M8_NiLS2ccsanJPm-7kevE10rqP_NKMyBgiXUpcsUtj4e9eJlwKM02h-oL83bYxG2QwVRiuDKWgPfePcvFNWLVGzfpHYYn_Nl4";
+
+        html += `
+            <div class="glass-card rounded-xl p-4 flex gap-4 relative overflow-hidden group cursor-pointer hover:border-primary/30"
+                 onclick="centerMapOnKebab(${index})"
+                 data-rank="${rank}">
+                 
+                <!-- Rank Badge -->
+                <div class="absolute top-4 left-4 ${rankBadgeClass} font-black text-[10px] px-2 py-0.5 rounded flex items-center gap-1 z-20 shadow-lg">
+                    <span class="material-icons text-[10px]">emoji_events</span> #${rank}
+                </div>
+
+                <!-- Image -->
+                <div class="w-24 h-24 shrink-0 rounded-lg overflow-hidden shadow-lg bg-surface-dark">
+                    <img alt="${kebab.name}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="${kebabImage}"/>
+                </div>
+
+                <!-- Content -->
+                <div class="flex-1 flex flex-col justify-between min-w-0">
+                    <div>
+                        <div class="flex justify-between items-start">
+                            <h3 class="text-base font-bold text-white group-hover:text-primary transition-colors truncate pr-2">${kebab.name} ${rankChangeHtml}</h3>
+                            <span class="text-xs font-bold bg-primary/20 px-2 py-0.5 rounded text-primary border border-primary/20 whitespace-nowrap">${kebab.rank_score.toFixed(1)}</span>
+                        </div>
+                        <p class="text-[10px] text-gray-400 mt-1 flex items-center gap-1 truncate">
+                            <span class="material-icons text-[10px]">place</span> ${kebab.address}
+                        </p>
+                    </div>
+
+                    <div class="mt-2">
+                        <!-- Tags / Highlights -->
+                         <div class="flex flex-wrap gap-1 mb-2">
+                            ${hasAI && kebab.ai_summary ? 
+                                `<span class="text-[9px] font-bold uppercase tracking-wider text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20 truncate max-w-full">AI SUMMARY</span>` : ''}
+                             <span class="text-[9px] font-bold uppercase tracking-wider text-gray-400 bg-white/5 px-2 py-0.5 rounded border border-white/10">${kebab.total_reviews} reviews</span>
+                        </div>
+                        
+                        <!-- Progress Bar / Score -->
+                        <div class="flex flex-col gap-1">
+                            <div class="flex justify-between text-[9px] text-gray-400">
+                                <span>Google ⭐ ${kebab.rating.toFixed(1)}</span>
+                                ${hasAI && kebab.ai_score ? `<span>AI ${kebab.ai_score.toFixed(1)}</span>` : ''}
+                            </div>
+                            <div class="w-full bg-white/5 h-1 rounded-full overflow-hidden">
+                                <div class="bg-gradient-to-r from-gray-600 to-primary h-full rounded-full" style="width: ${(kebab.rank_score / 100) * 100}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+}
+
+// Helper function for ranking display
+function isTopThree(rank) {
+    return rank <= 3;
+}
+
+// Update helper functions to handle numbers properly
+function getSentimentClass(sentiment) {
+    if (typeof sentiment === 'number') {
+        if (sentiment > 0.5) return 'sentiment-very-positive';
+        if (sentiment > 0.2) return 'sentiment-positive';
+        if (sentiment < -0.5) return 'sentiment-very-negative';
+        if (sentiment < -0.2) return 'sentiment-negative';
+    }
+    return 'sentiment-neutral';
+}
+
+function getSentimentLabel(sentiment) {
+    if (typeof sentiment === 'number') {
+        if (sentiment > 0.5) return translations[currentLang]['very-positive'];
+        if (sentiment > 0.2) return translations[currentLang]['positive'];
+        if (sentiment < -0.5) return translations[currentLang]['very-negative'];
+        if (sentiment < -0.2) return translations[currentLang]['negative'];
+    }
+    return translations[currentLang]['neutral'];
+}
+
+function getTrendLabel(trend) {
+    if (typeof trend === 'string') {
+        switch(trend) {
+            case 'improving': return translations[currentLang]['improving'];
+            case 'declining': return translations[currentLang]['declining'];
+            default: return translations[currentLang]['stable'];
+        }
+    }
+    return translations[currentLang]['stable'];
+}
+
+// --- MAP FUNCTIONS ---
+
+// Initialize the city map
+function initializeMap() {
+    const mapContainer = document.getElementById('kebab-map');
+    if (!mapContainer) return;
+    
+    // Remove placeholder if it exists
+    const placeholder = mapContainer.querySelector('.map-placeholder');
+    if (placeholder) {
+        placeholder.style.display = 'none';
+    }
+    
+    // Initialize map centered on Poland
+    kebabMap = L.map('kebab-map').setView([52.2370, 21.0175], 6);
+    
+    // Add OpenStreetMap tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 18
+    }).addTo(kebabMap);
+    
+    console.log('City map initialized successfully');
+}
+
+// Initialize the global map
+function initializeGlobalMap() {
+    const mapContainer = document.getElementById('kebab-map-global');
+    if (!mapContainer) return;
+    
+    // Remove placeholder if it exists
+    const placeholder = mapContainer.querySelector('.map-placeholder');
+    if (placeholder) {
+        placeholder.style.display = 'none';
+    }
+    
+    // Initialize map with better view for Poland
+    globalKebabMap = L.map('kebab-map-global').setView([52.0, 19.0], 6);
+    
+    // Add OpenStreetMap tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 18
+    }).addTo(globalKebabMap);
+    
+    console.log('Global map initialized successfully');
+}
+
+// Clear all existing markers from the city map
+function clearMapMarkers() {
+    mapMarkers.forEach(marker => {
+        kebabMap.removeLayer(marker);
+    });
+    mapMarkers = [];
+}
+
+// Clear all existing markers from the global map
+function clearGlobalMapMarkers() {
+    globalMapMarkers.forEach(marker => {
+        globalKebabMap.removeLayer(marker);
+    });
+    globalMapMarkers = [];
+}
+
+// Add markers for kebab places to city map
+function addKebabMarkers(kebabPlaces) {
+    if (!kebabMap) {
+        console.error('City map not initialized');
+        return;
+    }
+    
+    clearMapMarkers();
+    
+    if (!kebabPlaces || kebabPlaces.length === 0) {
+        console.log('No kebab places to display on city map');
+        return;
+    }
+    
+    // Filter places with valid coordinates
+    const placesWithCoords = kebabPlaces.filter(place => 
+        place.latitude && place.longitude && 
+        !isNaN(parseFloat(place.latitude)) && 
+        !isNaN(parseFloat(place.longitude))
+    );
+    
+    if (placesWithCoords.length === 0) {
+        console.log('No kebab places with valid coordinates for city map');
+        return;
+    }
+    
+    console.log(`Adding ${placesWithCoords.length} markers to city map`);
+    
+    // Create bounds for all markers
+    const bounds = L.latLngBounds();
+    
+    placesWithCoords.forEach((place, index) => {
+        const lat = parseFloat(place.latitude);
+        const lng = parseFloat(place.longitude);
+        
+        // Create custom icon based on rank
+        const iconColor = getMarkerColor(index + 1);
+        const iconHtml = `
+            <div style="
+                background-color: ${iconColor};
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                border: 3px solid white;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-weight: bold;
+                font-size: 12px;
+            ">${index + 1}</div>
+        `;
+        
+        const customIcon = L.divIcon({
+            html: iconHtml,
+            className: 'custom-marker',
+            iconSize: [30, 30],
+            iconAnchor: [15, 15]
+        });
+        
+        // Create marker
+        const marker = L.marker([lat, lng], { icon: customIcon })
+            .addTo(kebabMap)
+            .bindPopup(`
+                <div style="padding: 8px; min-width: 200px;">
+                    <strong style="font-size: 14px;">${place.name}</strong><br>
+                    <span style="font-size: 11px; color: #666;">${place.address}</span><br><br>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; font-size: 12px;">
+                        <div><strong>SCORE:</strong> ${place.rank_score.toFixed(1)}</div>
+                        <div><strong>RATING:</strong> ⭐ ${place.rating.toFixed(1)}</div>
+                        <div><strong>REVIEWS:</strong> ${place.total_reviews.toLocaleString()}</div>
+                        <div><strong>AI SCORE:</strong> ${place.ai_score ? place.ai_score.toFixed(1) : 'N/A'}</div>
+                    </div>
+                    <div style="text-align: center; margin-top: 8px; font-weight: bold;">
+                        Rank: #${index + 1}
+                    </div>
+                </div>
+            `);
+        
+        mapMarkers.push(marker);
+        bounds.extend([lat, lng]);
+        
+        // Add click event to center map on marker
+        marker.on('click', function() {
+            kebabMap.setView([lat, lng], 15);
+        });
+    });
+    
+    // Fit map to show all markers with padding
+    if (placesWithCoords.length > 0) {
+        kebabMap.fitBounds(bounds, { padding: [20, 20] });
+        currentCityBounds = bounds;
+    }
+}
+
+// Add markers for kebab places to global map
+function addGlobalKebabMarkers(kebabPlaces) {
+    if (!globalKebabMap) {
+        console.error('Global map not initialized');
+        return;
+    }
+    
+    clearGlobalMapMarkers();
+    
+    if (!kebabPlaces || kebabPlaces.length === 0) {
+        console.log('No kebab places to display on global map');
+        return;
+    }
+    
+    // Filter places with valid coordinates
+    const placesWithCoords = kebabPlaces.filter(place => 
+        place.latitude && place.longitude && 
+        !isNaN(parseFloat(place.latitude)) && 
+        !isNaN(parseFloat(place.longitude))
+    );
+    
+    if (placesWithCoords.length === 0) {
+        console.log('No kebab places with valid coordinates for global map');
+        return;
+    }
+    
+    console.log(`Adding ${placesWithCoords.length} markers to global map`);
+    
+    // Create bounds for all markers
+    const bounds = L.latLngBounds();
+    
+    placesWithCoords.forEach((place, index) => {
+        const lat = parseFloat(place.latitude);
+        const lng = parseFloat(place.longitude);
+        
+        // Create custom icon based on rank
+        const iconColor = getMarkerColor(index + 1);
+        const iconHtml = `
+            <div style="
+                background-color: ${iconColor};
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                border: 3px solid white;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-weight: bold;
+                font-size: 12px;
+            ">${index + 1}</div>
+        `;
+        
+        const customIcon = L.divIcon({
+            html: iconHtml,
+            className: 'custom-marker',
+            iconSize: [30, 30],
+            iconAnchor: [15, 15]
+        });
+        
+        // Create marker
+        const marker = L.marker([lat, lng], { icon: customIcon })
+            .addTo(globalKebabMap)
+            .bindPopup(`
+                <div style="padding: 8px; min-width: 200px;">
+                    <strong style="font-size: 14px;">${place.name}</strong><br>
+                    <span style="font-size: 11px; color: #666;">${place.address}</span><br><br>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; font-size: 12px;">
+                        <div><strong>SCORE:</strong> ${place.rank_score.toFixed(1)}</div>
+                        <div><strong>RATING:</strong> ⭐ ${place.rating.toFixed(1)}</div>
+                        <div><strong>REVIEWS:</strong> ${place.total_reviews.toLocaleString()}</div>
+                        <div><strong>AI SCORE:</strong> ${place.ai_score ? place.ai_score.toFixed(1) : 'N/A'}</div>
+                    </div>
+                    <div style="text-align: center; margin-top: 8px; font-weight: bold;">
+                        Rank: #${index + 1}
+                    </div>
+                </div>
+            `);
+        
+        globalMapMarkers.push(marker);
+        bounds.extend([lat, lng]);
+        
+        // Add click event to center map on marker
+        marker.on('click', function() {
+            globalKebabMap.setView([lat, lng], 15);
+        });
+    });
+    
+    // Fit map to show all markers with padding, but ensure full Poland is visible
+    if (placesWithCoords.length > 0) {
+        // Create bounds for Poland to ensure full country is visible
+        const polandBounds = L.latLngBounds(
+            [49.0, 14.0], // Southwest corner (southwest Poland)
+            [55.0, 24.0]  // Northeast corner (northeast Poland)
+        );
+        
+        // Combine marker bounds with Poland bounds to ensure everything is visible
+        const combinedBounds = bounds.extend(polandBounds);
+        
+        // Fit map with more padding and max zoom limit
+        globalKebabMap.fitBounds(combinedBounds, { 
+            padding: [50, 50],
+            maxZoom: 8 // Don't zoom in too much
+        });
+        
+        // If markers are too clustered, set a minimum zoom level
+        setTimeout(() => {
+            if (globalKebabMap.getZoom() > 8) {
+                globalKebabMap.setZoom(6); // Show more of Poland
+            }
+        }, 100);
+    } else {
+        // If no markers, show full Poland
+        globalKebabMap.setView([52.0, 19.0], 6);
+    }
+}
+
+// Get marker color based on rank - Standardized colors matching ranking badges
+function getMarkerColor(rank) {
+    switch(rank) {
+        case 1:
+            return '#FFD700'; // Gold for #1
+        case 2:
+            return '#C0C0C0'; // Silver for #2
+        case 3:
+            return '#CD7F32'; // Bronze for #3
+        default:
+            if (rank <= 10) {
+                return '#E67E22'; // Orange for ranks 4-10
+            } else {
+                return '#3498db'; // Blue for ranks 11+
+            }
+    }
+}
+
+// Update map when city rankings are loaded
+function updateMapWithKebabs(kebabPlaces) {
+    if (!kebabMap) {
+        initializeMap();
+    }
+    addKebabMarkers(kebabPlaces);
+}
+
+
+// Center map on specific kebab place
+function centerMapOnKebab(index) {
+    if (!kebabMap || !mapMarkers[index]) return;
+    
+    const marker = mapMarkers[index];
+    const latLng = marker.getLatLng();
+    kebabMap.setView(latLng, 15);
+    marker.openPopup();
+}
+
+// Initialize map when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    // ... existing initialization code ...
+    
+    // Initialize map
+    initializeMap();
+    
+    // Add Intersection Observer for map containers
+    setupMapVisibilityObserver();
+});
+
+// Setup Intersection Observer for map containers
+function setupMapVisibilityObserver() {
+    const mapContainers = [
+        document.getElementById('kebab-map'),
+        document.getElementById('kebab-map-global')
+    ];
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // Map container became visible
+                const containerId = entry.target.id;
+                console.log(`Map container ${containerId} became visible`);
+                
+                // Invalidate size for the appropriate map
+                if (containerId === 'kebab-map' && kebabMap) {
+                    setTimeout(() => {
+                        kebabMap.invalidateSize();
+                        console.log('City map size invalidated via observer');
+                    }, 100);
+                } else if (containerId === 'kebab-map-global' && globalKebabMap) {
+                    setTimeout(() => {
+                        globalKebabMap.invalidateSize();
+                        console.log('Global map size invalidated via observer');
+                    }, 100);
+                }
+            }
+        });
+    }, {
+        threshold: 0.1 // Trigger when at least 10% of container is visible
+    });
+    
+    // Observe both map containers
+    mapContainers.forEach(container => {
+        if (container) {
+            observer.observe(container);
+            console.log(`Observing map container: ${container.id}`);
+        }
+    });
+}
+
+// Toggle function for collapsible sections
+function toggleSection(id) {
+    const content = document.getElementById(id);
+    const button = event.currentTarget;
+    const arrow = button.querySelector('.arrow');
+    
+    if (content.style.display === 'none') {
+        content.style.display = 'block';
+        arrow.textContent = '▲';
+    } else {
+        content.style.display = 'none';
+        arrow.textContent = '▼';
+    }
+}
+
+// Regular rankings display function
+function displayRankings(rankings, container, cityName, isGlobal = false) {
+    if (rankings.length === 0) {
+        container.innerHTML = `<p class="info-message">${translations[currentLang]['no-kebabs']}</p>`;
+        return;
+    }
+
+    // Ensure rankings are properly sorted by rank_score descending
+    const sortedRankings = [...rankings].sort((a, b) => {
+        if (b.rank_score !== a.rank_score) {
+            return b.rank_score - a.rank_score;
+        }
+        // Secondary sort by rating if scores are equal
+        return b.rating - a.rating;
+    });
+
+    let html = '';
+    // Only add title if not global rankings (title already exists in HTML)
+    if (!isGlobal) {
+        const title = translations[currentLang]['top-kebabs']
+            .replace('{count}', sortedRankings.length)
+            .replace('{city}', cityName);
+        html += `<h2>${title}</h2>`;
+        html += `<p class="info-text">${translations[currentLang]['ranking-subtitle']}</p>`;
+    }
+
+    sortedRankings.forEach((kebab, index) => {
+        const rank = index + 1;
+        const isTopFive = rank <= 5;
+        const isMidFive = rank > 5 && rank <= 10;
+        const isTopThree = rank <= 3;
+        const rankDisplay = `#${rank}`;
+
+        // Rank change indicator with tooltips
+        let rankChangeHtml = '';
+        if (kebab.is_new === true) {
+            rankChangeHtml = `<span class="rank-change new" data-tooltip="New entry in rankings">New</span>`;
+        } else if (kebab.rank_change !== undefined && kebab.rank_change !== null) {
+            if (kebab.rank_change > 0) {
+                rankChangeHtml = `<span class="rank-change up" data-tooltip="Moved up ${kebab.rank_change} positions">▲ +${kebab.rank_change}</span>`;
+            } else if (kebab.rank_change < 0) {
+                rankChangeHtml = `<span class="rank-change down" data-tooltip="Moved down ${Math.abs(kebab.rank_change)} positions">▼ ${kebab.rank_change}</span>`;
+            } else {
+                rankChangeHtml = `<span class="rank-change neutral" data-tooltip="No change in position">-</span>`;
+            }
+        }
+
+        html += `
+            <div class="kebab-card ${isTopFive ? 'top-five' : ''} ${isMidFive ? 'mid-five' : ''}" data-rank="${rank}">
+                <div class="rank-badge ${isTopThree ? 'medal-badge' : ''}">${rankDisplay}</div>
+                <div class="kebab-info">
+                    <h3 class="kebab-name">
+                        ${kebab.name}
+                        ${rankChangeHtml ? rankChangeHtml : ''}
+                    </h3>
+                    <p class="kebab-address">${kebab.address}</p>
+                    <div class="kebab-stats">
+                        <div class="stat stat-score">
+                            <span class="stat-label">${translations[currentLang]['score']}</span>
+                            <span class="stat-value score-value">${kebab.rank_score.toFixed(1)}</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">${translations[currentLang]['rating']}</span>
+                            <span class="stat-value rating">⭐ ${kebab.rating.toFixed(1)}</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">${translations[currentLang]['reviews']}</span>
+                            <span class="stat-value">${kebab.total_reviews.toLocaleString()}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+
+    container.innerHTML = html;
+}

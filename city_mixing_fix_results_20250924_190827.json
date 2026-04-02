@@ -1,0 +1,79 @@
+{
+  "timestamp": "2025-09-24T19:08:27.329089",
+  "backup_file": "kebab_places_backup_20250924_190827.json",
+  "issues_fixed": 7,
+  "issues_skipped": 0,
+  "errors": [],
+  "fixed_issues": [
+    {
+      "kebab_id": 72,
+      "kebab_name": "Maas Kebab",
+      "address": "Wrocławska 31, 30-011 Kraków, Poland",
+      "assigned_city": "Wrocław",
+      "assigned_city_id": 4,
+      "mentioned_city": "Kraków",
+      "mentioned_city_id": 2,
+      "confidence": "medium"
+    },
+    {
+      "kebab_id": 89,
+      "kebab_name": "Moza kebab",
+      "address": "Wrocławska 76, 30-017 Kraków, Poland",
+      "assigned_city": "Wrocław",
+      "assigned_city_id": 4,
+      "mentioned_city": "Kraków",
+      "mentioned_city_id": 2,
+      "confidence": "medium"
+    },
+    {
+      "kebab_id": 200,
+      "kebab_name": "Kebab 365",
+      "address": "Poznańska 20C, 53-630 Wrocław, Poland",
+      "assigned_city": "Wrocław",
+      "assigned_city_id": 4,
+      "mentioned_city": "Poznań",
+      "mentioned_city_id": 5,
+      "confidence": "medium"
+    },
+    {
+      "kebab_id": 268,
+      "kebab_name": "Kura Warzyw Gemüse Kebab",
+      "address": "Wrocławska 20, 61-838 Poznań, Poland",
+      "assigned_city": "Poznań",
+      "assigned_city_id": 5,
+      "mentioned_city": "Wrocław",
+      "mentioned_city_id": 4,
+      "confidence": "medium"
+    },
+    {
+      "kebab_id": 271,
+      "kebab_name": "Zahir Kebab",
+      "address": "Wrocławska 14, 61-838 Poznań, Poland",
+      "assigned_city": "Poznań",
+      "assigned_city_id": 5,
+      "mentioned_city": "Wrocław",
+      "mentioned_city_id": 4,
+      "confidence": "medium"
+    },
+    {
+      "kebab_id": 524,
+      "kebab_name": "Bafra Kebab",
+      "address": "Wrocławska 15, 15-644 Białystok, Poland",
+      "assigned_city": "Białystok",
+      "assigned_city_id": 10,
+      "mentioned_city": "Wrocław",
+      "mentioned_city_id": 4,
+      "confidence": "medium"
+    },
+    {
+      "kebab_id": 1395,
+      "kebab_name": "AM AM Kebab",
+      "address": "Wrocławska 155, 59-220 Legnica, Poland",
+      "assigned_city": "Legnica",
+      "assigned_city_id": 40,
+      "mentioned_city": "Wrocław",
+      "mentioned_city_id": 4,
+      "confidence": "medium"
+    }
+  ]
+}

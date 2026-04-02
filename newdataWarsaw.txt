@@ -1,0 +1,371 @@
+PS C:\Users\markowyy\Documents\kebab-rank> python create_historical_data.py --city Warszawa --apply --backup
+? Loaded environment variables from .env
+DEBUG: SUPABASE_URL available: YES
+DEBUG: SUPABASE_KEY available: YES
+=== KEBAB RANK HISTORICAL DATA GENERATOR ===
+City: Warszawa
+Days ago: 14
+Preview mode: False
+Apply changes: True
+
+Creating backup...
+? Backup created: ratings_backup_20250922_204206.json
+
+=== DEBUG: Getting rankings for 'Warszawa' ===
+
+=== DEBUG: Looking up city_id for 'Warszawa' ===
+City lookup response: [{'id': 1, 'name': 'Warszawa'}]
+Found city_id: 1 for 'Warszawa'
+Getting previous rankings...
+Not enough historical data points. Found 1 unique dates
+Found 0 previous rankings
+  Zaib Kebab: NEW entry
+  Younas Kebab - Okopowa: NEW entry
+  Praski Kebab: NEW entry
+  Adana Kebab: NEW entry
+  Chilli Kebab And Grill Towarowa: NEW entry
+  Spicy Kebab & Grill 24h-al.jana paw?a II: NEW entry
+  BIG SZEF KEBAB (HALAL): NEW entry
+  Alibaba Kebab: NEW entry
+  Astana Kebab: NEW entry
+  LAVA? DÖNER KEBAB: NEW entry
+  Kebab "U Karima": NEW entry
+  Kebab Rafik: NEW entry
+  Doktor kebab: NEW entry
+  Ukrainian fast food restaurant: ?????? | ???????? | Kebab | Shawarma | Shoarma | Czebureki Warszawa: NEW entry
+  Tikka - Tendur, Kebab i Chleb: NEW entry
+  Baku Kebab & Grill: NEW entry
+  Gemüse Haus Kebab: NEW entry
+  Doner Kebab: NEW entry
+  Mister Doner: NEW entry
+  GEBAB - Gemüse Kebab: NEW entry
+  Eshfa Kebab: NEW entry
+  Just Kebab: NEW entry
+  Hayat Kebab Warszawa: NEW entry
+  BLACK KING’S KEBAB: NEW entry
+  Kasab Kebab: NEW entry
+  Ahura grill&kebab: NEW entry
+  Patila Döner Kebap: NEW entry
+  Ekim Kebab: NEW entry
+  Zarin Kebab: NEW entry
+  Bafra Kebab: NEW entry
+  Modern Kebab: NEW entry
+  Kebabland ( Kraftowy Kebab & Shawarma): NEW entry
+  The Golden Spoon Kebab & Restaurant: NEW entry
+  Layla kebab: NEW entry
+  KUMPIR & KEBAB WARSZAWA URSYNÓW: NEW entry
+  Spicy Kebab & Grill-Grójecka: NEW entry
+  Kebab Dubaj: NEW entry
+  Fadi Kebab: NEW entry
+  Doner Kebab: NEW entry
+  BERLIN DÖNER KEBAP: NEW entry
+  Ugarit Grill Kebab: NEW entry
+  ROJ Kebab: NEW entry
+  Bongo Kebab Warszawa: NEW entry
+  Chupan Kebab: NEW entry
+  Kebab Green Chili: NEW entry
+  Chilli Kebab And Grill Towarowa: NEW entry
+  Delikatessen Döner Kebap: NEW entry
+  Pars Kebab: NEW entry
+  Eid Kebab (Halal): NEW entry
+  Aayat Kebab: NEW entry
+  ShawaHub kebab: NEW entry
+  Efes Express Kebab: NEW entry
+  Zahir Kebab: NEW entry
+  7 Dni Grill & Kebab: NEW entry
+  EFES KEBAB: NEW entry
+  EFES KEBAB: NEW entry
+  Adana Kebab: NEW entry
+  Taksim Restaurant &Kraft kebap: NEW entry
+  GUL KEBAB: NEW entry
+  Szammmaj Kebab: NEW entry
+  Miss Doner Kraft Kebab: NEW entry
+  Astana Kebab: NEW entry
+  Kebab & Szasz?yk: NEW entry
+  Kebab Salema: NEW entry
+  Efes Kebab Restauracja Turecka: NEW entry
+  Kebab Habiba: NEW entry
+  Esnaf Lokantasi Kebab: NEW entry
+  Kura Warzyw Gemüse Kebab: NEW entry
+  Kura Warzyw | Gemüse Kebap: NEW entry
+  Harbi Kebab: NEW entry
+  Tantuni Kebab: NEW entry
+  Kura Warzyw: NEW entry
+  Aden Kebab: NEW entry
+  Spicy Kebab & Grill-Grójecka: NEW entry
+  MAVI Restaurant Kebab&Grill: NEW entry
+  Ali Kebab: NEW entry
+  Kebab Bajka: NEW entry
+  BERLIN DÖNER KEBAP: NEW entry
+  Zarin kebab: NEW entry
+  Kura Warzyw Gemüse Kebab: NEW entry
+  Spicy Kebab & Grill -?elazna: NEW entry
+  Sefa Kebab fast food kuchnia turecka: NEW entry
+  Hello Kebab: NEW entry
+  Kebab Station: NEW entry
+  Miss Döner Kraft Kebab: NEW entry
+  Moza Kebab: NEW entry
+  Köz Döner Kebab: NEW entry
+  Sapko: NEW entry
+  TENDUR KEBAB: NEW entry
+  Kebab Bajka: NEW entry
+  Mama Kebab: NEW entry
+  Shawarma Rozmaito?ci - ?wi?tokrzyska 30: NEW entry
+  TORUN SPICY KEBAB WARSZAWA: NEW entry
+  Fresh Kebab and Grill: NEW entry
+  Miss Döner Kraft Kebap: NEW entry
+  KEBAB KING: NEW entry
+  Fenicja Kebab - ?wi?tokrzyska 32: NEW entry
+  Tendur Kebab: NEW entry
+  Kebab Super King: NEW entry
+  Sirin Bodrum Döner Kebab: NEW entry
+Found 100 current kebabs in Warszawa
+? Added historical data for Zaib Kebab (Rank: 1)
+? Added historical data for Younas Kebab - Okopowa (Rank: 1)
+? Added historical data for Praski Kebab (Rank: 7)
+? Added historical data for Adana Kebab (Rank: 6)
+? Added historical data for Chilli Kebab And Grill Towarowa (Rank: 7)
+? Added historical data for Spicy Kebab & Grill 24h-al.jana paw?a II (Rank: 8)
+? Added historical data for BIG SZEF KEBAB (HALAL) (Rank: 6)
+? Added historical data for Alibaba Kebab (Rank: 10)
+? Added historical data for Astana Kebab (Rank: 10)
+? Added historical data for LAVA? DÖNER KEBAB (Rank: 12)
+? Added historical data for Kebab "U Karima" (Rank: 10)
+? Added historical data for Kebab Rafik (Rank: 10)
+? Added historical data for Doktor kebab (Rank: 12)
+? Added historical data for Ukrainian fast food restaurant: ?????? | ???????? | Kebab | Shawarma | Shoarma | Czebureki Warszawa (Rank: 12)
+? Added historical data for Tikka - Tendur, Kebab i Chleb (Rank: 15)
+? Added historical data for Baku Kebab & Grill (Rank: 17)
+? Added historical data for Gemüse Haus Kebab (Rank: 19)
+? Added historical data for Mister Doner (Rank: 21)
+? Added historical data for GEBAB - Gemüse Kebab (Rank: 19)
+? Added historical data for Eshfa Kebab (Rank: 19)
+? Added historical data for Just Kebab (Rank: 20)
+? Added historical data for Hayat Kebab Warszawa (Rank: 23)
+? Added historical data for BLACK KING’S KEBAB (Rank: 26)
+? Added historical data for Kasab Kebab (Rank: 25)
+? Added historical data for Ahura grill&kebab (Rank: 21)
+? Added historical data for Patila Döner Kebap (Rank: 26)
+? Added historical data for Ekim Kebab (Rank: 29)
+? Added historical data for Zarin Kebab (Rank: 30)
+? Added historical data for Bafra Kebab (Rank: 30)
+? Added historical data for Modern Kebab (Rank: 32)
+? Added historical data for Kebabland ( Kraftowy Kebab & Shawarma) (Rank: 29)
+? Added historical data for The Golden Spoon Kebab & Restaurant (Rank: 36)
+? Added historical data for Layla kebab (Rank: 32)
+? Added historical data for KUMPIR & KEBAB WARSZAWA URSYNÓW (Rank: 33)
+? Added historical data for Spicy Kebab & Grill-Grójecka (Rank: 36)
+? Added historical data for Kebab Dubaj (Rank: 37)
+? Added historical data for Fadi Kebab (Rank: 40)
+? Added historical data for Doner Kebab (Rank: 39)
+? Added historical data for BERLIN DÖNER KEBAP (Rank: 42)
+? Added historical data for Ugarit Grill Kebab (Rank: 43)
+? Added historical data for ROJ Kebab (Rank: 40)
+? Added historical data for Bongo Kebab Warszawa (Rank: 43)
+? Added historical data for Chupan Kebab (Rank: 42)
+? Added historical data for Kebab Green Chili (Rank: 45)
+? Added historical data for Chilli Kebab And Grill Towarowa (Rank: 44)
+? Added historical data for Delikatessen Döner Kebap (Rank: 47)
+? Added historical data for Pars Kebab (Rank: 47)
+? Added historical data for Eid Kebab (Halal) (Rank: 51)
+? Added historical data for Aayat Kebab (Rank: 48)
+? Added historical data for ShawaHub kebab (Rank: 49)
+? Added historical data for Efes Express Kebab (Rank: 50)
+? Added historical data for Zahir Kebab (Rank: 49)
+? Added historical data for 7 Dni Grill & Kebab (Rank: 56)
+? Added historical data for EFES KEBAB (Rank: 53)
+? Added historical data for EFES KEBAB (Rank: 55)
+? Added historical data for Adana Kebab (Rank: 56)
+? Added historical data for Taksim Restaurant &Kraft kebap (Rank: 63)
+? Added historical data for GUL KEBAB (Rank: 60)
+? Added historical data for Szammmaj Kebab (Rank: 64)
+? Added historical data for Miss Doner Kraft Kebab (Rank: 62)
+? Added historical data for Astana Kebab (Rank: 60)
+? Added historical data for Kebab & Szasz?yk (Rank: 63)
+? Added historical data for Kebab Salema (Rank: 68)
+? Added historical data for Efes Kebab Restauracja Turecka (Rank: 60)
+? Added historical data for Kebab Habiba (Rank: 67)
+? Added historical data for Esnaf Lokantasi Kebab (Rank: 68)
+? Added historical data for Kura Warzyw Gemüse Kebab (Rank: 73)
+? Added historical data for Kura Warzyw | Gemüse Kebap (Rank: 70)
+? Added historical data for Harbi Kebab (Rank: 70)
+? Added historical data for Tantuni Kebab (Rank: 69)
+? Added historical data for Kura Warzyw (Rank: 72)
+? Added historical data for Aden Kebab (Rank: 75)
+? Added historical data for Spicy Kebab & Grill-Grójecka (Rank: 76)
+? Added historical data for MAVI Restaurant Kebab&Grill (Rank: 73)
+? Added historical data for Ali Kebab (Rank: 77)
+? Added historical data for Kebab Bajka (Rank: 82)
+? Added historical data for BERLIN DÖNER KEBAP (Rank: 76)
+? Added historical data for Zarin kebab (Rank: 79)
+? Added historical data for Kura Warzyw Gemüse Kebab (Rank: 80)
+? Added historical data for Spicy Kebab & Grill -?elazna (Rank: 83)
+? Added historical data for Sefa Kebab fast food kuchnia turecka (Rank: 82)
+? Added historical data for Hello Kebab (Rank: 82)
+? Added historical data for Kebab Station (Rank: 83)
+? Added historical data for Miss Döner Kraft Kebab (Rank: 85)
+? Added historical data for Moza Kebab (Rank: 85)
+? Added historical data for Köz Döner Kebab (Rank: 88)
+? Added historical data for Sapko (Rank: 92)
+? Added historical data for TENDUR KEBAB (Rank: 90)
+? Added historical data for Kebab Bajka (Rank: 91)
+? Added historical data for Mama Kebab (Rank: 89)
+? Added historical data for Kura Warzyw (Rank: 72)
+? Added historical data for Aden Kebab (Rank: 75)
+? Added historical data for Spicy Kebab & Grill-Grójecka (Rank: 76)
+? Added historical data for MAVI Restaurant Kebab&Grill (Rank: 73)
+? Added historical data for Ali Kebab (Rank: 77)
+? Added historical data for Kebab Bajka (Rank: 82)
+? Added historical data for BERLIN DÖNER KEBAP (Rank: 76)
+? Added historical data for Zarin kebab (Rank: 79)
+? Added historical data for Kura Warzyw Gemüse Kebab (Rank: 80)
+? Added historical data for Spicy Kebab & Grill -?elazna (Rank: 83)
+? Added historical data for Sefa Kebab fast food kuchnia turecka (Rank: 82)
+? Added historical data for Hello Kebab (Rank: 82)
+? Added historical data for Kebab Station (Rank: 83)
+? Added historical data for Miss Döner Kraft Kebab (Rank: 85)
+? Added historical data for Moza Kebab (Rank: 85)
+? Added historical data for Köz Döner Kebab (Rank: 88)
+? Added historical data for Sapko (Rank: 92)
+? Added historical data for TENDUR KEBAB (Rank: 90)
+? Added historical data for Kebab Bajka (Rank: 91)
+? Added historical data for Mama Kebab (Rank: 89)
+? Added historical data for Aden Kebab (Rank: 75)
+? Added historical data for Spicy Kebab & Grill-Grójecka (Rank: 76)
+? Added historical data for MAVI Restaurant Kebab&Grill (Rank: 73)
+? Added historical data for Ali Kebab (Rank: 77)
+? Added historical data for Kebab Bajka (Rank: 82)
+? Added historical data for BERLIN DÖNER KEBAP (Rank: 76)
+? Added historical data for Zarin kebab (Rank: 79)
+? Added historical data for Kura Warzyw Gemüse Kebab (Rank: 80)
+? Added historical data for Spicy Kebab & Grill -?elazna (Rank: 83)
+? Added historical data for Sefa Kebab fast food kuchnia turecka (Rank: 82)
+? Added historical data for Hello Kebab (Rank: 82)
+? Added historical data for Kebab Station (Rank: 83)
+? Added historical data for Miss Döner Kraft Kebab (Rank: 85)
+? Added historical data for Moza Kebab (Rank: 85)
+? Added historical data for Köz Döner Kebab (Rank: 88)
+? Added historical data for Sapko (Rank: 92)
+? Added historical data for TENDUR KEBAB (Rank: 90)
+? Added historical data for Kebab Bajka (Rank: 91)
+? Added historical data for Mama Kebab (Rank: 89)
+? Added historical data for MAVI Restaurant Kebab&Grill (Rank: 73)
+? Added historical data for Ali Kebab (Rank: 77)
+? Added historical data for Kebab Bajka (Rank: 82)
+? Added historical data for BERLIN DÖNER KEBAP (Rank: 76)
+? Added historical data for Zarin kebab (Rank: 79)
+? Added historical data for Kura Warzyw Gemüse Kebab (Rank: 80)
+? Added historical data for Spicy Kebab & Grill -?elazna (Rank: 83)
+? Added historical data for Sefa Kebab fast food kuchnia turecka (Rank: 82)
+? Added historical data for Hello Kebab (Rank: 82)
+? Added historical data for Kebab Station (Rank: 83)
+? Added historical data for Miss Döner Kraft Kebab (Rank: 85)
+? Added historical data for Moza Kebab (Rank: 85)
+? Added historical data for Köz Döner Kebab (Rank: 88)
+? Added historical data for Sapko (Rank: 92)
+? Added historical data for TENDUR KEBAB (Rank: 90)
+? Added historical data for Kebab Bajka (Rank: 91)
+? Added historical data for Mama Kebab (Rank: 89)
+? Added historical data for Zarin kebab (Rank: 79)
+? Added historical data for Kura Warzyw Gemüse Kebab (Rank: 80)
+? Added historical data for Spicy Kebab & Grill -?elazna (Rank: 83)
+? Added historical data for Sefa Kebab fast food kuchnia turecka (Rank: 82)
+? Added historical data for Hello Kebab (Rank: 82)
+? Added historical data for Kebab Station (Rank: 83)
+? Added historical data for Miss Döner Kraft Kebab (Rank: 85)
+? Added historical data for Moza Kebab (Rank: 85)
+? Added historical data for Köz Döner Kebab (Rank: 88)
+? Added historical data for Sapko (Rank: 92)
+? Added historical data for TENDUR KEBAB (Rank: 90)
+? Added historical data for Kebab Bajka (Rank: 91)
+? Added historical data for Mama Kebab (Rank: 89)
+? Added historical data for TORUN SPICY KEBAB WARSZAWA (Rank: 90)
+? Added historical data for Fresh Kebab and Grill (Rank: 97)
+? Added historical data for Miss Döner Kraft Kebap (Rank: 95)
+? Added historical data for KEBAB KING (Rank: 98)
+? Added historical data for Spicy Kebab & Grill -?elazna (Rank: 83)
+? Added historical data for Sefa Kebab fast food kuchnia turecka (Rank: 82)
+? Added historical data for Hello Kebab (Rank: 82)
+? Added historical data for Kebab Station (Rank: 83)
+? Added historical data for Miss Döner Kraft Kebab (Rank: 85)
+? Added historical data for Moza Kebab (Rank: 85)
+? Added historical data for Köz Döner Kebab (Rank: 88)
+? Added historical data for Sapko (Rank: 92)
+? Added historical data for TENDUR KEBAB (Rank: 90)
+? Added historical data for Kebab Bajka (Rank: 91)
+? Added historical data for Mama Kebab (Rank: 89)
+? Added historical data for TORUN SPICY KEBAB WARSZAWA (Rank: 90)
+? Added historical data for Fresh Kebab and Grill (Rank: 97)
+? Added historical data for Miss Döner Kraft Kebap (Rank: 95)
+? Added historical data for KEBAB KING (Rank: 98)
+? Added historical data for Kebab Station (Rank: 83)
+? Added historical data for Miss Döner Kraft Kebab (Rank: 85)
+? Added historical data for Moza Kebab (Rank: 85)
+? Added historical data for Köz Döner Kebab (Rank: 88)
+? Added historical data for Sapko (Rank: 92)
+? Added historical data for TENDUR KEBAB (Rank: 90)
+? Added historical data for Kebab Bajka (Rank: 91)
+? Added historical data for Mama Kebab (Rank: 89)
+? Added historical data for TORUN SPICY KEBAB WARSZAWA (Rank: 90)
+? Added historical data for Fresh Kebab and Grill (Rank: 97)
+? Added historical data for Miss Döner Kraft Kebap (Rank: 95)
+? Added historical data for KEBAB KING (Rank: 98)
+? Added historical data for Köz Döner Kebab (Rank: 88)
+? Added historical data for Sapko (Rank: 92)
+? Added historical data for TENDUR KEBAB (Rank: 90)
+? Added historical data for Kebab Bajka (Rank: 91)
+? Added historical data for Mama Kebab (Rank: 89)
+? Added historical data for TORUN SPICY KEBAB WARSZAWA (Rank: 90)
+? Added historical data for Fresh Kebab and Grill (Rank: 97)
+? Added historical data for Miss Döner Kraft Kebap (Rank: 95)
+? Added historical data for KEBAB KING (Rank: 98)
+? Added historical data for Kebab Bajka (Rank: 91)
+? Added historical data for Mama Kebab (Rank: 89)
+? Added historical data for TORUN SPICY KEBAB WARSZAWA (Rank: 90)
+? Added historical data for Fresh Kebab and Grill (Rank: 97)
+? Added historical data for Miss Döner Kraft Kebap (Rank: 95)
+? Added historical data for KEBAB KING (Rank: 98)
+? Added historical data for Fenicja Kebab - ?wi?tokrzyska 32 (Rank: 96)
+? Added historical data for Tendur Kebab (Rank: 99)
+? Added historical data for TORUN SPICY KEBAB WARSZAWA (Rank: 90)
+? Added historical data for Fresh Kebab and Grill (Rank: 97)
+? Added historical data for Miss Döner Kraft Kebap (Rank: 95)
+? Added historical data for KEBAB KING (Rank: 98)
+? Added historical data for Fenicja Kebab - ?wi?tokrzyska 32 (Rank: 96)
+? Added historical data for Tendur Kebab (Rank: 99)
+? Added historical data for Fenicja Kebab - ?wi?tokrzyska 32 (Rank: 96)
+? Added historical data for Tendur Kebab (Rank: 99)
+? Added historical data for Kebab Super King (Rank: 99)
+? Added historical data for Sirin Bodrum Döner Kebab (Rank: 102)
+? Added historical data for Kebab Super King (Rank: 99)
+? Added historical data for Sirin Bodrum Döner Kebab (Rank: 102)
+? Added historical data for Sirin Bodrum Döner Kebab (Rank: 102)
+
+=== RESULTS FOR WARSZAWA ===
+
+=== RESULTS FOR WARSZAWA ===
+=== RESULTS FOR WARSZAWA ===
+Historical date: 2025-09-08T20:42:06.989244
+Total kebabs: 100
+Historical data entries: 98
+Total kebabs: 100
+Historical data entries: 98
+Historical data entries: 98
+New entries: 2
+No change: 19
+Small changes: 65
+Moderate changes: 14
+
+=== SAMPLE CHANGES ===
+ 1. Zaib Kebab                     | Rank:  1 ?  1 | Change:  ? 2 | Rating: +0.1 | Reviews: +161
+ 2. Younas Kebab - Okopowa         | Rank:  1 ?  2 | Change:  ? 2 | Rating: +0.3 | Reviews: +98
+ 3. Praski Kebab                   | Rank:  7 ?  3 | Change:  ? 4 | Rating: +0.3 | Reviews: +43
+ 4. Adana Kebab                    | Rank:  6 ?  4 | Change:  ? 2 | Rating: -0.0 | Reviews: +168
+ 5. Chilli Kebab And Grill Towarow | Rank:  7 ?  5 | Change:  ? 2 | Rating: +0.1 | Reviews: +63
+ 6. Spicy Kebab & Grill 24h-al.jan | Rank:  8 ?  6 | Change:  ? 2 | Rating: +0.2 | Reviews: +70
+ 7. BIG SZEF KEBAB (HALAL)         | Rank:  6 ?  7 | Change:  ? 1 | Rating: -0.0 | Reviews: +191
+ 8. Alibaba Kebab                  | Rank: 10 ?  8 | Change:  ? 2 | Rating: -0.2 | Reviews: +169
+ 9. Astana Kebab                   | Rank: 10 ?  9 | Change:  ? 1 | Rating: +0.0 | Reviews: +90
+10. LAVA? DÖNER KEBAB              | Rank: 12 ? 10 | Change:  ? 2 | Rating: -0.1 | Reviews: +109
+
+? Applied 98 historical records

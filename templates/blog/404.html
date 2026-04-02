@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Strona nie znaleziona | Kebab Rank</title>
+    <meta name="description" content="Przepraszamy, strona której szukasz nie istnieje.">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=2">
+</head>
+<body>
+    <div style="text-align: center; padding: 4rem 1rem;">
+        <h1 style="font-size: 4rem; margin-bottom: 1rem;">404</h1>
+        <h2>Ups! Strona nie znaleziona</h2>
+        <p style="margin: 2rem 0; color: #666;">
+            Wygląda na to, że szukany kebab uciekł z talerza...<br>
+            Strona, której szukasz, nie istnieje.
+        </p>
+        <div style="margin-top: 2rem;">
+            <a href="/" class="cta-button" style="display: inline-block; background: #e67e22; color: white; padding: 0.75rem 2rem; border-radius: 5px; text-decoration: none;">
+                Wróć do strony głównej
+            </a>
+        </div>
+    </div>
+</body>
+</html>

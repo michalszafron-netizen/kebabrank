@@ -1,0 +1,253 @@
+{% extends "base.html" %}
+
+{% block title %}Najlepszy kebab w Katowicach – Ranking TOP 10 (2025/2026) | Kebab Rank{% endblock %}
+{% block description %}Odkryj najlepsze kebaby w Katowicach! Od rzemieślniczego Kraft Döner po berliński styl i lokale
+influencerów. Sprawdź aktualny ranking bazujący na danych AI.{% endblock %}
+{% block keywords %}najlepszy kebab w Katowicach, kebab Katowice ranking, kraft kebab katowice, viral kebab friz,
+krakowski kebab katowice, gdzie na kebaba katowice{% endblock %}
+{% block canonical %}https://www.kebabrank.com/blog/najlepszy-kebab-katowice{% endblock %}
+
+{% block og_title %}Najlepszy kebab w Katowicach – Ranking TOP 10 (2025/2026){% endblock %}
+{% block og_description %}Gastronomiczna rewolucja na Śląsku! Zobacz, które lokale w Katowicach serwują rzemieślnicze
+mięso, a które wygrywają w rankingu Google.{% endblock %}
+{% block og_image %}https://www.kebabrank.com/static/img/blog/katowice.png{% endblock %}
+{% block og_url %}https://www.kebabrank.com/blog/najlepszy-kebab-katowice{% endblock %}
+
+{% block content %}
+<!-- Main Container -->
+<div class="h-full w-full overflow-y-auto bg-background-dark flex justify-center">
+
+    <!-- Central Column: Article Content -->
+    <div class="w-full max-w-4xl bg-[#0f172a] border-x border-white/5 relative z-20 shadow-2xl min-h-screen">
+
+        <!-- Sticky Header / Navbar -->
+        <header
+            class="sticky top-0 z-50 bg-surface-dark/95 backdrop-blur-md border-b border-white/5 px-6 py-4 flex items-center justify-between">
+            <a href="/" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
+                <div
+                    class="w-8 h-8 rounded-md bg-primary flex items-center justify-center shadow-[0_0_10px_rgba(255,106,0,0.4)]">
+                    <span class="material-icons text-white text-lg">kebab_dining</span>
+                </div>
+                <h1 class="text-xl font-black tracking-tighter uppercase italic text-white hidden sm:block">
+                    Kebab<span class="text-primary">Rank</span> <span
+                        class="text-gray-500 text-xs not-italic ml-2 font-medium">Blog</span>
+                </h1>
+            </a>
+            <a href="/blog"
+                class="text-gray-400 hover:text-white transition-colors flex items-center gap-2 font-bold text-xs uppercase tracking-wider">
+                <span class="material-icons text-sm">arrow_back</span>
+                <span>Powrót</span>
+            </a>
+        </header>
+
+        <article class="p-6 md:p-12 pb-24">
+            <!-- Hero Section -->
+            <div class="mb-10">
+                <div class="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-[0.2em] mb-4">
+                    <span class="w-8 h-[1px] bg-primary"></span>
+                    Rankingi Miast
+                </div>
+                <h1 class="text-3xl md:text-5xl font-black text-white mb-6 leading-tight">
+                    Najlepszy kebab w Katowicach: Od Taniego Fast Foodu do <span class="text-primary italic">Kulinarnego
+                        Rzemiosła</span>
+                </h1>
+
+                <div class="flex flex-wrap gap-4 items-center text-xs text-gray-400 font-mono mb-8">
+                    <span class="bg-white/5 px-3 py-1 rounded-full border border-white/10 flex items-center gap-1">
+                        <span class="material-icons text-sm">location_on</span> Katowice
+                    </span>
+                    <span class="flex items-center gap-1"><span class="material-icons text-sm">schedule</span> {{
+                        current_date }}</span>
+                    <span class="flex items-center gap-1 text-green-500 font-bold uppercase tracking-tighter">
+                        Aktualizacja LIVE
+                    </span>
+                </div>
+
+                <img src="/static/img/blog/katowice.png" alt="Najlepszy Kebab w Katowicach"
+                    class="w-full h-[300px] md:h-[450px] object-cover rounded-2xl shadow-2xl border border-white/5 mb-10">
+            </div>
+
+            <!-- Content Bridge -->
+            <div class="prose prose-invert max-w-none">
+                <p
+                    class="text-xl text-gray-300 leading-relaxed mb-8 font-light italic border-l-4 border-primary pl-6 py-2">
+                    Aglomeracja katowicka w 2026 roku to jeden z najbardziej dynamicznych rynków gastronomicznych w
+                    Polsce. Kebab – niegdyś budżetowa przekąska – dziś wyłania się jako zróżnicowany sektor pełen
+                    rzemieślniczych nowości i berlińskich inspiracji.
+                </p>
+
+                <!-- TOP 3 DYNAMIC SECTION -->
+                <section class="mb-16">
+                    <div class="flex items-center justify-between mb-8">
+                        <h2 class="text-2xl font-black text-white uppercase tracking-tighter italic">
+                            Aktualne <span class="text-primary">TOP 3</span> w Katowicach
+                        </h2>
+                        <div class="text-[10px] text-gray-500 font-mono uppercase">Na podstawie ocen Google</div>
+                    </div>
+
+                    <div class="grid gap-6">
+                        {% if top_kebabs %}
+                        {% for kebab in top_kebabs[:3] %}
+                        <a href="/katowice"
+                            class="bg-white/5 border border-white/10 rounded-xl p-4 flex items-center gap-4 hover:bg-white/10 transition-all hover:scale-[1.02] active:scale-[0.98] group">
+                            <div class="text-4xl">
+                                {% if loop.index == 1 %}🏆{% elif loop.index == 2 %}🥈{% else %}🥉{% endif %}
+                            </div>
+                            <div class="flex-1">
+                                <h3 class="text-xl font-bold text-white group-hover:text-primary transition-colors">{{
+                                    kebab.name }}</h3>
+                                <p class="text-gray-400 text-sm">{{ kebab.address }}</p>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-primary font-black text-2xl">{{ "%.1f"|format(kebab.rank_score) if
+                                    kebab.rank_score else "N/A" }}</div>
+                                <div class="text-xs text-gray-500 uppercase">PKT</div>
+                            </div>
+                        </a>
+                        {% endfor %}
+                        {% else %}
+                        <div class="bg-white/5 border border-white/10 rounded-xl p-8 text-center text-gray-400 italic">
+                            Pobieranie aktualnych liderów rankingu...
+                        </div>
+                        {% endif %}
+                    </div>
+                </section>
+
+                <h2 class="text-2xl font-bold text-white mb-6">Era "Kraft Döner" i Rzemieślnicze Mięso</h2>
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    Kluczowym trendem definiującym rynek w Katowicach jest odejście od masowych, mrożonych bloków
+                    mięsnych na rzecz produkcji rzemieślniczej. Klienci stają się coraz bardziej świadomi, szukając
+                    transparentności i jakości.
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+                    <div class="bg-white/5 p-6 rounded-2xl border border-white/10">
+                        <h3 class="text-primary font-bold mb-2">Sheikh Kebab & Falafel</h3>
+                        <p class="text-sm text-gray-400 leading-snug">Przy ul. 3 Maja serwują 100% wołowiny z baraniną w
+                            tunezyjskim pieczywie mlewi. Pasta marokańska to ich znak rozpoznawczy.</p>
+                    </div>
+                    <div class="bg-white/5 p-6 rounded-2xl border border-white/10">
+                        <h3 class="text-primary font-bold mb-2">Stacja Bejrut</h3>
+                        <p class="text-sm text-gray-400 leading-snug">Lokal wyróżniający się prawdziwym mięsem bez
+                            mielonki i oryginalnymi dodatkami, takimi jak syrop z granatu.</p>
+                    </div>
+                </div>
+
+                <h2 class="text-2xl font-bold text-white mb-6 font-display uppercase tracking-tight">Styl berliński i
+                    Siła Influencerów</h2>
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    Katowice stały się areną ekspansji tzw. stylu berlińskiego (<em>gemüse kebap</em>). Od lutego 2025
+                    roku na Placu Szewczyka działa <strong>Kreuzberg Kraft Kebap</strong> – koncept sygnowany nazwiskiem
+                    Filipa Chajzera. Ale to nie jedyny głośny debiut.
+                </p>
+
+                <div
+                    class="bg-primary/10 border border-primary/20 p-8 rounded-2xl mb-12 flex flex-col md:flex-row items-center gap-6">
+                    <div class="text-5xl">📱</div>
+                    <div>
+                        <h3 class="text-xl font-bold text-white mb-2 italic">VIRAL Kebab przy Mariackiej</h3>
+                        <p class="text-gray-400 text-sm">Nowy koncept powiązany z <strong>Karolem "Frizem"
+                                Wiśniewskim</strong> przyciąga tłumy. To miejsce stworzone dla estetów jedzenia, idealne
+                            na Instagram i TikTok, choć popularność oznacza tu często dłuższy czas oczekiwania.</p>
+                    </div>
+                </div>
+
+                <h2 class="text-2xl font-bold text-white mb-6">Geograficzny Podział Smaku</h2>
+                <div class="space-y-4 mb-12">
+                    <div class="flex gap-4 items-start bg-white/5 p-4 rounded-xl border border-white/5">
+                        <div class="bg-primary/20 p-2 rounded-lg text-primary"><span
+                                class="material-icons">nightlife</span></div>
+                        <div>
+                            <strong class="text-white">Klaster Mariacka</strong>
+                            <p class="text-gray-400 text-sm">Centrum nocnego street foodu. Shorma Planet i VIRAL Kebab
+                                dominują tu między 22:00 a 4:00 rano.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 items-start bg-white/5 p-4 rounded-xl border border-white/5">
+                        <div class="bg-primary/20 p-2 rounded-lg text-primary"><span
+                                class="material-icons">school</span></div>
+                        <div>
+                            <strong class="text-white">Środmieście i Strefa Akademicka</strong>
+                            <p class="text-gray-400 text-sm">Okolice ul. Uniwersyteckiej to królestwo studentów. Silną
+                                pozycję ma tu Kebab u Pajdy oraz Amrit JOY.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h2 class="text-2xl font-bold text-white mb-6">Vegab i Roślinne Alternatywy</h2>
+                <p class="text-gray-300 leading-relaxed mb-10">
+                    W 2026 roku menu bezmięsne to standard. <strong>Vegab</strong> serwujący rollo z "mięsem" roślinnym
+                    oraz <strong>Heat Katowice</strong> (roślinny farsz w rzemieślniczej focacci) to liderzy katowickiej
+                    sceny wegańskiej.
+                </p>
+
+                <!-- Call to Action Section -->
+                <div
+                    class="relative bg-gradient-to-br from-primary to-orange-700 rounded-3xl p-10 overflow-hidden shadow-2xl">
+                    <div class="relative z-10 text-center">
+                        <h3 class="text-3xl font-black text-white mb-4 uppercase italic">Chcesz sprawdzić aktualne
+                            miejsca?</h3>
+                        <p class="text-white/80 mb-8 max-w-lg mx-auto">
+                            Zamiast opierać się na artykułach sponsorowanych, skorzystaj z <strong>Kebab Rank</strong>.
+                            Nasza AI analizuje setki opinii Google w czasie rzeczywistym.
+                        </p>
+                        <a href="/katowice"
+                            class="inline-block bg-white text-primary px-10 py-4 rounded-full font-black hover:scale-105 transition-transform shadow-xl uppercase tracking-wider">
+                            Zobacz Pełny Ranking Katowic
+                        </a>
+                    </div>
+                    <!-- Decorative element -->
+                    <div class="absolute -right-20 -bottom-20 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+                </div>
+
+                <!-- FAQ Section -->
+                <div class="mt-20">
+                    <h2 class="text-2xl font-black text-white mb-8 border-b border-white/10 pb-4">Często Zadawane
+                        Pytania (FAQ)</h2>
+                    <div class="space-y-6">
+                        <details class="group bg-white/5 rounded-xl border border-white/10 p-4">
+                            <summary
+                                class="text-white font-bold cursor-pointer list-none flex justify-between items-center group-open:text-primary transition-colors">
+                                Czy w Katowicach znajdę prawdziwy kebab berliński?
+                                <span
+                                    class="material-icons group-open:rotate-180 transition-transform">expand_more</span>
+                            </summary>
+                            <p class="text-gray-400 text-sm mt-4 leading-relaxed">
+                                Tak, najpopularniejszym miejscem w tym stylu jest obecnie Kreuzberg Kraft Kebap na Placu
+                                Szewczyka, oferujący grillowane warzywa i rzemieślnicze sosy.
+                            </p>
+                        </details>
+                        <details class="group bg-white/5 rounded-xl border border-white/10 p-4">
+                            <summary
+                                class="text-white font-bold cursor-pointer list-none flex justify-between items-center group-open:text-primary transition-colors">
+                                Ile kosztuje kebab w Katowicach w 2026 roku?
+                                <span
+                                    class="material-icons group-open:rotate-180 transition-transform">expand_more</span>
+                            </summary>
+                            <p class="text-gray-400 text-sm mt-4 leading-relaxed">
+                                Ceny w lokalach premium i rzemieślniczych oscylują między 35 a 44 zł. Tradycyjne kebaby
+                                w cieście można znaleźć w przedziale 28-34 zł.
+                            </p>
+                        </details>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <!-- Newsletter / Socials Footer -->
+        <footer class="bg-black/30 border-t border-white/5 p-12 text-center">
+            <h4 class="text-white font-bold mb-4">Śledź Kebab Rank na Social Mediach</h4>
+            <div class="flex justify-center gap-6 mb-8 text-gray-500">
+                <a href="https://www.youtube.com/@kebabrank" class="hover:text-red-600 transition-colors"><span
+                        class="material-icons">play_circle</span></a>
+                <a href="https://www.instagram.com/kebabrank/" class="hover:text-pink-500 transition-colors"><span
+                        class="material-icons">camera_alt</span></a>
+                <a href="https://www.tiktok.com/@kebabrank" class="hover:text-white transition-colors"><span
+                        class="material-icons">music_video</span></a>
+            </div>
+            <p class="text-[10px] text-gray-600 uppercase tracking-widest">&copy; 2026 KebabRank - Prawdziwy Głos
+                Konsumentów</p>
+        </footer>
+    </div>
+</div>
+{% endblock %}

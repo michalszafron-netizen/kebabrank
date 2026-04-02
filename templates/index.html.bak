@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}🥙 Kebab Rank Poland - Ranking najlepszych kebabów w Polsce{% endblock %}
+
+{% block description %}Discover the best kebabs in Poland based on Google reviews. Updated weekly across major cities.{% endblock %}
+
+{% block keywords %}kebab, Poland, ranking, najlepszy kebab, kebab Poland, top kebab, kebab ranking, kebab Kraków, kebab Warszawa{% endblock %}
+
+{% block content %}
+
+    <main>
+        <!-- Shared controls (always visible) -->
+        <div class="shared-controls">
+            <div class="filter-section">
+                <!-- Line 1: Tab buttons + Search field + Search button + Arrow -->
+                <div class="controls-row">
+                    <div class="controls">
+                        <button class="tab-button active" onclick="showTab('city')" data-translate="tab-city">City Rankings</button>
+                        <button class="tab-button" onclick="showTab('global')" data-translate="tab-global">Global Top 10</button>
+                    </div>
+                    <div class="search-container">
+                        <input type="text" 
+                               id="city-search" 
+                               value="{{ initial_city if initial_city else 'Kraków' }}"
+                               placeholder="Type city name (e.g., Kraków, Pszczyna)..." 
+                               data-placeholder-en="Type city name (e.g., Kraków, Pszczyna)..."
+                               data-placeholder-pl="Wpisz nazwę miasta (np. Kraków, Pszczyna)..."
+                               autocomplete="off"
+                               oninput="filterCities(this.value)">
+                        <button class="dropdown-arrow" onclick="toggleCityDropdown()">▼</button>
+                        <button onclick="searchCity()" class="search-button" data-translate="search-button">Search</button>
+                    </div>
+                </div>
+                
+                <!-- Line 2: Popular cities + Number of kebabs slider -->
+                <div class="controls-row">
+                    <div class="popular-cities">
+                        <span data-translate="popular">Popular:</span>
+                        <button class="city-quick-link" onclick="selectCity('Warszawa')">Warszawa</button>
+                        <button class="city-quick-link" onclick="selectCity('Kraków')">Kraków</button>
+                        <button class="city-quick-link" onclick="selectCity('Gdańsk')">Gdańsk</button>
+                        <button class="city-quick-link desktop-only" onclick="selectCity('Katowice')">Katowice</button>
+                        <button class="city-quick-link desktop-only" onclick="selectCity('Wrocław')">Wrocław</button>
+                        <button class="city-quick-link desktop-only" onclick="selectCity('Poznań')">Poznań</button>
+                        <button class="city-quick-link desktop-only" onclick="selectCity('Łódź')">Łódź</button>
+                    </div>
+                    
+                    <div class="kebab-count-slider">
+                        <label for="kebab-count" data-translate="kebab-count-label">Number of kebabs to show:</label>
+                        <input type="range" id="kebab-count" min="1" max="60" value="10" step="1">
+                        <span id="kebab-count-value">10</span>
+                    </div>
+                </div>
+                
+                <div id="city-dropdown" class="city-dropdown" style="display: none;">
+                    <!-- Filtered cities will appear here -->
+                </div>
+            </div>
+        </div>
+
+        <div id="city-tab" class="tab-content active">
+
+            <!-- Split-screen layout for city rankings and map -->
+            <div class="split-layout">
+                <div class="rankings-panel">
+                    <div id="city-rankings" class="rankings-container">
+                        <p class="info-message" data-translate="search-prompt">Search for a city to see the best kebabs</p>
+                    </div>
+                </div>
+                
+                <div class="map-panel">
+                    <div id="kebab-map" class="map-container">
+                        <div class="map-placeholder">
+                            <p data-translate="map-placeholder">Select a city to see kebab locations on the map</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- City Grid for Internal Linking -->
+            <div class="city-grid-section">
+                <h3 data-translate="all-cities">All Available Cities</h3>
+                <div id="city-grid" class="city-grid">
+                    <!-- Cities will be populated by JavaScript -->
+                    <div class="loading" data-translate="loading-cities">Loading cities...</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="global-tab" class="tab-content">
+            <!-- Split-screen layout for global rankings and map -->
+            <div class="split-layout">
+                <div class="rankings-panel">
+                    <h2 data-translate="global-title">Top 10 Kebabs in Poland</h2>
+                    <div id="global-rankings" class="rankings-container">
+                        <div class="loading" data-translate="loading">Loading...</div>
+                    </div>
+                </div>
+                
+                <div class="map-panel">
+                    <div id="kebab-map-global" class="map-container">
+                        <div class="map-placeholder">
+                            <p data-translate="map-placeholder">Global kebab locations will appear here</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Pass initial city data from Flask template to JavaScript
+        const initialCity = "{{ initial_city if initial_city else '' }}";
+    </script>
+{% endblock %}

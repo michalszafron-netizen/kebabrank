@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html class="dark" lang="pl">
+
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CMSKM4X7XD"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-CMSKM4X7XD');
+    </script>
+
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="theme-color" content="#0b1121">
+
+    <!-- Performance Optimizations -->
+    <link rel="preload" href="https://cdn.tailwindcss.com?plugins=forms,container-queries" as="script">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+    <link rel="dns-prefetch" href="https://unpkg.com">
+
+    <title>{% if page_title %}{{ page_title }}{% else %}{% block title %}🥙 Kebab Rank Poland - Ranking najlepszych
+        kebabów w Polsce{% endblock %}{% endif %}</title>
+    <meta name="description"
+        content="{% if page_description %}{{ page_description }}{% else %}{% block description %}Odkryj najlepsze kebaby w Polsce na podstawie ocen Google. Ranking kebabów w ponad 50 miastach, aktualizowany co tydzień.{% endblock %}{% endif %}">
+    <meta name="keywords"
+        content="{% if page_keywords %}{{ page_keywords }}{% else %}{% block keywords %}kebab, Poland, ranking, najlepszy kebab, ranking kebabów, kebab ranking, kebab Kraków, kebab Warszawa, kebab Gdańsk, kebab Wrocław, doner, tortilla{% endblock %}{% endif %}">
+
+    <link rel="canonical" href="https://www.kebabrank.com{{ request.path }}">
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Kebab Rank",
+      "url": "https://www.kebabrank.com",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://www.kebabrank.com/kebab-{search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Kebab Rank",
+        "item": "https://www.kebabrank.com"
+      }{% if initial_city %}, {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Kebab {{ initial_city }}",
+        "item": "{{ request.url }}"
+      }{% endif %}]
+    }
+    </script>
+    {% if seo_rankings %}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "name": "Najlepsze Kebaby w {% if initial_city %}{{ initial_city }}{% else %}Polsce{% endif %} - Ranking 2026",
+      "description": "Najwyżej oceniane lokale serwujące kebab w Polsce według analizy AI i opinii Google.",
+      "itemListElement": [
+        {% for kebab in seo_rankings %}
+        {
+          "@type": "ListItem",
+          "position": {{ loop.index }},
+          "item": {
+            "@type": "Restaurant",
+            "name": "{{ kebab.name }}",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "{{ kebab.address }}",
+              "addressLocality": "{{ kebab.city }}",
+              "addressCountry": "PL"
+            },
+            "aggregateRating": {
+              "@type": "AggregateRating",
+              "ratingValue": "{{ kebab.rating }}",
+              "reviewCount": "{{ kebab.total_reviews }}"
+            }
+          }
+        }{% if not loop.last %},{% endif %}
+        {% endfor %}
+      ]
+    }
+    </script>
+    {% elif initial_city %}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "name": "Najlepsze Kebaby w {{ initial_city }}",
+      "description": "Ranking najlepszych lokali serwujących kebab, doner i tortillę w {{ initial_city }} na podstawie opinii Google i analizy AI."
+    }
+    </script>
+    {% endif %}
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&amp;display=swap&font-display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons&display=swap" rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+
+    <!-- Leaflet.js CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ff6a00",
+                        "background-light": "#f8f7f5",
+                        "background-dark": "#0b1121",
+                        "surface-dark": "#1e293b",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=6">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/skeleton.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body
+    class="bg-background-dark text-slate-200 h-screen w-screen overflow-hidden font-display flex flex-col md:flex-row selection:bg-primary/30 selection:text-white">
+    <!-- SEO H1 - Accessible but hidden for premium aesthetic -->
+    <h1 class="sr-only">{% if page_h1 %}{{ page_h1 }}{% else %}Ranking Najlepszych Kebabów w Polsce - Kebab Rank 2026{%
+        endif %}</h1>
+
+    {% block content %}
+    <!-- Sidebar (Navigation & List) -->
+    <aside class="w-full md:w-[40%] h-full flex flex-col border-r border-white/5 relative z-20 bg-[#0b1121]">
+
+        <!-- Header -->
+        <header class="sticky top-0 z-30 bg-[#0b1121] pb-2 pt-4 px-4 md:pb-4 md:pt-6 md:px-6 flex-shrink-0">
+            <div class="flex items-center justify-between mb-4 md:mb-6">
+                <div class="flex items-center gap-2 md:gap-3">
+                    <a href="/" class="flex items-center gap-2 md:gap-3 hover:opacity-80 transition-opacity">
+                        <div
+                            class="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-primary flex items-center justify-center shadow-[0_0_15px_rgba(255,106,0,0.4)]">
+                            <span class="material-icons text-white text-lg md:text-2xl">kebab_dining</span>
+                        </div>
+                        <h1 class="text-xl md:text-2xl font-black tracking-tighter uppercase italic">
+                            Kebab<span class="text-primary">Rank</span></h1>
+                    </a>
+                </div>
+                <div class="flex items-center gap-1 md:gap-2">
+                    <!-- Social Icons -->
+                    <div class="flex items-center gap-0.5 md:gap-2 mr-1 md:mr-2">
+                        <a href="https://www.youtube.com/@kebabrank" target="_blank"
+                            class="w-7 h-7 md:w-8 md:h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:bg-red-600 hover:text-white hover:border-red-600 transition-all duration-300 shadow-sm"
+                            title="YouTube">
+                            <span class="material-symbols-outlined text-[14px] md:text-[18px]">play_circle</span>
+                        </a>
+                        <a href="https://www.instagram.com/kebabrank/" target="_blank"
+                            class="w-7 h-7 md:w-8 md:h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:bg-gradient-to-tr hover:from-yellow-400 hover:via-red-500 hover:to-purple-600 hover:text-white hover:border-transparent transition-all duration-300 shadow-sm"
+                            title="Instagram">
+                            <span class="material-symbols-outlined text-[14px] md:text-[18px]">camera</span>
+                        </a>
+                        <a href="https://www.facebook.com/people/Kebab-Rank-Polska/61577128095107/" target="_blank"
+                            class="w-7 h-7 md:w-8 md:h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all duration-300 shadow-sm"
+                            title="Facebook">
+                            <span class="material-symbols-outlined text-[14px] md:text-[18px]">public</span>
+                        </a>
+                        <a href="https://www.tiktok.com/@kebabrank" target="_blank"
+                            class="w-7 h-7 md:w-8 md:h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:bg-black hover:text-white hover:border-white transition-all duration-300 shadow-sm"
+                            title="TikTok">
+                            <span class="material-symbols-outlined text-[14px] md:text-[18px]">music_note</span>
+                        </a>
+                    </div>
+                    <!-- Language Switcher -->
+                    <div
+                        class="flex items-center bg-white/5 rounded-full p-0.5 border border-white/10 language-switcher">
+                        <button
+                            class="w-7 h-7 md:w-8 md:h-8 rounded-full text-[10px] md:text-xs font-bold flex items-center justify-center lang-flag active"
+                            data-lang="pl">PL</button>
+                        <button
+                            class="w-7 h-7 md:w-8 md:h-8 rounded-full text-[10px] md:text-xs font-bold flex items-center justify-center lang-flag"
+                            data-lang="en">EN</button>
+                    </div>
+                    <!-- Socials / Mobile Toggle Map (Removed old button) -->
+                </div>
+            </div>
+
+            {% block sidebar_header %}{% endblock %}
+        </header>
+
+        <!-- Sidebar Content (Filters & Listings) -->
+        <div class="flex-1 overflow-y-auto custom-scrollbar p-3 md:p-6 space-y-4" id="sidebar-content">
+            {% block sidebar_content %}{% endblock %}
+        </div>
+
+        <!-- Mobile Footer Removed to save space -->
+
+    </aside>
+
+    <!-- Mobile Sticky View Switcher & Footer Links -->
+    <div
+        class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[999] md:hidden w-full px-4 flex flex-col items-center gap-3">
+        <div
+            class="flex items-center p-1.5 rounded-full bg-[#0f172a]/90 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
+            <button id="mobile-view-list"
+                class="flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-300 bg-primary text-white shadow-lg">
+                <span class="material-icons text-[18px]">list</span>
+                <span data-translate="view-list">Lista</span>
+            </button>
+            <button id="mobile-view-map"
+                class="flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-300 text-gray-400 hover:text-white">
+                <span class="material-icons text-[18px]">map</span>
+                <span data-translate="view-map">Mapa</span>
+            </button>
+        </div>
+
+        <!-- Ultra-compact footer links -->
+        <div
+            class="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[10px] text-slate-500/60 font-medium px-4 py-1 rounded-full bg-black/20 backdrop-blur-sm border border-white/5">
+            <a class="hover:text-primary transition-colors" href="/blog" data-translate="footer-blog">Blog</a>
+            <span class="text-white/5">•</span>
+            <a class="hover:text-primary transition-colors" href="/terms" data-translate="footer-terms">Regulamin</a>
+            <span class="text-white/5">•</span>
+            <a class="hover:text-primary transition-colors" href="/privacy" data-translate="footer-privacy">Polityka
+                Prywatności</a>
+            <span class="text-white/5">•</span>
+            <span class="opacity-50" data-translate="footer-rights">© 2026</span>
+        </div>
+    </div>
+
+    <!-- Main Content (Map) -->
+    <main class="hidden md:flex w-full md:w-[60%] h-full relative map-bg overflow-hidden flex-col" id="map-container">
+        {% block map_content %}{% endblock %}
+
+        <!-- Desktop Footer Overlay -->
+        <footer
+            class="glass-panel border-t border-white/5 p-4 z-40 bg-background-dark/80 backdrop-blur-md absolute bottom-0 w-full">
+            <div class="flex items-center justify-between px-4">
+                <div class="flex items-center gap-2">
+                    <a href="https://www.youtube.com/@kebabrank" target="_blank"
+                        class="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:bg-red-600 hover:text-white hover:border-red-600 transition-all duration-300 shadow-sm"
+                        title="YouTube">
+                        <span class="material-symbols-outlined text-[18px]">play_circle</span>
+                    </a>
+                    <a href="https://www.instagram.com/kebabrank/" target="_blank"
+                        class="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:bg-gradient-to-tr hover:from-yellow-400 hover:via-red-500 hover:to-purple-600 hover:text-white hover:border-transparent transition-all duration-300 shadow-sm"
+                        title="Instagram">
+                        <span class="material-symbols-outlined text-[18px]">camera</span>
+                    </a>
+                    <a href="https://www.facebook.com/people/Kebab-Rank-Polska/61577128095107/" target="_blank"
+                        class="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all duration-300 shadow-sm"
+                        title="Facebook">
+                        <span class="material-symbols-outlined text-[18px]">public</span>
+                    </a>
+                    <a href="https://www.tiktok.com/@kebabrank" target="_blank"
+                        class="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:bg-black hover:text-white hover:border-white transition-all duration-300 shadow-sm"
+                        title="TikTok">
+                        <span class="material-symbols-outlined text-[18px]">music_note</span>
+                    </a>
+                    <a href="mailto:kebabrank@gmail.com"
+                        class="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:bg-primary hover:text-white hover:border-primary transition-all duration-300 shadow-sm"
+                        title="Email">
+                        <span class="material-icons text-[18px]">email</span>
+                    </a>
+                </div>
+                <div class="flex items-center gap-3 text-[11px] text-slate-500 font-medium">
+                    <a class="hover:text-primary transition-colors" href="/blog" data-translate="footer-blog">Blog</a>
+                    <span class="text-white/10">•</span>
+                    <a class="hover:text-primary transition-colors" href="/terms"
+                        data-translate="footer-terms">Regulamin</a>
+                    <span class="text-white/10">•</span>
+                    <a class="hover:text-primary transition-colors" href="/privacy"
+                        data-translate="footer-privacy">Polityka Prywatności</a>
+                    <span class="text-white/10">•</span>
+                    <span class="text-slate-600 font-semibold" data-translate="footer-rights">© 2026 KebabRank</span>
+                </div>
+            </div>
+        </footer>
+    </main>
+    {% endblock %}
+
+    <!-- Cookie Banner -->
+    <div id="cookie-banner"
+        class="fixed bottom-0 left-0 w-full z-[1000] bg-[#0f172a]/95 backdrop-blur-md border-t border-white/10 p-4 transition-transform duration-500">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            <p class="text-sm text-gray-300 text-center md:text-left" data-translate="cookie-text">Strona korzysta z
+                plików cookies w celach technicznych i analitycznych. Korzystając z serwisu, wyrażasz zgodę na ich
+                użycie.</p>
+            <div class="flex items-center gap-4">
+                <div class="flex flex-col md:flex-row items-center gap-2 md:gap-4 mr-2">
+                    <a href="/terms"
+                        class="text-[10px] text-slate-400 hover:text-primary underline md:no-underline md:hover:underline"
+                        data-translate="footer-terms">Regulamin</a>
+                    <a href="/privacy"
+                        class="text-[10px] text-slate-400 hover:text-primary underline md:no-underline md:hover:underline"
+                        data-translate="footer-privacy">Polityka Prywatności</a>
+                </div>
+                <button id="cookie-ok-btn" class="btn-primary" data-translate="cookie-ok">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaflet.js JavaScript -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}?v=1" defer></script>
+    {% block extra_js %}{% endblock %}
+</body>
+
+</html>

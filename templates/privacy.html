@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block title %}{% if session.get('lang') == 'en' %}Privacy Policy | Kebab Rank{% else %}Polityka Prywatności | Kebab
+Rank{% endif %}{% endblock %}
+
+{% block content %}
+<div class="h-full w-full overflow-y-auto bg-background-dark flex justify-center">
+    <div class="w-full max-w-4xl bg-[#0f172a] border-x border-white/5 relative z-20 shadow-2xl min-h-screen">
+        <header
+            class="sticky top-0 z-50 bg-surface-dark/95 backdrop-blur-md border-b border-white/5 px-6 py-4 flex items-center justify-between">
+            <a href="/" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
+                <div
+                    class="w-8 h-8 rounded-md bg-primary flex items-center justify-center shadow-[0_0_10px_rgba(255,106,0,0.4)]">
+                    <span class="material-icons text-white text-lg">kebab_dining</span>
+                </div>
+                <h1 class="text-xl font-black tracking-tighter uppercase italic text-white">
+                    Kebab<span class="text-primary">Rank</span> <span
+                        class="text-gray-500 text-xs not-italic ml-2 font-medium"
+                        data-translate="footer-privacy">Polityka Prywatności</span>
+                </h1>
+            </a>
+            <a href="/"
+                class="text-gray-400 hover:text-white transition-colors flex items-center gap-2 font-bold text-xs uppercase tracking-wider">
+                <span class="material-icons text-sm">arrow_back</span>
+                <span data-translate="back">Powrót</span>
+            </a>
+        </header>
+
+        <article class="p-6 md:p-12 pb-24 prose prose-invert max-w-none">
+            <h1 class="text-3xl md:text-5xl font-black text-white mb-8" data-translate="legal-privacy-title">Polityka
+                Prywatności i Plików Cookies Serwisu KebabRank.com</h1>
+
+            <div class="space-y-8 text-gray-300">
+                <section>
+                    <h2 class="text-xl font-bold text-white mb-4" data-translate="legal-admin-title">1. Administrator
+                        Danych</h2>
+                    <p data-translate="legal-admin-desc">Administratorem danych jest Michal Szafron, kontakt:
+                        kebabrank@gmail.com (dalej: "Administrator").</p>
+                </section>
+
+                <section>
+                    <h2 class="text-xl font-bold text-white mb-4" data-translate="legal-data-purpose-title">2. Jakie
+                        dane przetwarzamy i w jakim celu?</h2>
+                    <p class="mb-4" data-translate="legal-privacy-first">Szanujemy Twoją prywatność. Serwis został
+                        zaprojektowany w duchu "Privacy First".</p>
+                    <ul class="list-disc pl-6 space-y-4">
+                        <li>
+                            <strong class="text-white" data-translate="legal-no-personal-title">Brak danych
+                                osobowych:</strong>
+                            <span data-translate="legal-no-personal-desc">Nie zbieramy aktywnie żadnych danych
+                                osobowych. W serwisie nie ma formularzy kontaktowych, formularzy rejestracji ani
+                                możliwości pozostawiania komentarzy bezpośrednio na naszych serwerach. Nie zbieramy
+                                adresów e-mail ani imion Użytkowników.</span>
+                        </li>
+                        <li>
+                            <strong class="text-white" data-translate="legal-logs-title">Logi serwera:</strong>
+                            <span data-translate="legal-logs-desc">Jak każda strona internetowa, nasz serwer
+                                automatycznie zapisuje zapytania wysyłane przez przeglądarkę (adres IP, data i czas,
+                                informacje o przeglądarce i systemie operacyjnym). Dane te nie są kojarzone z
+                                konkretnymi osobami i służą wyłącznie celom technicznym (diagnostyka, bezpieczeństwo
+                                serwera). Podstawą prawną jest uzasadniony interes Administratora (art. 6 ust. 1 lit. f
+                                RODO).</span>
+                        </li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2 class="text-xl font-bold text-white mb-4" data-translate="legal-cookies-title">3. Pliki Cookies
+                        (Ciasteczka)</h2>
+                    <p class="mb-4" data-translate="legal-cookies-desc">Serwis wykorzystuje pliki cookies (małe pliki
+                        tekstowe zapisywane na urządzeniu Użytkownika) w ograniczonym zakresie:</p>
+                    <ul class="list-disc pl-6 space-y-4">
+                        <li data-translate="legal-cookies-tech"><strong class="text-white">Cookies techniczne:</strong>
+                            Niezbędne do prawidłowego działania strony (np. zapamiętanie ustawień mapy czy widoku
+                            rankingu).</li>
+                        <li>
+                            <strong class="text-white" data-translate="legal-cookies-third-party">Cookies podmiotów
+                                trzecich:</strong>
+                            <ul class="mt-2 space-y-2 pl-4 border-l border-white/10">
+                                <li data-translate="legal-cookies-maps"><strong class="text-white">Mapy:</strong> Serwis
+                                    wykorzystuje mapy dostarczane przez zewnętrznych dostawców (OpenStreetMap /
+                                    CartoDB). Dostawcy ci mogą zapisywać własne pliki cookies w celu obsługi mapy.</li>
+                                <li data-translate="legal-cookies-analytics"><strong
+                                        class="text-white">Analityka:</strong> Korzystamy z anonimowych statystyk Google
+                                    Analytics w celu analizy ruchu na stronie. IP użytkowników jest anonimizowane.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2 class="text-xl font-bold text-white mb-4" data-translate="legal-manage-cookies-title">4.
+                        Zarządzanie plikami cookies</h2>
+                    <p data-translate="legal-manage-cookies-desc">Użytkownik może w każdej chwili zmienić ustawienia
+                        dotyczące plików cookies w swojej przeglądarce internetowej (zablokować je lub usunąć). Może to
+                        jednak wpłynąć na funkcjonalność mapy w Serwisie.</p>
+                </section>
+
+                <section>
+                    <h2 class="text-xl font-bold text-white mb-4" data-translate="legal-share-title">5. Przekazywanie
+                        danych</h2>
+                    <p data-translate="legal-share-desc">Dane techniczne (logi) mogą być powierzone firmie hostingowej
+                        obsługującej Serwis wyłącznie w celu utrzymania ciągłości działania strony. Nie sprzedajemy ani
+                        nie udostępniamy żadnych danych podmiotom marketingowym.</p>
+                </section>
+
+                <section>
+                    <h2 class="text-xl font-bold text-white mb-4" data-translate="legal-changes-title">6. Zmiany w
+                        polityce</h2>
+                    <p data-translate="legal-changes-desc">W przypadku zmiany funkcjonalności Serwisu, niniejsza
+                        Polityka może ulec zmianie. Aktualna wersja zawsze znajduje się pod tym adresem.</p>
+                </section>
+
+                <div class="mt-12 pt-8 border-t border-white/5 text-sm text-gray-500 font-mono">
+                    <span data-translate="refreshing">Ostatnia aktualizacja:</span> {{ current_date }}
+                </div>
+            </div>
+        </article>
+    </div>
+</div>
+{% endblock %}

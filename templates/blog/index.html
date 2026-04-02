@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block title %}Blog – wszystkie artykuły o kebabach w Polsce | Kebab Rank{% endblock %}
+{% block description %}Przegląd wszystkich artykułów blogowych Kebab Rank. Dowiedz się, gdzie zjeść najlepszy kebab w
+Polsce.{% endblock %}
+{% block keywords %}blog kebab rank, najlepszy kebab, ranking kebabów, przewodnik kebab, kebab polska{% endblock %}
+
+{% block og_title %}Blog Kebab Rank{% endblock %}
+{% block og_description %}Odkryj nasze artykuły o najlepszych kebabach w Polsce – rankingi miast, przewodniki i
+porady.{% endblock %}
+{% block og_url %}https://kebabrank.com/blog{% endblock %}
+
+{% block content %}
+<div class="min-h-screen w-full bg-background-dark flex flex-col items-center overflow-y-auto">
+  <!-- Navbar -->
+  <header class="w-full max-w-6xl mx-auto py-6 px-4 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
+      <div
+        class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center shadow-[0_0_15px_rgba(255,106,0,0.4)]">
+        <span class="material-icons text-white text-2xl">kebab_dining</span>
+      </div>
+      <div class="text-2xl font-black tracking-tighter uppercase italic text-white">
+        Kebab<span class="text-primary">Rank</span> <span
+          class="text-gray-500 text-sm not-italic ml-2 font-medium">Blog</span>
+      </div>
+    </a>
+    <a href="/" class="text-gray-400 hover:text-white transition-colors flex items-center gap-2 font-bold text-sm">
+      <span class="material-icons text-sm">arrow_back</span>
+      <span data-translate="back-to-rankings">Wróć do rankingu</span>
+    </a>
+  </header>
+
+  <div class="w-full max-w-6xl mx-auto px-4 pb-8">
+    <h1 class="text-3xl md:text-5xl font-black text-white mb-8 text-center mt-10" data-translate-html="blog-title">
+      Baza wiedzy o <span class="text-primary">Kebabach</span>
+    </h1>
+
+    <section class="blog-list">
+      {% for article in articles %}
+      <a href="/blog/{{ article.slug }}" class="blog-card group">
+        <div class="overflow-hidden h-[200px] relative">
+          <img src="{{ article.cover }}" alt="{{ article.title }}"
+            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy"
+            onerror="this.src='https://images.unsplash.com/photo-1529042410759-befb1204b468?q=80&w=600&auto=format&fit=crop'" />
+          <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
+        </div>
+        <div class="blog-card-content bg-surface-dark border-t border-white/5">
+          <span class="text-[#ff6a00] text-xs font-bold uppercase tracking-widest mb-2 block"
+            data-translate="article-label">Artykuł</span>
+          <h2 class="text-xl font-bold text-white mb-2 group-hover:text-primary transition-colors leading-tight">{{
+            article.title }}</h2>
+          <p class="text-gray-400 text-sm line-clamp-2 mb-4">{{ article.excerpt }}</p>
+          <div class="flex items-center justify-between text-xs text-gray-500 border-t border-white/5 pt-3">
+            <span class="flex items-center gap-1"><span class="material-icons text-[14px]">calendar_today</span> {{
+              article.date }}</span>
+            <span class="group-hover:translate-x-1 transition-transform text-white font-medium flex items-center gap-1">
+              <span data-translate="read-more">Czytaj</span>
+              <span class="material-icons text-[14px]">arrow_forward</span></span>
+          </div>
+        </div>
+      </a>
+      {% endfor %}
+    </section>
+  </div>
+</div>
+
+
+<style>
+  /* ------------ Blog list grid ------------- */
+  .blog-list {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+
+  .blog-card {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, .1);
+    text-decoration: none;
+    color: inherit;
+    transition: transform .3s, box-shadow .3s;
+  }
+
+  .blog-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, .12);
+  }
+
+  .blog-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+  }
+
+  .blog-card-content {
+    padding: 1.5rem;
+  }
+
+  .blog-card-content h2 {
+    font-size: 1.25rem;
+    color: #2c3e50;
+    margin-bottom: .5rem;
+  }
+
+  .blog-card-content p {
+    font-size: .95rem;
+    color: #555;
+    line-height: 1.6;
+    min-height: 72px;
+  }
+
+  .blog-card-meta {
+    display: block;
+    margin-top: 1rem;
+    font-size: .8rem;
+    color: #7f8c8d;
+  }
+
+  @media(max-width:480px) {
+    .blog-card img {
+      height: 140px;
+    }
+  }
+</style>
+{% endblock %}

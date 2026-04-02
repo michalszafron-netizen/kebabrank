@@ -1,0 +1,252 @@
++] Building 20.0s (9/11)                                                                                                                                                                                          
+ => [internal] load local bake definitions                                                                                                                                                                    0.0s
+ => => reading from stdin 504B                                                                                                                                                                                0.0s
+ => [internal] load build definition from dockerfile                                                                                                                                                          0.0s
+ => => transferring dockerfile: 527B                                                                                                                                                                          0.0s
+ => [internal] load metadata for docker.io/library/python:3.9-slim                                                                                                                                            0.7s
+ => [internal] load .dockerignore                                                                                                                                                                             0.0s
+ => => transferring context: 2B                                                                                                                                                                               0.0s
+ => [1/6] FROM docker.io/library/python:3.9-slim@sha256:2d97f6910b16bd338d3060f261f53f144965f755599aab1acda1e13cf1731b1b                                                                                      0.0s
+ => [internal] load build context                                                                                                                                                                             0.4s
+ => => transferring context: 1.47MB                                                                                                                                                                           0.4s
+ => CACHED [2/6] WORKDIR /app                                                                                                                                                                                 0.0s
+ => [3/6] COPY requirements.txt .                                                                                                                                                                             0.0s
+ => ERROR [4/6] RUN pip install --no-cache-dir -r requirements.txt                                                                                                                                           18.7s
+------                                                                                                                                                                                                             
+ > [4/6] RUN pip install --no-cache-dir -r requirements.txt:                                                                                                                                                       
+2.708 Collecting annotated-types==0.7.0                                                                                                                                                                            
+2.885   Downloading annotated_types-0.7.0-py3-none-any.whl (13 kB)                                                                                                                                                 
+2.969 Collecting anyio==4.9.0                                                                                                                                                                                      
+2.997   Downloading anyio-4.9.0-py3-none-any.whl (100 kB)                                                                                                                                                          
+3.033      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100.9/100.9 kB 3.0 MB/s eta 0:00:00
+3.074 Collecting blinker==1.9.0
+3.099   Downloading blinker-1.9.0-py3-none-any.whl (8.5 kB)
+3.163 Collecting certifi==2025.4.26
+3.187   Downloading certifi-2025.4.26-py3-none-any.whl (159 kB)
+3.210      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 159.6/159.6 kB 7.6 MB/s eta 0:00:00
+3.485 Collecting charset-normalizer==3.4.2
+3.511   Downloading charset_normalizer-3.4.2-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (149 kB)
+3.517      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 149.5/149.5 kB 60.4 MB/s eta 0:00:00
+3.571 Collecting click==8.1.7
+3.596   Downloading click-8.1.7-py3-none-any.whl (97 kB)
+3.599      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 97.9/97.9 kB 147.8 MB/s eta 0:00:00
+3.646 Collecting colorama==0.4.6
+3.670   Downloading colorama-0.4.6-py2.py3-none-any.whl (25 kB)
+3.708 Collecting deprecation==2.1.0
+3.733   Downloading deprecation-2.1.0-py2.py3-none-any.whl (11 kB)
+3.773 Collecting distro==1.9.0
+3.797   Downloading distro-1.9.0-py3-none-any.whl (20 kB)
+3.840 Collecting exceptiongroup==1.3.0
+3.865   Downloading exceptiongroup-1.3.0-py3-none-any.whl (16 kB)
+3.919 Collecting Flask==2.3.3
+3.943   Downloading flask-2.3.3-py3-none-any.whl (96 kB)
+3.947      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 96.1/96.1 kB 223.0 MB/s eta 0:00:00
+3.995 Collecting Flask-Cors==4.0.0
+4.021   Downloading Flask_Cors-4.0.0-py2.py3-none-any.whl (14 kB)
+4.067 Collecting googlemaps==4.10.0
+4.093   Downloading googlemaps-4.10.0.tar.gz (33 kB)
+4.118   Preparing metadata (setup.py): started
+8.616   Preparing metadata (setup.py): finished with status 'done'
+8.678 Collecting gotrue==1.3.1
+8.703   Downloading gotrue-1.3.1-py3-none-any.whl (42 kB)
+8.707      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 42.3/42.3 kB 182.0 MB/s eta 0:00:00
+8.756 Collecting gunicorn==21.2.0
+8.781   Downloading gunicorn-21.2.0-py3-none-any.whl (80 kB)
+8.785      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 80.2/80.2 kB 161.6 MB/s eta 0:00:00
+8.825 Collecting h11==0.14.0
+8.851   Downloading h11-0.14.0-py3-none-any.whl (58 kB)
+8.854      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 58.3/58.3 kB 231.4 MB/s eta 0:00:00
+8.900 Collecting h2==4.2.0
+8.926   Downloading h2-4.2.0-py3-none-any.whl (60 kB)
+8.929      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 61.0/61.0 kB 217.7 MB/s eta 0:00:00
+8.968 Collecting hpack==4.1.0
+8.994   Downloading hpack-4.1.0-py3-none-any.whl (34 kB)
+9.054 Collecting httpcore==0.17.3
+9.082   Downloading httpcore-0.17.3-py3-none-any.whl (74 kB)
+9.085      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 74.5/74.5 kB 190.3 MB/s eta 0:00:00
+9.141 Collecting httpx==0.24.1
+9.167   Downloading httpx-0.24.1-py3-none-any.whl (75 kB)
+9.170      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 75.4/75.4 kB 141.3 MB/s eta 0:00:00
+9.210 Collecting hyperframe==6.1.0
+9.235   Downloading hyperframe-6.1.0-py3-none-any.whl (13 kB)
+9.278 Collecting idna==3.10
+9.303   Downloading idna-3.10-py3-none-any.whl (70 kB)
+9.308      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 70.4/70.4 kB 143.6 MB/s eta 0:00:00
+9.354 Collecting itsdangerous==2.2.0
+9.381   Downloading itsdangerous-2.2.0-py3-none-any.whl (16 kB)
+9.433 Collecting Jinja2==3.1.6
+9.458   Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
+9.463      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 134.9/134.9 kB 89.7 MB/s eta 0:00:00
+9.715 Collecting jiter==0.10.0
+9.741   Downloading jiter-0.10.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (353 kB)
+9.763      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 353.8/353.8 kB 17.8 MB/s eta 0:00:00
+9.816 Collecting joblib==1.5.1
+9.841   Downloading joblib-1.5.1-py3-none-any.whl (307 kB)
+9.845      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 307.7/307.7 kB 224.9 MB/s eta 0:00:00
+9.993 Collecting MarkupSafe==3.0.2
+10.02   Downloading MarkupSafe-3.0.2-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (20 kB)
+10.07 Collecting nltk==3.9.1
+10.09   Downloading nltk-3.9.1-py3-none-any.whl (1.5 MB)
+10.13      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.5/1.5 MB 45.6 MB/s eta 0:00:00
+10.70 Collecting numpy==1.26.4
+10.73   Downloading numpy-1.26.4-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (18.2 MB)
+10.89      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 18.2/18.2 MB 121.4 MB/s eta 0:00:00
+11.08 Collecting openai==1.88.0
+11.10   Downloading openai-1.88.0-py3-none-any.whl (734 kB)
+11.11      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 734.3/734.3 kB 130.0 MB/s eta 0:00:00
+11.18 Collecting packaging==25.0
+11.21   Downloading packaging-25.0-py3-none-any.whl (66 kB)
+11.21      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 66.5/66.5 kB 221.3 MB/s eta 0:00:00
+11.28 Collecting postgrest==0.10.8
+11.30   Downloading postgrest-0.10.8-py3-none-any.whl (18 kB)
+11.73 Collecting pydantic==2.11.7
+11.75   Downloading pydantic-2.11.7-py3-none-any.whl (444 kB)
+11.76      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 444.8/444.8 kB 226.0 MB/s eta 0:00:00
+13.85 Collecting pydantic_core==2.33.2
+13.87   Downloading pydantic_core-2.33.2-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.0 MB)
+13.89      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.0/2.0 MB 151.7 MB/s eta 0:00:00
+13.94 Collecting python-dateutil==2.9.0.post0
+13.97   Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)
+13.97      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 229.9/229.9 kB 244.0 MB/s eta 0:00:00
+14.02 Collecting python-dotenv==1.0.0
+14.05   Downloading python_dotenv-1.0.0-py3-none-any.whl (19 kB)
+14.10 Collecting realtime==1.0.6
+14.13   Downloading realtime-1.0.6-py3-none-any.whl (9.0 kB)
+15.18 Collecting regex==2024.11.6
+15.21   Downloading regex-2024.11.6-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (780 kB)
+15.22      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 780.9/780.9 kB 206.3 MB/s eta 0:00:00
+15.28 Collecting requests==2.31.0
+15.30   Downloading requests-2.31.0-py3-none-any.whl (62 kB)
+15.31      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 62.6/62.6 kB 200.6 MB/s eta 0:00:00
+15.35 Collecting schedule==1.2.0
+15.37   Downloading schedule-1.2.0-py2.py3-none-any.whl (11 kB)
+15.41 Collecting six==1.17.0
+15.44   Downloading six-1.17.0-py2.py3-none-any.whl (11 kB)
+15.48 Collecting sniffio==1.3.1
+15.50   Downloading sniffio-1.3.1-py3-none-any.whl (10 kB)
+15.56 Collecting storage3==0.5.4
+15.67   Downloading storage3-0.5.4-py3-none-any.whl (14 kB)
+15.71 Collecting StrEnum==0.4.15
+15.74   Downloading StrEnum-0.4.15-py3-none-any.whl (8.9 kB)
+15.82 Collecting supabase==1.0.4
+15.85   Downloading supabase-1.0.4-py3-none-any.whl (11 kB)
+15.90 Collecting supafunc==0.2.3
+15.92   Downloading supafunc-0.2.3-py3-none-any.whl (2.8 kB)
+15.97 Collecting textblob==0.19.0
+15.99   Downloading textblob-0.19.0-py3-none-any.whl (624 kB)
+16.00      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 624.3/624.3 kB 255.1 MB/s eta 0:00:00
+16.11 Collecting tqdm==4.67.1
+16.13   Downloading tqdm-4.67.1-py3-none-any.whl (78 kB)
+16.13      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 78.5/78.5 kB 201.5 MB/s eta 0:00:00
+16.17 Collecting typing-inspection==0.4.1
+16.20   Downloading typing_inspection-0.4.1-py3-none-any.whl (14 kB)
+16.25 Collecting typing_extensions==4.14.0
+16.28   Downloading typing_extensions-4.14.0-py3-none-any.whl (43 kB)
+16.28      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 43.8/43.8 kB 224.4 MB/s eta 0:00:00
+16.35 Collecting urllib3==2.4.0
+16.38   Downloading urllib3-2.4.0-py3-none-any.whl (128 kB)
+16.38      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 128.7/128.7 kB 225.0 MB/s eta 0:00:00
+16.63 Collecting websockets==12.0
+16.65   Downloading websockets-12.0-cp39-cp39-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl (130 kB)
+16.66      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 130.0/130.0 kB 270.9 MB/s eta 0:00:00
+16.72 Collecting Werkzeug==3.1.3
+16.75   Downloading werkzeug-3.1.3-py3-none-any.whl (224 kB)
+16.75      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 224.5/224.5 kB 202.2 MB/s eta 0:00:00
+16.89 Collecting pocketbase==0.15.0
+16.91   Downloading pocketbase-0.15.0-py3-none-any.whl (28 kB)
+16.95 Collecting Flask-Caching
+16.98   Downloading Flask_Caching-2.3.1-py3-none-any.whl (28 kB)
+17.15 Collecting importlib-metadata>=3.6.0
+17.17   Downloading importlib_metadata-8.7.1-py3-none-any.whl (27 kB)
+17.70 INFO: pip is looking at multiple versions of werkzeug to determine which version is compatible with other requirements. This could take a while.
+17.70 INFO: pip is looking at multiple versions of websockets to determine which version is compatible with other requirements. This could take a while.
+17.70 INFO: pip is looking at multiple versions of urllib3 to determine which version is compatible with other requirements. This could take a while.
+17.70 INFO: pip is looking at multiple versions of typing-extensions to determine which version is compatible with other requirements. This could take a while.
+17.70 INFO: pip is looking at multiple versions of typing-inspection to determine which version is compatible with other requirements. This could take a while.
+17.70 INFO: pip is looking at multiple versions of tqdm to determine which version is compatible with other requirements. This could take a while.
+17.70 INFO: pip is looking at multiple versions of textblob to determine which version is compatible with other requirements. This could take a while.
+17.70 INFO: pip is looking at multiple versions of supafunc to determine which version is compatible with other requirements. This could take a while.
+17.70 INFO: pip is looking at multiple versions of supabase to determine which version is compatible with other requirements. This could take a while.
+17.70 INFO: pip is looking at multiple versions of strenum to determine which version is compatible with other requirements. This could take a while.
+17.70 INFO: pip is looking at multiple versions of storage3 to determine which version is compatible with other requirements. This could take a while.
+17.70 INFO: pip is looking at multiple versions of sniffio to determine which version is compatible with other requirements. This could take a while.
+17.70 INFO: pip is looking at multiple versions of six to determine which version is compatible with other requirements. This could take a while.
+17.70 INFO: pip is looking at multiple versions of schedule to determine which version is compatible with other requirements. This could take a while.
+17.70 INFO: pip is looking at multiple versions of requests to determine which version is compatible with other requirements. This could take a while.
+17.70 INFO: pip is looking at multiple versions of regex to determine which version is compatible with other requirements. This could take a while.
+17.70 INFO: pip is looking at multiple versions of realtime to determine which version is compatible with other requirements. This could take a while.
+17.70 INFO: pip is looking at multiple versions of python-dotenv to determine which version is compatible with other requirements. This could take a while.
+17.70 INFO: pip is looking at multiple versions of python-dateutil to determine which version is compatible with other requirements. This could take a while.
+17.70 INFO: pip is looking at multiple versions of pydantic-core to determine which version is compatible with other requirements. This could take a while.
+17.70 INFO: pip is looking at multiple versions of pydantic to determine which version is compatible with other requirements. This could take a while.
+17.71 INFO: pip is looking at multiple versions of postgrest to determine which version is compatible with other requirements. This could take a while.
+17.71 INFO: pip is looking at multiple versions of packaging to determine which version is compatible with other requirements. This could take a while.
+17.71 INFO: pip is looking at multiple versions of openai to determine which version is compatible with other requirements. This could take a while.
+17.71 INFO: pip is looking at multiple versions of numpy to determine which version is compatible with other requirements. This could take a while.
+17.71 INFO: pip is looking at multiple versions of nltk to determine which version is compatible with other requirements. This could take a while.
+17.71 INFO: pip is looking at multiple versions of markupsafe to determine which version is compatible with other requirements. This could take a while.
+17.71 INFO: pip is looking at multiple versions of joblib to determine which version is compatible with other requirements. This could take a while.
+17.71 INFO: pip is looking at multiple versions of jiter to determine which version is compatible with other requirements. This could take a while.
+17.71 INFO: pip is looking at multiple versions of jinja2 to determine which version is compatible with other requirements. This could take a while.
+17.71 INFO: pip is looking at multiple versions of itsdangerous to determine which version is compatible with other requirements. This could take a while.
+17.71 INFO: pip is looking at multiple versions of idna to determine which version is compatible with other requirements. This could take a while.
+17.71 INFO: pip is looking at multiple versions of hyperframe to determine which version is compatible with other requirements. This could take a while.
+17.71 INFO: pip is looking at multiple versions of httpx to determine which version is compatible with other requirements. This could take a while.
+17.71 INFO: pip is looking at multiple versions of httpcore to determine which version is compatible with other requirements. This could take a while.
+17.71 INFO: pip is looking at multiple versions of hpack to determine which version is compatible with other requirements. This could take a while.
+17.71 INFO: pip is looking at multiple versions of h2 to determine which version is compatible with other requirements. This could take a while.
+17.71 INFO: pip is looking at multiple versions of h11 to determine which version is compatible with other requirements. This could take a while.
+17.71 INFO: pip is looking at multiple versions of gunicorn to determine which version is compatible with other requirements. This could take a while.
+17.71 INFO: pip is looking at multiple versions of gotrue to determine which version is compatible with other requirements. This could take a while.
+17.71 INFO: pip is looking at multiple versions of googlemaps to determine which version is compatible with other requirements. This could take a while.
+17.71 INFO: pip is looking at multiple versions of flask-cors to determine which version is compatible with other requirements. This could take a while.
+17.71 INFO: pip is looking at multiple versions of flask to determine which version is compatible with other requirements. This could take a while.
+17.71 INFO: pip is looking at multiple versions of exceptiongroup to determine which version is compatible with other requirements. This could take a while.
+17.71 INFO: pip is looking at multiple versions of distro to determine which version is compatible with other requirements. This could take a while.
+17.71 INFO: pip is looking at multiple versions of deprecation to determine which version is compatible with other requirements. This could take a while.
+17.71 INFO: pip is looking at multiple versions of colorama to determine which version is compatible with other requirements. This could take a while.
+17.71 INFO: pip is looking at multiple versions of click to determine which version is compatible with other requirements. This could take a while.
+17.71 INFO: pip is looking at multiple versions of charset-normalizer to determine which version is compatible with other requirements. This could take a while.
+17.71 INFO: pip is looking at multiple versions of certifi to determine which version is compatible with other requirements. This could take a while.
+17.71 INFO: pip is looking at multiple versions of blinker to determine which version is compatible with other requirements. This could take a while.
+17.72 INFO: pip is looking at multiple versions of anyio to determine which version is compatible with other requirements. This could take a while.
+17.72 INFO: pip is looking at multiple versions of <Python from Requires-Python> to determine which version is compatible with other requirements. This could take a while.
+17.72 INFO: pip is looking at multiple versions of annotated-types to determine which version is compatible with other requirements. This could take a while.
+17.72 ERROR: Cannot install -r requirements.txt (line 14), -r requirements.txt (line 30), -r requirements.txt (line 32), -r requirements.txt (line 43), -r requirements.txt (line 45), -r requirements.txt (line 46), -r requirements.txt (line 54) and httpx==0.24.1 because these package versions have conflicting dependencies.
+17.72 
+17.72 The conflict is caused by:
+17.72     The user requested httpx==0.24.1
+17.72     gotrue 1.3.1 depends on httpx<0.26 and >=0.23
+17.72     openai 1.88.0 depends on httpx<1 and >=0.23.0
+17.72     postgrest 0.10.8 depends on httpx<0.25.0 and >=0.24.0
+17.72     storage3 0.5.4 depends on httpx<0.25 and >=0.24
+17.72     supabase 1.0.4 depends on httpx<0.25.0 and >=0.24.0
+17.72     supafunc 0.2.3 depends on httpx<0.25.0 and >=0.24.0
+17.72     pocketbase 0.15.0 depends on httpx>=0.27.2
+17.72 
+17.72 To fix this you could try to:
+17.72 1. loosen the range of package versions you've specified
+17.72 2. remove package versions to allow pip attempt to solve the dependency conflict
+17.72 
+17.72 ERROR: ResolutionImpossible: for help visit https://pip.pypa.io/en/latest/topics/dependency-resolution/#dealing-with-dependency-conflicts
+17.87 
+17.87 [notice] A new release of pip is available: 23.0.1 -> 26.0.1
+17.87 [notice] To update, run: pip install --upgrade pip
+------
+dockerfile:8
+
+--------------------
+
+   6 |     # Install dependencies
+
+   7 |     COPY requirements.txt .
+
+   8 | >>> RUN pip install --no-cache-dir -r requirements.txt
+
+   9 |     
+
+  10 |     # Copy application files
+
+--------------------
+
+failed to solve: process "/bin/sh -c pip install --no-cache-dir -r requirements.txt" did not complete successfully: exit code: 1

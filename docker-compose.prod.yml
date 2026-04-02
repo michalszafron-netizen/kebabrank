@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  kebab-rank:
+    build: .
+    container_name: kebab-rank-app
+    environment:
+      - FLASK_ENV=production
+      - PYTHONUNBUFFERED=1
+    env_file:
+      - .env
+    restart: unless-stopped
+    networks:
+      - root_default
+    # Add resource limits to prevent memory exhaustion
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+        reservations:
+          memory: 256M
+          cpus: '0.25'
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=root_default"
+      - "traefik.http.routers.kebabrank.rule=Host(`kebabrank.com`) || Host(`www.kebabrank.com`)"
+      - "traefik.http.routers.kebabrank.entrypoints=web,websecure"
+      - "traefik.http.routers.kebabrank.tls=true"
+      - "traefik.http.routers.kebabrank.tls.certresolver=mytlschallenge"
+      - "traefik.http.services.kebabrank.loadbalancer.server.port=5000"
+      - "traefik.http.middlewares.kebabrank.headers.SSLRedirect=true"
+      - "traefik.http.routers.kebabrank.middlewares=kebabrank@docker"
+
+  pb-gateway:
+    image: alpine:latest
+    container_name: pb-gateway
+    command: tail -f /dev/null
+    restart: unless-stopped
+    networks:
+      - root_default
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=root_default"
+      - "traefik.http.routers.pocketbase.rule=Host(`pb.kebabrank.com`)"
+      - "traefik.http.routers.pocketbase.entrypoints=websecure"
+      - "traefik.http.routers.pocketbase.tls=true"
+      - "traefik.http.routers.pocketbase.tls.certresolver=mytlschallenge"
+      - "traefik.http.services.pocketbase.loadbalancer.server.url=http://172.17.0.1:8090"
+
+networks:
+  root_default:
+    external: true

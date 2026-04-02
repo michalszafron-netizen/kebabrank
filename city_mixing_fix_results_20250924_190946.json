@@ -1,0 +1,29 @@
+{
+  "timestamp": "2025-09-24T19:09:46.082782",
+  "backup_file": "kebab_places_backup_20250924_190945.json",
+  "issues_fixed": 2,
+  "issues_skipped": 0,
+  "errors": [],
+  "fixed_issues": [
+    {
+      "kebab_id": 1280,
+      "kebab_name": "LUX-KEBAB",
+      "address": "Toruńska 46, 87-816 Włocławek, Poland",
+      "assigned_city": "Włocławek",
+      "assigned_city_id": 35,
+      "mentioned_city": "Toruń",
+      "mentioned_city_id": 17,
+      "confidence": "medium"
+    },
+    {
+      "kebab_id": 708,
+      "kebab_name": "KEBAB U PAJDY",
+      "address": "Toruńska 1, 26-612 Radom, Poland",
+      "assigned_city": "Radom",
+      "assigned_city_id": 14,
+      "mentioned_city": "Toruń",
+      "mentioned_city_id": 17,
+      "confidence": "medium"
+    }
+  ]
+}
