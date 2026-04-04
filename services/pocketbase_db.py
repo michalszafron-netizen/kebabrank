@@ -139,7 +139,7 @@ class PocketbaseService:
                 if not city_id:
                     return []
 
-                # Fetch current batch (limit 500 should cover any city's full list of kebabs)
+                # Fetch all ratings for this city (sorted newest first)
                 records = self.client.collection('ratings').get_list(1, 500, query_params={
                     "filter": f'kebab_place.city="{city_id}"',
                     "sort": "-created",
@@ -170,13 +170,25 @@ class PocketbaseService:
                     seen_google_ids.add(g_id)
                     batch_items.append(r)
                 
+                # Ghost elimination: keep only places whose most recent rating has city_rank > 0.
+                # After reset_city_ranks, ghost places have city_rank=0 in their latest rating.
+                # Valid places have city_rank>0 set by insert_rating_history during update.
+                batch_items = [r for r in batch_items if getattr(r, 'city_rank', 0) > 0]
+
                 # Sort by rank_score primarily to get current ranks
                 batch_items.sort(key=lambda x: (getattr(x, 'rank_score', 0), getattr(x, 'total_reviews', 0)), reverse=True)
                 
-                # --- Trend Calculation for Cities (Targeted secondary query) ---
-                cutoff = (latest_dt - timedelta(hours=12)).strftime('%Y-%m-%d %H:%M:%S')
-                prev_records = self.client.collection('ratings').get_list(1, 500, query_params={
-                    "filter": f'kebab_place.city="{city_id}" && created < "{cutoff}"',
+                # --- Trend Calculation for Cities ---
+                # We need to find the rank from the PREVIOUS update session.
+                # To do this, we find the oldest record in our current batch as a threshold.
+                # All batch items are very recent.
+                batch_by_date = sorted(batch_items, key=lambda x: x.created)
+                batch_threshold = batch_by_date[0].created if batch_by_date else latest_dt
+                
+                # We now search for the last known rating record that had a rank > 0 
+                # (to ignore those reset to zero) and was created before this batch.
+                prev_records = self.client.collection('ratings').get_list(1, 1000, query_params={
+                    "filter": f'kebab_place.city="{city_id}" && city_rank > 0 && created < "{batch_threshold}"',
                     "sort": "-created",
                     "expand": "kebab_place"
                 })
@@ -937,6 +949,41 @@ class PocketbaseService:
                     print(f"Error updating rank for {r.id}: {e}")
         except Exception as e:
             print(f"Error recalculating city rankings: {e}")
+
+    def reset_city_ranks(self, city_id: str):
+        """Reset city_rank to 0 in the latest rating for all places in a city before updating.
+        This marks all places as 'ghost' so only re-validated places become visible after update.
+        Works on the ratings collection (where city_rank actually lives in the original schema)."""
+        self._ensure_auth()
+        try:
+            print(f"Resetting existing city ranks for city ID: {city_id}...")
+            places = self.client.collection('kebab_places').get_full_list(
+                query_params={"filter": f'city="{city_id}"'}
+            )
+            count = 0
+            for p in places:
+                try:
+                    latest = self.client.collection('ratings').get_list(1, 1, {
+                        "filter": f'kebab_place="{p.id}"',
+                        "sort": "-created"
+                    })
+                    if latest.items:
+                        l = latest.items[0]
+                        # CREATE A NEW RECORD instead of updating.
+                        # This preserves history for trends.
+                        self.client.collection('ratings').create({
+                            "kebab_place": p.id,
+                            "rating": getattr(l, 'rating', 0),
+                            "total_reviews": getattr(l, 'total_reviews', 0),
+                            "rank_score": getattr(l, 'rank_score', 0),
+                            "city_rank": 0
+                        })
+                        count += 1
+                except Exception as reset_err:
+                    print(f"  Warning: Could not reset rank for {getattr(p, 'name', p.id)}: {reset_err}")
+            print(f"\u2713 Reset ranks for {count} places.")
+        except Exception as e:
+            print(f"Error resetting city ranks: {e}")
 
     def upload_place_photo(self, record_id: str, photo_url: str) -> bool:
         """Download photo from URL and upload to PocketBase record"""

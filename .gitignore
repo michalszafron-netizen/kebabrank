@@ -29,7 +29,6 @@ Thumbs.db
 
 # Test files
 test_*.py
-update_*.py
 add_city.py
 
 # Local data
