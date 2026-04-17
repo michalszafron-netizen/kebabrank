@@ -207,7 +207,14 @@ def update_city_with_gmaps(city_name: str, api_key: str):
             print(f"  ⛔ Skipping {item.get('Name')} - No Polish postal code (Address: {full_address})")
             continue
 
-        if city_name.lower() not in city_chunk:
+        def normalize_polish(s):
+            mapping = str.maketrans('ąćęłńóśźż', 'acelnoszz')
+            return s.lower().translate(mapping)
+
+        normalized_city_name = normalize_polish(city_name)
+        normalized_city_chunk = normalize_polish(city_chunk)
+
+        if normalized_city_name not in normalized_city_chunk:
             print(f"  ⛔ Skipping {item.get('Name')} - Not in {city_name} (Postal chunk: {city_chunk})")
             continue
         # Kebab Qualification Filter:

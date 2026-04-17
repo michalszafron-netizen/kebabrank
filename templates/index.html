@@ -5,47 +5,237 @@
 {% endblock %}
 
 {% block sidebar_header %}
-<!-- Search Bar -->
-<div class="relative mb-6 group">
+<!-- Search Bar (Partially Hidden as requested) -->
+<div class="relative mb-6 group hidden">
     <span
         class="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors">search</span>
     <input id="city-search" class="w-full input-premium py-3 pl-12 pr-4 transition-all placeholder-gray-500"
         placeholder="Search for spots, flavors, or cities..." type="text"
         value="{{ initial_city if initial_city else '' }}" autocomplete="off" oninput="filterCities(this.value)">
 
-    <!-- Dropdown for City Search -->
     <div id="city-dropdown"
         class="absolute left-0 right-0 top-full mt-2 bg-[#1e293b] border border-white/10 rounded-xl shadow-xl z-[1001] hidden max-h-[60vh] overflow-y-auto custom-scrollbar">
-        <!-- Populated by JS -->
     </div>
 </div>
 
-<!-- Quick City Selector (Horizontal Scroll) -->
-<div class="flex gap-4 overflow-x-auto pb-4 custom-scrollbar snap-x px-1" id="city-selector">
-    <button class="tab-button flex flex-col items-center gap-2 group min-w-[56px] md:min-w-[72px] snap-start"
-        onclick="showTab('global')">
-        <div
-            class="tab-icon-wrapper w-12 h-12 md:w-16 md:h-16 rounded-full border border-white/10 bg-surface-dark flex items-center justify-center relative group-hover:scale-105 transition-all overflow-hidden shadow-lg interactive-card">
-            <img src="{{ url_for('static', filename='img/top10.png') }}?v=1" alt="Top 10"
-                class="w-full h-full object-cover">
-        </div>
-        <span
-            class="text-[10px] md:text-xs font-black text-gray-400 group-hover:text-primary tracking-wide uppercase text-center w-16 md:w-20 leading-tight transition-colors"
-            data-translate-html="top-poland">Top
-            10<br />W Polsce</span>
+<!-- Premium Navigation (Horizontal Scroll with Compact Cards) -->
+<div class="relative group mb-4 px-1">
+    <!-- Left Navigation Arrow -->
+    <button onclick="scrollCities('left')" 
+            class="absolute -left-2 top-1/2 -translate-y-1/2 z-30 w-8 h-8 rounded-full bg-surface-dark/90 backdrop-blur-md border border-white/20 flex items-center justify-center text-white transition-all hover:bg-[#34d399] hover:border-[#34d399] hover:scale-110 shadow-[0_0_15px_rgba(0,0,0,0.5)]">
+        <span class="material-icons text-sm">chevron_left</span>
     </button>
 
-    <div class="w-[1px] h-16 bg-gradient-to-b from-transparent via-white/10 to-transparent flex-shrink-0"></div>
+    <div class="flex gap-3 overflow-x-auto py-5 px-1 custom-scrollbar snap-x scroll-smooth" id="city-selector">
+        <!-- Select City Action (Pinned Search) -->
+        <div class="sticky left-0 z-20 bg-[#0f172a] pr-1 flex items-center shrink-0">
+            <button id="mega-menu-trigger" class="flex flex-col items-center gap-1.5 group min-w-[70px] md:min-w-[100px] snap-start">
+                <div class="w-10 h-10 md:w-16 md:h-16 rounded-full bg-primary flex items-center justify-center relative group-hover:scale-105 transition-all shadow-[0_0_15px_rgba(255,107,0,0.3)] interactive-card overflow-hidden">
+                    <span class="material-icons text-white text-lg md:text-2xl">search</span>
+                </div>
+                <span class="text-[9px] md:text-[11px] font-black text-primary group-hover:text-white transition-colors uppercase text-center leading-tight whitespace-normal w-[64px] md:w-[90px]" data-translate="search-label">Wyszukaj Miasto</span>
+            </button>
+            <div class="w-[1px] h-8 bg-white/10 ml-2 shrink-0 self-center"></div>
+        </div>
 
-    <!-- Dynamic Cities will be populated here by JS -->
+        <!-- Top 10 Button -->
+        <button class="tab-button flex flex-col items-center gap-2 group min-w-[64px] md:min-w-[100px] shrink-0 snap-start"
+            onclick="showTab('global')">
+            <div class="tab-icon-wrapper w-10 h-10 md:w-16 md:h-16 rounded-full border border-white/10 bg-surface-dark flex items-center justify-center relative group-hover:scale-105 transition-all overflow-hidden shadow-lg interactive-card">
+                <img src="{{ url_for('static', filename='img/top10.png') }}?v=1" alt="Top 10" class="w-full h-full object-cover">
+            </div>
+            <span class="text-[9px] md:text-[11px] font-black text-gray-400 group-hover:text-primary tracking-wide uppercase text-center w-16 md:w-24 leading-tight transition-colors"
+                data-translate-html="top-poland">Top 10<br />W Polsce</span>
+        </button>
+
+        <div class="w-[1px] h-10 bg-gradient-to-b from-transparent via-white/10 to-transparent flex-shrink-0 self-center"></div>
+
+        <!-- Dynamic Content (Premium Cards) populated by JS -->
+    </div>
+
+    <!-- Right Navigation Arrow (Pinned for easy reach) -->
+    <button onclick="scrollCities('right')" 
+            class="absolute -right-2 top-1/2 -translate-y-1/2 z-30 w-8 h-8 rounded-full bg-surface-dark/95 backdrop-blur-md border border-white/20 flex items-center justify-center text-white transition-all hover:bg-[#34d399] hover:border-[#34d399] hover:scale-110 shadow-[0_0_20px_rgba(0,0,0,0.6)]">
+        <span class="material-icons text-sm">chevron_right</span>
+    </button>
 </div>
 
+<style>
+    /* Compact Card Styling */
+    .compact-city-card {
+        position: relative;
+        min-width: 100px;
+        height: 52px;
+        border-radius: 12px;
+        overflow: hidden;
+        flex-shrink: 0;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .compact-city-card.active {
+        border: 2.5px solid #34d399; /* Emerald Green */
+        box-shadow: 0 0 30px rgba(52, 211, 153, 0.4), inset 0 0 12px rgba(52, 211, 153, 0.2);
+        transform: scale(1.1);
+        z-index: 5;
+    }
+
+    .compact-city-card.active img {
+        filter: brightness(1.2) contrast(1.1);
+    }
+
+    .compact-city-card.active::after {
+        content: '';
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        width: 8px;
+        height: 8px;
+        background: #34d399;
+        border: 2px solid #0b1121;
+        border-radius: 50%;
+        z-index: 6;
+        box-shadow: 0 0 10px rgba(52, 211, 153, 0.8);
+    }
+    
+    .compact-city-card img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+    
+    .compact-city-card:hover img {
+        transform: scale(1.1);
+    }
+    
+    .compact-city-card .overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 60%, transparent 100%);
+    }
+    
+    .compact-city-card .label {
+        position: absolute;
+        bottom: 4px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 9px;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: white;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+    }
+
+    /* Desktop Optimization */
+    @media (min-width: 768px) {
+        .compact-city-card {
+            min-width: 140px;
+            height: 72px;
+            border-radius: 16px;
+        }
+        .compact-city-card .label {
+            font-size: 11px;
+            bottom: 6px;
+        }
+        .compact-city-card.active {
+            transform: scale(1.04);
+        }
+    }
+
+    /* Scrollbar behavior */
+    #city-selector {
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none;  /* IE and Edge */
+    }
+    #city-selector::-webkit-scrollbar {
+        display: none; /* Chrome, Safari, Opera */
+    }
+    /* Range Slider Dynamic Fill */
+    input[type='range'] {
+        background: linear-gradient(to right, #ff6b00 0%, #ff6b00 11.11%, rgba(255, 255, 255, 0.1) 11.11%, rgba(255, 255, 255, 0.1) 100%);
+        border-radius: 8px;
+        height: 6px;
+        transition: background 0.1s ease;
+    }
+
+    input[type='range']::-webkit-slider-runnable-track {
+        background: transparent;
+    }
+
+    /* AI Badge Mobile Optimization */
+    #ai-badge-container {
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    @media (max-width: 767px) {
+        #ai-status-badge {
+            width: 42px;
+            height: 42px;
+            padding: 0 !important;
+            overflow: hidden;
+            border-radius: 50% !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid rgba(255, 106, 0, 0.5) !important;
+        }
+        
+        #ai-status-badge.expanded {
+            width: calc(100vw - 32px);
+            height: auto;
+            border-radius: 16px !important;
+            padding: 12px !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        }
+
+        #ai-status-badge .badge-content-wrapper {
+            opacity: 0;
+            display: none;
+            transition: opacity 0.3s ease;
+        }
+
+        #ai-status-badge.expanded .badge-content-wrapper {
+            opacity: 1;
+            display: block;
+        }
+
+        /* Hide glow and secondary icons when collapsed */
+        #ai-status-badge:not(.expanded) .bg-glow,
+        #ai-status-badge:not(.expanded) .toggle-btn-inner,
+        #ai-status-badge:not(.expanded) #ai-badge-details {
+            display: none;
+        }
+
+        /* Center the main icon when collapsed */
+        #ai-status-badge:not(.expanded) .main-icon-wrapper {
+            margin: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            background: none !important;
+            box-shadow: none !important;
+        }
+        
+        #ai-status-badge:not(.expanded) .main-icon-wrapper span {
+            font-size: 20px !important;
+        }
+    }
+</style>
+
 <!-- Controls (Kebab Count) -->
-<div class="mt-4 flex items-center justify-between text-xs text-gray-400">
-    <label for="kebab-count" class="font-medium" data-translate="show-top">Show top:</label>
-    <div class="flex items-center gap-2">
-        <input type="range" id="kebab-count" min="5" max="50" value="10" step="5" class="accent-primary w-24">
-        <span id="kebab-count-value" class="text-white font-bold">10</span>
+<div class="mt-4 flex flex-col items-center justify-center gap-3 text-sm text-gray-400">
+    <label for="kebab-count" class="font-bold tracking-widest uppercase text-[10px] text-gray-500" data-translate="show-top">Filter kebab count:</label>
+    <div class="flex items-center gap-4 w-full px-4">
+        <input type="range" id="kebab-count" min="5" max="120" value="10" step="5" 
+               class="accent-primary flex-grow appearance-none cursor-pointer transition-all"
+               oninput="this.style.background = 'linear-gradient(to right, #ff6b00 0%, #ff6b00 ' + ((this.value - this.min) / (this.max - this.min) * 100) + '%, rgba(255, 255, 255, 0.1) ' + ((this.value - this.min) / (this.max - this.min) * 100) + '%, rgba(255, 255, 255, 0.1) 100%)'">
+        <span id="kebab-count-value" class="text-white font-black text-base min-w-[24px] text-right">10</span>
     </div>
 </div>
 {% endblock %}
@@ -70,57 +260,68 @@
 <div id="kebab-map-global" class="w-full h-full z-10 hidden"></div>
 
 <!-- Map Overlay (AI Badge) -->
-<div
-    class="absolute bottom-24 left-1/2 -translate-x-1/2 md:bottom-auto md:top-6 md:left-1/2 md:-translate-x-1/2 z-[400] pointer-events-none w-[90%] md:w-full max-w-xl px-0 md:px-4">
-    <div
-        class="bg-surface-dark/95 backdrop-blur-xl rounded-xl md:rounded-2xl p-3 md:p-4 border border-white/10 shadow-2xl pointer-events-auto relative overflow-hidden group">
+<div id="ai-badge-container"
+    class="absolute top-4 right-4 md:top-8 md:right-8 left-auto z-[400] pointer-events-none transition-all duration-500">
+    <div id="ai-status-badge" onclick="if(window.innerWidth < 768) toggleAiBadge()"
+        class="bg-surface-dark/90 backdrop-blur-xl rounded-xl md:rounded-2xl p-3 md:p-4 border border-white/10 shadow-2xl pointer-events-auto relative overflow-hidden group">
 
         <!-- Background Gradient Glow -->
         <div
-            class="absolute top-0 right-0 w-20 h-20 md:w-32 md:h-32 bg-primary/20 blur-[30px] md:blur-[50px] rounded-full pointer-events-none -mr-5 -mt-5 md:-mr-10 md:-mt-10">
+            class="bg-glow absolute top-0 right-0 w-20 h-20 md:w-32 md:h-32 bg-primary/20 blur-[30px] md:blur-[50px] rounded-full pointer-events-none -mr-5 -mt-5 md:-mr-10 md:-mt-10">
         </div>
 
-        <div class="flex items-start gap-3 md:gap-5 relative z-10">
+        <!-- Toggle Button (Visible only on desktop or when expanded) -->
+        <button onclick="event.stopPropagation(); toggleAiBadge()" class="toggle-btn-inner absolute top-3 right-3 md:top-4 md:right-4 w-7 h-7 md:w-8 md:h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center border border-white/10 transition-colors z-20" aria-label="Toggle AI Info">
+            <span id="ai-badge-icon-desktop" class="material-icons text-white text-base hidden md:block transition-transform">expand_less</span>
+            <span id="ai-badge-icon-mobile" class="material-icons text-white text-base md:hidden transition-transform">expand_more</span>
+        </button>
+
+        <div class="flex items-start md:items-center gap-3 md:gap-5 relative z-10">
             <!-- Icon -->
             <div
-                class="w-8 h-8 md:w-12 md:h-12 rounded-lg md:rounded-xl bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center shadow-lg shrink-0 group-hover:scale-110 transition-transform duration-500 mt-1">
+                class="main-icon-wrapper w-8 h-8 md:w-12 md:h-12 rounded-lg md:rounded-xl bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center shadow-lg shrink-0 group-hover:scale-105 transition-transform duration-500">
                 <span class="material-icons text-white text-base md:text-2xl">auto_awesome</span>
             </div>
 
             <!-- Content -->
-            <div class="flex-1 min-w-0 text-left">
-                <div class="flex items-center gap-2 mb-0.5 md:mb-1">
-                    <h2 class="text-xs md:text-base font-black text-white uppercase tracking-widest flex items-center gap-2"
-                        data-translate="ai-badge-title">
-                        Kebab Rank 2026
-                    </h2>
-                    <span
-                        class="bg-white/10 text-[8px] md:text-[9px] px-1 md:px-1.5 py-0 md:py-0.5 rounded text-primary font-bold border border-primary/30">AI</span>
-                </div>
-
-                <div class="text-[9px] md:text-[11px] text-gray-300 leading-snug font-medium mb-1 md:mb-2 space-y-1">
-                    <p data-translate="ai-badge-desc">
-                        Pierwszy w Polsce ranking kebabów wspierany sztuczną inteligencją, analizujący tysiące opinii
-                        Google Maps w czasie rzeczywistym.
-                    </p>
-                    <p class="text-gray-500 font-normal hidden md:block border-l border-primary/30 pl-2 italic"
-                        data-translate="ai-badge-subdesc">
-                        Odkryj najlepsze lokale serwujące doner i rzemieślniczą tortillę na podstawie sentymentu i
-                        jakości mięsa.
-                    </p>
-                </div>
-
-                <!-- Stats / Timer -->
-                <div
-                    class="flex items-center gap-3 md:gap-4 text-[9px] md:text-[10px] text-gray-400 font-mono border-t border-white/5 pt-1 md:pt-2 mt-0.5 md:mt-1">
-                    <div class="flex items-center gap-1 md:gap-1.5">
-                        <span class="w-1 md:w-1.5 h-1 md:h-1.5 rounded-full bg-green-500 animate-pulse"></span>
-                        <span class="uppercase tracking-wider" data-translate="live-analysis">Live Analysis</span>
+            <div class="badge-content-wrapper flex-1 min-w-0 text-left pr-8 md:pr-10">
+                <!-- Persistent Pill Header -->
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-1 md:gap-4">
+                    <div class="flex items-center gap-2">
+                        <h2 class="text-xs md:text-base font-black text-white uppercase tracking-widest flex items-center gap-2"
+                            data-translate="ai-badge-title">
+                            Kebab Rank 2026
+                        </h2>
+                        <span
+                            class="bg-white/10 text-[8px] md:text-[9px] px-1 md:px-1.5 py-0 md:py-0.5 rounded text-primary font-bold border border-primary/30">AI</span>
                     </div>
-                    <div class="flex items-center gap-1 md:gap-1.5 text-primary">
-                        <span class="material-icons text-[9px] md:text-[10px]">timer</span>
-                        <span><span data-translate="update-in">Update:</span> <span id="countdown"
-                                class="font-bold text-white">--:--:--</span></span>
+
+                    <!-- Stats / Timer (Now part of the main pill header) -->
+                    <div class="flex items-center gap-3 md:gap-4 text-[9px] md:text-[10px] text-gray-400 font-mono">
+                        <div class="flex items-center gap-1 md:gap-1.5">
+                            <span class="w-1 md:w-1.5 h-1 md:h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                            <span class="uppercase tracking-wider" data-translate="live-analysis">Live Analysis</span>
+                        </div>
+                        <div class="flex items-center gap-1 md:gap-1.5 text-primary">
+                            <span class="material-icons text-[9px] md:text-[10px]">timer</span>
+                            <span><span data-translate="update-in" class="hidden md:inline">Update:</span> <span id="countdown"
+                                    class="font-bold text-white">--:--:--</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Collapsible Details -->
+                <div id="ai-badge-details" class="transition-all duration-500 overflow-hidden max-h-[500px] opacity-100 mt-2 pt-2 border-t border-white/5">
+                    <div class="text-[9px] md:text-[11px] text-gray-300 leading-snug font-medium mb-1 md:mb-2 space-y-1">
+                        <p data-translate="ai-badge-desc">
+                            Pierwszy w Polsce ranking kebabów wspierany sztuczną inteligencją, analizujący tysiące opinii
+                            Google Maps w czasie rzeczywistym.
+                        </p>
+                        <p class="text-gray-500 font-normal hidden md:block border-l border-primary/30 pl-2 italic"
+                            data-translate="ai-badge-subdesc">
+                            Odkryj najlepsze lokale serwujące doner i rzemieślniczą tortillę na podstawie sentymentu i
+                            jakości mięsa.
+                        </p>
                     </div>
                 </div>
             </div>
@@ -133,6 +334,83 @@
 <script>
     // Pass initial city data from Flask template to JavaScript
     window.initialCity = "{{ initial_city if initial_city else '' }}";
+
+    // --- AI Badge Toggle Logic ---
+    function toggleAiBadge() {
+        const badge = document.getElementById('ai-status-badge');
+        const details = document.getElementById('ai-badge-details');
+        const iconMobile = document.getElementById('ai-badge-icon-mobile');
+        const iconDesktop = document.getElementById('ai-badge-icon-desktop');
+        const isMobile = window.innerWidth < 768;
+
+        if (isMobile) {
+            // Mobile FAB Toggle
+            if (!badge.classList.contains('expanded')) {
+                badge.classList.add('expanded');
+                iconMobile.textContent = 'expand_less';
+            } else {
+                badge.classList.remove('expanded');
+                iconMobile.textContent = 'expand_more';
+            }
+        } else {
+            // Desktop Pill Toggle (Slide out behavior)
+            const isHidden = details.classList.contains('max-h-0');
+            if (isHidden) {
+                // Expand
+                details.classList.remove('max-h-0', 'opacity-0');
+                details.classList.add('max-h-[500px]', 'opacity-100', 'mt-2', 'pt-2', 'border-t');
+                iconDesktop.textContent = 'expand_less';
+            } else {
+                // Collapse
+                details.classList.add('max-h-0', 'opacity-0');
+                details.classList.remove('max-h-[500px]', 'opacity-100', 'mt-2', 'pt-2', 'border-t');
+                iconDesktop.textContent = 'expand_more';
+            }
+        }
+    }
+
+    // --- City Scroll Arrows Logic ---
+    function scrollCities(direction) {
+        const container = document.getElementById('city-selector');
+        if (!container) return;
+        
+        // Multiplier for direction (-1 or 1)
+        const dirMultiplier = direction === 'left' ? -1 : 1;
+        
+        // Dynamic scroll amount: roughly 3-4 cards depending on screen size
+        const cardWidth = window.innerWidth > 768 ? 152 : 112; // Adjusted for desktop scaling (140px + 12px gap)
+        const scrollAmount = cardWidth * (window.innerWidth > 1024 ? 4 : (window.innerWidth > 768 ? 3 : 2));
+        
+        container.scrollBy({ left: dirMultiplier * scrollAmount, behavior: 'smooth' });
+    }
+
+    function updateScrollButtons() {
+        const container = document.getElementById('city-selector');
+        const leftBtn = document.getElementById('scroll-left-btn');
+        const rightBtn = document.getElementById('scroll-right-btn');
+        
+        if (!container || !leftBtn || !rightBtn) return;
+
+        if (container.scrollLeft > +5) {
+            leftBtn.disabled = false;
+        } else {
+            leftBtn.disabled = true;
+        }
+
+        if (container.scrollLeft + container.clientWidth >= container.scrollWidth - 5) {
+            rightBtn.disabled = true;
+        } else {
+            rightBtn.disabled = false;
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        // We wait for the AJAX to load the cities, then update buttons
+        setTimeout(updateScrollButtons, 500);
+        setTimeout(updateScrollButtons, 1500); // Check again after some time
+    });
+    window.addEventListener('resize', updateScrollButtons);
+    // --- End City Scroll Arrows Logic ---
 
     // Tab switching logic adaptation
     /* 

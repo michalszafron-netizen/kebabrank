@@ -11,6 +11,9 @@
         gtag('config', 'G-CMSKM4X7XD');
     </script>
 
+    <!-- Ahrefs Analytics -->
+    <script src="https://analytics.ahrefs.com/analytics.js" data-key="TLKIyEgU1R7dR5mD4TliNQ" async></script>
+
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
 
@@ -152,117 +155,85 @@
     {% block extra_css %}{% endblock %}
 </head>
 
-<body
-    class="bg-background-dark text-slate-200 h-screen w-screen overflow-hidden font-display flex flex-col md:flex-row selection:bg-primary/30 selection:text-white">
+<body class="bg-[#0b1121] text-gray-200 font-display selection:bg-primary/30 selection:text-white">
+    <div id="app-root" class="h-screen w-screen overflow-hidden flex flex-col relative">
+
     <!-- SEO H1 - Accessible but hidden for premium aesthetic -->
+    {% if not request.path.startswith('/blog') and request.path not in ['/privacy', '/terms'] %}
     <h1 class="sr-only">{% if page_h1 %}{{ page_h1 }}{% else %}Ranking Najlepszych Kebabów w Polsce - Kebab Rank 2026{%
         endif %}</h1>
+    {% endif %}
 
     {% block content %}
-    <!-- Sidebar (Navigation & List) -->
-    <aside class="w-full md:w-[40%] h-full flex flex-col border-r border-white/5 relative z-20 bg-[#0b1121]">
-
-        <!-- Header -->
-        <header class="sticky top-0 z-30 bg-[#0b1121] pb-2 pt-4 px-4 md:pb-4 md:pt-6 md:px-6 flex-shrink-0">
-            <div class="flex items-center justify-between mb-4 md:mb-6">
-                <div class="flex items-center gap-2 md:gap-3">
-                    <a href="/" class="flex items-center gap-2 md:gap-3 hover:opacity-80 transition-opacity">
-                        <div
-                            class="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-primary flex items-center justify-center shadow-[0_0_15px_rgba(255,106,0,0.4)]">
-                            <span class="material-icons text-white text-lg md:text-2xl">kebab_dining</span>
-                        </div>
-                        <h1 class="text-xl md:text-2xl font-black tracking-tighter uppercase italic">
-                            Kebab<span class="text-primary">Rank</span></h1>
+    <!-- Unified Top Header (Spans full width on desktop) -->
+    <header class="sticky top-0 z-30 bg-[#0b1121] pb-2 pt-4 px-4 md:pb-4 md:pt-6 md:px-6 flex-shrink-0 border-b border-white/5">
+        <div class="flex items-center justify-between mb-4 md:mb-6">
+            <div class="flex items-center gap-2 md:gap-3">
+                <a href="/" class="flex items-center gap-1.5 md:gap-3 hover:opacity-80 transition-opacity">
+                    <div
+                        class="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-primary flex items-center justify-center shadow-[0_0_15px_rgba(255,106,0,0.4)]">
+                        <span class="material-icons text-white text-lg md:text-2xl">kebab_dining</span>
+                    </div>
+                    <div class="text-lg md:text-2xl font-black tracking-tighter uppercase italic text-white flex items-center">
+                        Kebab<span class="text-primary">Rank</span></div>
+                </a>
+            </div>
+            <div class="flex items-center gap-1 md:gap-2">
+                <!-- Social Icons -->
+                <div class="flex items-center gap-0.5 md:gap-2 mr-1 md:mr-2">
+                    <a href="https://www.youtube.com/@kebabrank" target="_blank"
+                        class="w-7 h-7 md:w-8 md:h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:bg-red-600 hover:text-white hover:border-red-600 transition-all duration-300 shadow-sm"
+                        title="YouTube">
+                        <span class="material-symbols-outlined text-[14px] md:text-[18px]">play_circle</span>
+                    </a>
+                    <a href="https://www.instagram.com/kebabrank/" target="_blank"
+                        class="w-7 h-7 md:w-8 md:h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:bg-gradient-to-tr hover:from-yellow-400 hover:via-red-500 hover:to-purple-600 hover:text-white hover:border-transparent transition-all duration-300 shadow-sm"
+                        title="Instagram">
+                        <span class="material-symbols-outlined text-[14px] md:text-[18px]">camera</span>
+                    </a>
+                    <a href="https://www.facebook.com/people/Kebab-Rank-Polska/61577128095107/" target="_blank"
+                        class="w-7 h-7 md:w-8 md:h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all duration-300 shadow-sm"
+                        title="Facebook">
+                        <span class="material-symbols-outlined text-[14px] md:text-[18px]">public</span>
+                    </a>
+                    <a href="https://www.tiktok.com/@kebabrank" target="_blank"
+                        class="w-7 h-7 md:w-8 md:h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:bg-black hover:text-white hover:border-white transition-all duration-300 shadow-sm"
+                        title="TikTok">
+                        <span class="material-symbols-outlined text-[14px] md:text-[18px]">music_note</span>
                     </a>
                 </div>
-                <div class="flex items-center gap-1 md:gap-2">
-                    <!-- Social Icons -->
-                    <div class="flex items-center gap-0.5 md:gap-2 mr-1 md:mr-2">
-                        <a href="https://www.youtube.com/@kebabrank" target="_blank"
-                            class="w-7 h-7 md:w-8 md:h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:bg-red-600 hover:text-white hover:border-red-600 transition-all duration-300 shadow-sm"
-                            title="YouTube">
-                            <span class="material-symbols-outlined text-[14px] md:text-[18px]">play_circle</span>
-                        </a>
-                        <a href="https://www.instagram.com/kebabrank/" target="_blank"
-                            class="w-7 h-7 md:w-8 md:h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:bg-gradient-to-tr hover:from-yellow-400 hover:via-red-500 hover:to-purple-600 hover:text-white hover:border-transparent transition-all duration-300 shadow-sm"
-                            title="Instagram">
-                            <span class="material-symbols-outlined text-[14px] md:text-[18px]">camera</span>
-                        </a>
-                        <a href="https://www.facebook.com/people/Kebab-Rank-Polska/61577128095107/" target="_blank"
-                            class="w-7 h-7 md:w-8 md:h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all duration-300 shadow-sm"
-                            title="Facebook">
-                            <span class="material-symbols-outlined text-[14px] md:text-[18px]">public</span>
-                        </a>
-                        <a href="https://www.tiktok.com/@kebabrank" target="_blank"
-                            class="w-7 h-7 md:w-8 md:h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:bg-black hover:text-white hover:border-white transition-all duration-300 shadow-sm"
-                            title="TikTok">
-                            <span class="material-symbols-outlined text-[14px] md:text-[18px]">music_note</span>
-                        </a>
-                    </div>
-                    <!-- Language Switcher -->
-                    <div
-                        class="flex items-center bg-white/5 rounded-full p-0.5 border border-white/10 language-switcher">
-                        <button
-                            class="w-7 h-7 md:w-8 md:h-8 rounded-full text-[10px] md:text-xs font-bold flex items-center justify-center lang-flag active"
-                            data-lang="pl">PL</button>
-                        <button
-                            class="w-7 h-7 md:w-8 md:h-8 rounded-full text-[10px] md:text-xs font-bold flex items-center justify-center lang-flag"
-                            data-lang="en">EN</button>
-                    </div>
-                    <!-- Socials / Mobile Toggle Map (Removed old button) -->
+                <!-- Language Switcher -->
+                <div class="flex items-center bg-white/5 rounded-full p-0.5 border border-white/10 language-switcher">
+                    <button
+                        class="w-7 h-7 md:w-8 md:h-8 rounded-full text-[10px] md:text-xs font-bold flex items-center justify-center lang-flag active"
+                        data-lang="pl">PL</button>
+                    <button
+                        class="w-7 h-7 md:w-8 md:h-8 rounded-full text-[10px] md:text-xs font-bold flex items-center justify-center lang-flag"
+                        data-lang="en">EN</button>
                 </div>
             </div>
-
-            {% block sidebar_header %}{% endblock %}
-        </header>
-
-        <!-- Sidebar Content (Filters & Listings) -->
-        <div class="flex-1 overflow-y-auto custom-scrollbar p-3 md:p-6 space-y-4" id="sidebar-content">
-            {% block sidebar_content %}{% endblock %}
         </div>
 
-        <!-- Mobile Footer Removed to save space -->
+        {% block sidebar_header %}{% endblock %}
+    </header>
 
-    </aside>
+    <!-- Main View Area (Split between Sidebar and Map) -->
+    <div class="flex-1 flex flex-col md:flex-row overflow-hidden relative">
+        <!-- Sidebar (Listings) -->
+        <aside class="w-full md:w-[35%] h-full flex flex-col border-r border-white/5 relative z-20 bg-[#0b1121]" id="sidebar-container">
+            <!-- Sidebar Content (Filters & Listings) -->
+            <div class="flex-1 overflow-y-auto custom-scrollbar p-3 md:p-6 space-y-4" id="sidebar-content">
+                {% block sidebar_content %}{% endblock %}
+            </div>
+        </aside>
 
-    <!-- Mobile Sticky View Switcher & Footer Links -->
-    <div
-        class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[999] md:hidden w-full px-4 flex flex-col items-center gap-3">
-        <div
-            class="flex items-center p-1.5 rounded-full bg-[#0f172a]/90 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
-            <button id="mobile-view-list"
-                class="flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-300 bg-primary text-white shadow-lg">
-                <span class="material-icons text-[18px]">list</span>
-                <span data-translate="view-list">Lista</span>
-            </button>
-            <button id="mobile-view-map"
-                class="flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-300 text-gray-400 hover:text-white">
-                <span class="material-icons text-[18px]">map</span>
-                <span data-translate="view-map">Mapa</span>
-            </button>
-        </div>
-
-        <!-- Ultra-compact footer links -->
-        <div
-            class="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[10px] text-slate-500/60 font-medium px-4 py-1 rounded-full bg-black/20 backdrop-blur-sm border border-white/5">
-            <a class="hover:text-primary transition-colors" href="/blog" data-translate="footer-blog">Blog</a>
-            <span class="text-white/5">•</span>
-            <a class="hover:text-primary transition-colors" href="/terms" data-translate="footer-terms">Regulamin</a>
-            <span class="text-white/5">•</span>
-            <a class="hover:text-primary transition-colors" href="/privacy" data-translate="footer-privacy">Polityka
-                Prywatności</a>
-            <span class="text-white/5">•</span>
-            <span class="opacity-50" data-translate="footer-rights">© 2026</span>
-        </div>
-    </div>
-
-    <!-- Main Content (Map) -->
-    <main class="hidden md:flex w-full md:w-[60%] h-full relative map-bg overflow-hidden flex-col" id="map-container">
+        <!-- Main Content (Map) -->
+        <main class="hidden md:flex w-full md:w-[65%] h-full relative map-bg overflow-hidden flex-col" id="map-container">
         {% block map_content %}{% endblock %}
 
-        <!-- Desktop Footer Overlay -->
+        <!-- Desktop Footer Overlay (Hidden on Mobile to avoid duplication) -->
         <footer
-            class="glass-panel border-t border-white/5 p-4 z-40 bg-background-dark/80 backdrop-blur-md absolute bottom-0 w-full">
+            class="hidden md:block glass-panel border-t border-white/5 p-4 z-40 bg-background-dark/80 backdrop-blur-md absolute bottom-0 w-full">
             <div class="flex items-center justify-between px-4">
                 <div class="flex items-center gap-2">
                     <a href="https://www.youtube.com/@kebabrank" target="_blank"
@@ -307,6 +278,110 @@
     </main>
     {% endblock %}
 
+    <!-- Mobile Sticky View Switcher (Absolute positioned over the main view area) -->
+    <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-[30] md:hidden w-full px-4 flex flex-col items-center gap-3">
+        <div class="flex items-center p-1.5 rounded-full bg-[#0f172a]/90 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
+            <button id="mobile-view-list" class="flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-300 bg-primary text-white shadow-lg">
+                <span class="material-icons text-[18px]">list</span>
+                <span data-translate="view-list">Lista</span>
+            </button>
+            <button id="mobile-view-map" class="flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-300 text-gray-400 hover:text-white">
+                <span class="material-icons text-[18px]">map</span>
+                <span data-translate="view-map">Mapa</span>
+            </button>
+        </div>
+        
+        <!-- Ultra-compact footer links -->
+        <div class="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[10px] text-slate-500/60 font-medium px-4 py-1 rounded-full bg-black/20 backdrop-blur-sm border border-white/5">
+            <a class="hover:text-primary transition-colors" href="/blog" data-translate="footer-blog">Blog</a>
+            <span class="text-white/5">•</span>
+            <a class="hover:text-primary transition-colors" href="/terms" data-translate="footer-terms">Regulamin</a>
+            <span class="text-white/5">•</span>
+            <a class="hover:text-primary transition-colors" href="/privacy" data-translate="footer-privacy">Prywatność</a>
+            <span class="text-white/5">•</span>
+            <span class="opacity-50" data-translate="footer-rights">© 2026</span>
+        </div>
+    </div>
+    </div><!-- End flex-1 area -->
+
+    <!-- Mega Menu Overlay (SEO & Navigation) -->
+    <div id="mega-menu" class="fixed inset-0 z-[2000] hidden flex-col bg-[#0b1121]/98 backdrop-blur-3xl overflow-y-auto overflow-x-hidden transition-all duration-300">
+        <!-- Header -->
+        <div class="sticky top-0 left-0 w-full p-4 md:p-8 flex items-center justify-between z-[2100] bg-gradient-to-b from-[#0b1121] via-[#0b1121]/90 to-transparent">
+            <div class="flex items-center gap-2 md:gap-3">
+                <div class="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-primary flex items-center justify-center shadow-[0_0_15px_rgba(255,106,0,0.4)] flex-shrink-0">
+                    <span class="material-icons text-white text-base md:text-2xl">explore</span>
+                </div>
+                <div class="text-base md:text-2xl font-black tracking-tighter uppercase italic text-white leading-none whitespace-nowrap">Eksploruj <span class="text-primary tracking-normal">Miasta</span></div>
+            </div>
+            <button id="close-mega-menu" class="group flex items-center gap-1.5 px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all text-white flex-shrink-0">
+                <span class="text-[9px] md:text-xs font-bold uppercase tracking-widest text-gray-400 group-hover:text-white transition-colors">Zamknij</span>
+                <span class="material-icons text-sm md:text-lg">close</span>
+            </button>
+        </div>
+
+        <div class="flex-1 w-full max-w-7xl mx-auto px-4 md:px-8 pt-10 md:pt-16 pb-20">
+            <!-- Popular Cities Grid -->
+            <div class="mb-12 md:mb-16">
+                <div class="flex items-center gap-4 mb-6 md:mb-8">
+                    <div class="h-px flex-1 bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+                    <h2 class="text-[10px] md:text-sm font-bold text-primary uppercase tracking-[0.2em] md:tracking-[0.3em] whitespace-nowrap">Najpopularniejsze</h2>
+                    <div class="h-px flex-1 bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+                </div>
+                <!-- Popular Cities Grid -->
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 md:gap-4">
+                    <!-- Top 10 Card (Added for premium accessibility) -->
+                    <!-- Top 10 Card (Added for premium accessibility) -->
+                    <button id="mega-menu-top10" class="group relative overflow-hidden rounded-xl md:rounded-2xl bg-gradient-to-br from-primary/20 to-purple-600/20 border border-primary/30 p-3 md:p-6 hover:border-primary/60 transition-all duration-500 flex flex-col items-center text-center">
+                        <div class="absolute inset-0 opacity-40 group-hover:opacity-60 transition-opacity duration-500">
+                             <img src="/static/img/top10.png" alt="Top 10" class="w-full h-full object-cover grayscale group-hover:grayscale-0">
+                        </div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#0b1121] via-[#0b1121]/40 to-transparent z-10"></div>
+                        <div class="relative z-20 flex flex-col items-center">
+                            <span class="material-icons text-primary/80 group-hover:text-primary mb-1 md:mb-3 text-xl md:text-3xl transition-transform group-hover:scale-110 duration-500">emoji_events</span>
+                            <span class="font-black text-[10px] md:text-sm text-white transition-colors uppercase tracking-tight leading-tight">Top 10<br/>W Polsce</span>
+                        </div>
+                    </button>
+                    {% for city in popular_cities %}
+                    <a href="/kebab-{{ city.slug }}" class="city-modal-card group relative overflow-hidden rounded-xl md:rounded-2xl bg-white/5 border border-white/5 p-3 md:p-6 hover:border-primary/40 transition-all duration-500 flex flex-col items-center text-center" data-city="{{ city.name }}">
+                        <!-- Image Container (Populated by JS for better mapping) -->
+                        <div class="city-card-image-wrapper absolute inset-0 opacity-40 group-hover:opacity-60 transition-opacity duration-500">
+                            <!-- JS will inject img here -->
+                        </div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#0b1121] via-[#0b1121]/40 to-transparent z-10"></div>
+                        
+                        <div class="relative z-20 flex flex-col items-center">
+                            <span class="city-card-icon material-icons text-primary/40 group-hover:text-primary mb-1 md:mb-3 text-xl md:text-3xl transition-transform group-hover:scale-110 duration-500">location_city</span>
+                            <span class="font-black text-[10px] md:text-sm text-gray-300 group-hover:text-white transition-colors uppercase tracking-tight truncate w-full shadow-sm">{{ city.name }}</span>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- All Cities A-Z Grid -->
+            <div class="mt-8 md:mt-0">
+                <div class="flex items-center gap-4 mb-6 md:mb-10 justify-center">
+                    <div class="h-px w-8 md:w-20 bg-gradient-to-r from-transparent to-white/10"></div>
+                    <h2 class="text-[10px] md:text-sm font-bold text-gray-500 uppercase tracking-[0.2em] md:tracking-[0.3em] whitespace-nowrap text-center">Wszystkie Miasta A-Z</h2>
+                    <div class="h-px w-8 md:w-20 bg-gradient-to-l from-transparent to-white/10"></div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-y-3 md:gap-y-4 gap-x-4 md:gap-x-8 px-2 max-h-[40vh] md:max-h-full overflow-y-auto custom-scrollbar">
+                    {% for city in available_cities %}
+                    <a href="/kebab-{{ city.slug }}" class="flex items-center gap-3 group py-1 md:py-0">
+                        <div class="w-1.5 h-1.5 rounded-full bg-primary/20 group-hover:bg-primary transition-all duration-300 group-hover:scale-150"></div>
+                        <span class="text-xs md:text-sm text-gray-400 group-hover:text-white transition-colors duration-300">{{ city.name }}</span>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="py-10 text-center border-t border-white/5">
+            <p class="text-xs text-gray-500 uppercase tracking-widest">Kebab Rank 2026 • AI Engine Powered</p>
+        </div>
+    </div>
+
     <!-- Cookie Banner -->
     <div id="cookie-banner"
         class="fixed bottom-0 left-0 w-full z-[1000] bg-[#0f172a]/95 backdrop-blur-md border-t border-white/10 p-4 transition-transform duration-500">
@@ -327,6 +402,7 @@
             </div>
         </div>
     </div>
+    </div><!-- End #app-root -->
 
     <!-- Leaflet.js JavaScript -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"

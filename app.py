@@ -95,6 +95,36 @@ def redirect_to_www():
         if host == 'kebabrank.com':
             return redirect(f"{scheme}://www.{host}{request.full_path}", code=301)
 
+@app.context_processor
+def inject_cities():
+    """Make cities available to all templates for the Mega Menu"""
+    all_cities = db_service.get_cities()
+    
+    # Sort A-Z
+    all_cities.sort(key=lambda x: x.get('name', ''))
+    
+    # Define popular cities for the top section
+    popular_names = ["Warszawa", "Kraków", "Wrocław", "Gdańsk", "Poznań", "Łódź"]
+    popular_cities = [c for c in all_cities if c['name'] in popular_names]
+    # Sort popular cities in the order of the list above
+    popular_cities.sort(key=lambda x: popular_names.index(x['name']) if x['name'] in popular_names else 99)
+    
+    # Pre-calculate slugs for consistency
+    def slugify(text):
+        import urllib.parse
+        polish_mapping = {'ł': 'l', 'ó': 'o', 'ą': 'a', 'ę': 'e', 'ć': 'c', 'ń': 'n', 'ś': 's', 'ź': 'z', 'ż': 'z'}
+        text = text.lower()
+        for char, repl in polish_mapping.items():
+            text = text.replace(char, repl)
+        return text.replace(' ', '-')
+
+    for city in all_cities:
+        city['slug'] = slugify(city['name'])
+    for city in popular_cities:
+        city['slug'] = slugify(city['name'])
+        
+    return dict(available_cities=all_cities, popular_cities=popular_cities)
+
 @app.route('/')
 def index():
     """Main page"""
@@ -239,7 +269,7 @@ def get_city_rankings(city):
         
         last_update = db_service.get_last_update_time(city)
         update_interval_days = int(os.getenv('DATABASE_UPDATE_INTERVAL_DAYS', 7))
-        limit = min(int(request.args.get('limit', 10)), 100)  # Max 100 items
+        limit = min(int(request.args.get('limit', 10)), 120)  # Max 120 items
         offset = int(request.args.get('offset', 0))
         
         print(f"DEBUG: Last update: {last_update}, Interval: {update_interval_days} days")
@@ -393,15 +423,15 @@ def get_city_rankings_with_ai(city):
     try:
         # Get language and limit from query parameters
         lang = request.args.get('lang', 'pl')
-        limit = min(int(request.args.get('limit', 10)), 100)
+        limit = min(int(request.args.get('limit', 10)), 120)
         
         # Get basic rankings
         rankings = db_service.get_city_rankings(city, limit)
         if not rankings:
             return jsonify({'status': 'success', 'data': []})
             
-        # Enrich with AI data using bulk fetch
-        google_ids = [k['google_place_id'] for k in rankings]
+        # Enrich with AI data for TOP 20 ONLY to ensure performance and stay under request limits
+        google_ids = [k['google_place_id'] for k in rankings[:20]]
         ai_data_map = db_service.get_ai_for_places(google_ids)
         
         for kebab in rankings:
@@ -516,6 +546,7 @@ def blog_index():
         {"slug": "najlepszy-kebab-katowice", "title": "Najlepszy kebab w Katowicach – Kraft, Berlin i Friz", "excerpt": "Gastronomiczna transformacja Śląska – odkryj najlepsze rzemieślnicze kebaby w Katowicach.", "cover": "/static/img/blog/katowice.png", "date": "2025-06-18"},
         {"slug": "najlepszy-kebab-wroclaw", "title": "Najlepszy kebab we Wrocławiu – TOP 10", "excerpt": "Odkryj najlepsze lokale we Wrocławiu, w tym miejsce nr 1 w skali całego kraju!", "cover": "/static/img/blog/wroclaw.jpeg", "date": "2025-06-15"},
         {"slug": "gdzie-na-kebaba", "title": "Gdzie na kebaba? Ogólnopolski przewodnik", "excerpt": "Praktyczne wskazówki i linki do rankingów ponad 50 miast.", "cover": "/static/img/blog/przewodnik.jpg", "date": "2025-06-12"},
+        {"slug": "ai-sentiment-analysis", "title": "AI Sentiment Analysis dla Recenzji Restauracyjnych", "excerpt": "Czy wiesz, że sztuczna inteligencja rewolucjonizuje sposób, w jaki oceniane są kebaby? Sprawdź najnowsze trendy.", "cover": "/static/img/blog/guide.jpg", "date": "2026-04-08"},
     ]
     return render_template('blog/index.html', articles=articles,
                          page_title="Blog Kebab Rank - Porady, Rankingi i Ciekawostki o Kebabach",
@@ -565,6 +596,10 @@ def blog_page(slug):
             'gdzie-na-kebaba': {
                 'title': "Gdzie na Kebaba? Ogólnopolski Przewodnik i Ranking 2026",
                 'desc': "Praktyczne wskazówki jak rozpoznać dobry kebab i linki do rankingów w ponad 50 miastach Polski."
+            },
+            'ai-sentiment-analysis': {
+                'title': "AI Sentiment Analysis dla Kebabów - Przewodnik 2026 | Kebab Rank",
+                'desc': "Kompletny przewodnik po AI sentiment analysis. Dowiedz się, jak sztuczna inteligencja zmienia ocenianie i jak wpływa na ranking restauracji w Polsce."
             }
         }
 
@@ -781,6 +816,13 @@ def health_check():
             'error': str(e),
             'timestamp': datetime.now().isoformat()
         }), 500
+
+
+
+@app.route('/eu194yp2dtsh23cy4aapz6pequxv3f2w.txt')
+def index_now_verification():
+    """Verify IndexNow for search engines"""
+    return send_from_directory(os.path.dirname(os.path.abspath(__file__)), 'eu194yp2dtsh23cy4aapz6pequxv3f2w.txt')
 
 
 if __name__ == '__main__':

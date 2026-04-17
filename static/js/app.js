@@ -1,6 +1,66 @@
 // static/js/app.js
 const $id = (id) => document.getElementById(id);
 
+// List of available images discovered in static/img/cities/
+const availableCityImages = [
+    "Bydgoszcz.jpeg", "Czestochowa.jpeg", "Dobczyce.jpeg", "Gdansk.jpeg", "Gdynia.jpeg",
+    "Grudziądz.jpeg", "Jastrzebie_zdroj.jpeg", "Katowice.jpeg", "Konin.jpeg", "Kozieglowy.jpeg",
+    "Krakow.jpeg", "Legnica.jpeg", "Lubin.jpeg", "Lublin.jpeg", "Myszkow.jpeg", "Olsztyn.jpeg",
+    "Opole.jpeg", "Pila.jpeg", "Pszczyna.jpeg", "Radom.jpeg", "Rybnik.jpeg", "Slupsk.jpeg",
+    "Szczecin.jpeg", "Tarnow.jpeg", "Torun.jpeg", "Tychy.jpeg", "Warsaw.jpeg", "Wieliczka.jpeg",
+    "Wroclaw.jpeg", "Zabrze.jpeg", "Zarki.jpeg", "bialystok.jpeg", "bielsko-biala.jpeg",
+    "bytom.jpeg", "chorzow.jpeg", "czechowice-dziedzice.jpeg", "dabrawa-gornicza.jpeg",
+    "elbląg.jpeg", "gliwice.jpeg", "gorzów-wielkopolski.jpeg", "jaworzno.jpeg", "jordanow.jpeg",
+    "kalisz.jpeg", "kielce.jpeg", "koszalin.jpeg", "lodz.jpeg", "myslowice.jpeg", "nowy-sacz.jpeg",
+    "oswiecim.jpeg", "piotrkow-trybunalski.jpeg", "plock.jpeg", "poraj.jpeg", "poznan.jpeg",
+    "ruda-slaska.jpeg", "rzeszow.jpeg", "siedlce.jpeg", "skawina.jpeg", "sosnowiec.jpeg",
+    "walbrzych.jpeg", "wlocalwek.jpeg", "wolbrom.jpeg", "włocławek.jpeg", "zakopane.jpeg",
+    "zielona-gora.jpeg"
+];
+
+/**
+ * Finds the best matching image for a given city name.
+ * Handles Polish characters, case sensitivity, and common variations.
+ */
+const getCityImageFile = (cityName) => {
+    // Standardize city name for comparison (remove diacritics, lowercase)
+    const normalize = (str) => {
+        return str.toLowerCase()
+            .replace(/ł/g, 'l').replace(/ó/g, 'o').replace(/ą/g, 'a')
+            .replace(/ę/g, 'e').replace(/ć/g, 'c').replace(/ń/g, 'n')
+            .replace(/ś/g, 's').replace(/ź/g, 'z').replace(/ż/g, 'z');
+    }
+
+    if (!cityName) return null;
+    
+    const normalizedCity = normalize(cityName);
+    const slug = normalizedCity.replace(/ /g, '-');
+    const underscoreSlug = normalizedCity.replace(/ /g, '_').replace(/-/g, '_');
+
+    // 1. Direct match with exact name + .jpeg
+    let m = availableCityImages.find(img => img === cityName + '.jpeg');
+    if (m) return m;
+
+    // 2. Case-insensitive exact match
+    m = availableCityImages.find(img => img.toLowerCase() === cityName.toLowerCase() + '.jpeg');
+    if (m) return m;
+
+    // 3. Match normalized versions (slugs with hyphens or underscores)
+    m = availableCityImages.find(img => {
+        const normalizedImgName = normalize(img.split('.')[0]).replace(/_/g, '-');
+        return normalizedImgName === slug || normalizedImgName === underscoreSlug.replace(/_/g, '-');
+    });
+    if (m) return m;
+
+    // 4. Special case: Warszawa -> Warsaw.jpeg
+    if (slug === 'warszawa' || slug === 'warsaw') {
+        m = availableCityImages.find(img => img.toLowerCase() === 'warsaw.jpeg');
+        if (m) return m;
+    }
+
+    return m || null;
+};
+
 // Translation object
 const translations = {
     en: {
@@ -42,7 +102,8 @@ const translations = {
         'live-analysis': 'LIVE ANALYSIS',
         'update-in': 'Update in:',
         'top-poland': 'Top 10<br />In Poland',
-        'show-top': 'Show top:',
+        'show-top': 'Filter kebab count:',
+        'explore-cities': 'Select City',
         'footer-blog': 'Blog',
         'footer-privacy': 'Privacy Policy',
         'footer-rights': '© 2026 KebabRank',
@@ -144,7 +205,8 @@ const translations = {
         'live-analysis': 'ANALIZA LIVE',
         'update-in': 'Aktualizacja za:',
         'top-poland': 'Top 10<br />W Polsce',
-        'show-top': 'Pokaż top:',
+        'explore-cities': 'Wybierz Miasto',
+        'show-top': 'Filtruj ilość Kebabów',
         'footer-blog': 'Blog',
         'footer-privacy': 'Polityka Prywatności',
         'footer-rights': '© 2026 KebabRank',
@@ -483,6 +545,65 @@ document.addEventListener('DOMContentLoaded', () => {
             dropdown.style.opacity = '0';
             isDropdownOpen = false;
         }
+    });
+
+    // --- Mega Menu Interactivity ---
+    const megaMenu = $id('mega-menu');
+    const megaMenuTrigger = $id('mega-menu-trigger');
+    const closeMegaMenu = $id('close-mega-menu');
+
+    function toggleMegaMenu(show) {
+        if (!megaMenu) return;
+        if (show) {
+            megaMenu.classList.remove('hidden');
+            megaMenu.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+            setTimeout(() => {
+                megaMenu.style.opacity = '1';
+                megaMenu.style.transform = 'translateY(0)';
+            }, 10);
+        } else {
+            megaMenu.style.opacity = '0';
+            megaMenu.style.transform = 'translateY(-20px)';
+            setTimeout(() => {
+                megaMenu.classList.add('hidden');
+                megaMenu.classList.remove('flex');
+                document.body.style.overflow = '';
+            }, 300);
+        }
+    }
+
+    if (megaMenuTrigger) {
+        megaMenuTrigger.onclick = (e) => {
+            e.preventDefault();
+            toggleMegaMenu(true);
+        };
+    }
+    
+    if (closeMegaMenu) {
+        closeMegaMenu.onclick = () => toggleMegaMenu(false);
+    }
+    
+    // Close on background click
+    if (megaMenu) {
+        megaMenu.onclick = (e) => {
+            if (e.target === megaMenu) toggleMegaMenu(false);
+        };
+    }
+
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && megaMenu && !megaMenu.classList.contains('hidden')) {
+            toggleMegaMenu(false);
+        }
+    });
+
+    // Close mega menu when clicking any link inside it
+    const megaMenuLinks = document.querySelectorAll('#mega-menu a');
+    megaMenuLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            toggleMegaMenu(false);
+        });
     });
 });
 
@@ -1078,7 +1199,8 @@ function filterCities(searchTerm) {
 // Update your existing selectCity function
 function selectCity(cityName) {
     const dropdown = $id('city-dropdown');
-    $id('city-search').value = cityName;
+    const searchInput = $id('city-search');
+    if (searchInput) searchInput.value = cityName;
 
     // Hide dropdown on both desktop and mobile
     if (dropdown) {
@@ -1089,6 +1211,12 @@ function selectCity(cityName) {
         dropdown.style.opacity = '0';
     }
 
+    // Close Mega Menu if it's open
+    const megaMenu = $id('mega-menu');
+    if (megaMenu) {
+        megaMenu.classList.add('hidden');
+        megaMenu.classList.remove('flex');
+    }
 
     isDropdownOpen = false;
 
@@ -2018,61 +2146,64 @@ function populateCitySelector(cities) {
     if (globalButton) selector.appendChild(globalButton);
     if (divider) selector.appendChild(divider);
 
-    const icons = ['store', 'restaurant', 'local_dining', 'location_city', 'business', 'apartment', 'domain', 'location_on', 'map', 'place', 'fastfood', 'dinner_dining'];
-
+    // Render ALL Cities as Cards
     cities.forEach(city => {
-        const citySlug = city.toLowerCase()
-            .replace(/ /g, '-')
-            .replace(/ł/g, 'l').replace(/ó/g, 'o').replace(/ą/g, 'a')
-            .replace(/ę/g, 'e').replace(/ć/g, 'c').replace(/ń/g, 'n')
-            .replace(/ś/g, 's').replace(/ź/g, 'z').replace(/ż/g, 'z');
+        const imageFile = getCityImageFile(city);
+        const card = document.createElement('button');
+        const isActive = window.currentCity === city;
+        card.className = `compact-city-card group snap-start ${isActive ? 'active' : ''}`;
+        card.onclick = () => selectCity(city);
+        card.setAttribute('data-city', city);
 
-        const btn = document.createElement('a');
-        btn.href = `/kebab-${citySlug}`;
-        btn.className = 'tab-button flex flex-col items-center gap-2 group min-w-[64px] snap-start';
-        btn.onclick = (e) => {
-            e.preventDefault();
-            selectCity(city);
-        };
-
-        // Determine icon based on city name hash to be consistent but varied
-        let hash = 0;
-        for (let i = 0; i < city.length; i++) {
-            hash = city.charCodeAt(i) + ((hash << 5) - hash);
-        }
-        const iconIndex = Math.abs(hash) % icons.length;
-        const icon = icons[iconIndex];
-
-        // Specific overrides for major cities
-        let finalIcon = icon;
-        if (city === 'Kraków') finalIcon = 'castle';
-        else if (city === 'Warszawa') finalIcon = 'location_city';
-        else if (city === 'Wrocław') finalIcon = 'apartment';
-        else if (city === 'Gdańsk' || city === 'Gdynia' || city === 'Sopot') finalIcon = 'sailing';
-
-        const isSelected = window.currentCity && city === window.currentCity;
-        const activeClass = isSelected ? 'active' : '';
-
-        btn.className = `tab-button flex flex-col items-center gap-2 group min-w-[56px] md:min-w-[64px] snap-start ${activeClass}`;
-        btn.onclick = (e) => {
-            e.preventDefault();
-            selectCity(city);
-        };
-
-        btn.innerHTML = `
-                <div class="tab-icon-wrapper w-12 h-12 md:w-16 md:h-16 rounded-full bg-surface-dark border border-white/10 flex items-center justify-center relative transition-all duration-300 group-hover:scale-105">
-                    <span class="material-icons ${isSelected ? 'text-primary' : 'text-gray-400'} text-xl md:text-2xl">${finalIcon}</span>
-                </div>
-                <span class="text-[10px] md:text-xs font-bold tracking-wide uppercase text-center w-16 md:w-20 leading-tight transition-colors duration-300 px-1 truncate">
-                    ${city}
-                </span>
+        if (imageFile) {
+            card.innerHTML = `
+                <img src="/static/img/cities/${imageFile}" alt="${city}">
+                <div class="overlay"></div>
+                <div class="label">${city}</div>
             `;
+        } else {
+            // Fallback for cities without an image: Premium Glassmorphism Gradient
+            card.innerHTML = `
+                <div class="absolute inset-0 bg-gradient-to-br from-surface-dark to-surface-dark/40 flex items-center justify-center">
+                    <div class="absolute inset-0 bg-primary/5 mix-blend-overlay"></div>
+                    <span class="material-icons text-primary/20 text-2xl">location_city</span>
+                </div>
+                <div class="overlay"></div>
+                <div class="label">${city}</div>
+            `;
+        }
 
-        // Add prefetch on hover
-        btn.addEventListener('mouseenter', () => prefetchCity(city));
-
-        selector.appendChild(btn);
+        card.addEventListener('mouseenter', () => prefetchCity(city));
+        selector.appendChild(card);
     });
+
+    // --- AUTO-CENTERING FIX ---
+    // If a city is active, scroll it into the center of the scroller
+    if (window.currentCity) {
+        requestAnimationFrame(() => {
+            const activeCard = selector.querySelector('.compact-city-card.active');
+            if (activeCard) {
+                activeCard.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'nearest', 
+                    inline: 'center' 
+                });
+            }
+        });
+    }
+}
+
+// Handle horizontal scrolling of cities
+function scrollCities(direction) {
+    const selector = document.getElementById('city-selector');
+    if (!selector) return;
+    
+    const scrollAmount = 200;
+    if (direction === 'left') {
+        selector.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+    } else {
+        selector.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
 }
 
 // Regular rankings display function
@@ -2315,3 +2446,85 @@ async function prefetchCity(cityName) {
         console.warn(`Prefetch failed for ${cityName}:`, e);
     }
 }
+
+// --- Mega Menu Visuals ---
+/**
+ * Renders high-end city images in the Mega Menu (Popular Cities)
+ * Replaces generic icons with custom photography where available.
+ */
+function refreshCityPhotography() {
+    console.log("🏙️ Refreshing City Photography...");
+    const modalCards = document.querySelectorAll(".city-modal-card");
+    if (!modalCards.length) {
+        console.warn("⚠️ No city-modal-cards found to refresh.");
+        return;
+    }
+
+    modalCards.forEach(card => {
+        const cityName = card.getAttribute("data-city");
+        const imgWrapper = card.querySelector(".city-card-image-wrapper");
+        const icon = card.querySelector(".city-card-icon");
+        
+        if (!cityName || !imgWrapper) return;
+
+        // Use our now-global intelligent mapping logic
+        const imageFile = getCityImageFile(cityName);
+        
+        if (imageFile) {
+            // Apply high-res background
+            imgWrapper.innerHTML = `
+                <img src="/static/img/cities/${imageFile}" 
+                     alt="${cityName}" 
+                     class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+            `;
+            // Hide generic icons for a premium look
+            if (icon) {
+                icon.style.opacity = "0";
+                icon.style.visibility = "hidden";
+            }
+            imgWrapper.classList.remove("bg-gradient-to-br");
+        } else {
+            // Glassmorphism Fallback if no specific photo exists
+            imgWrapper.classList.add("bg-gradient-to-br", "from-surface-dark/40", "to-background-dark/80");
+            if (icon) {
+                icon.style.opacity = "0.4";
+                icon.style.visibility = "visible";
+            }
+        }
+    });
+}
+
+// Global handle for modal triggers
+window.initMegaMenuVisuals = function() {
+    // Immediate call and a slightly delayed one to catch any DOM injection
+    refreshCityPhotography();
+    setTimeout(refreshCityPhotography, 100);
+};
+
+// Auto-bind to the search trigger (Mega Menu opening button)
+document.addEventListener("DOMContentLoaded", () => {
+    const searchBtn = document.getElementById("mega-menu-trigger");
+    if (searchBtn) {
+        console.log("🔗 Binding mega-menu-trigger to initMegaMenuVisuals");
+        searchBtn.addEventListener("click", () => {
+            // Show the menu handled by CSS/Alpine or standard JS
+            const menu = document.getElementById('mega-menu');
+            if (menu) {
+                menu.classList.remove('hidden');
+                menu.classList.add('flex');
+            }
+            window.initMegaMenuVisuals();
+        });
+    }
+
+    const closeBtn = document.getElementById("close-mega-menu");
+    if (closeBtn) {
+        closeBtn.addEventListener("click", () => {
+            const menu = document.getElementById('mega-menu');
+            if (menu) {
+                menu.classList.add('hidden');
+                menu.classList.remove('flex');
+            }
+        });
+    }
+});

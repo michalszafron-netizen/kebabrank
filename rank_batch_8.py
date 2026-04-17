@@ -1,7 +1,7 @@
 
 import subprocess, sys
 # Batch 8: Opole - Poraj
-cities = ["Opole", "Oswiecim", "Piotrków Trybunalski", "Piła", "Poraj"]
+cities = [ "Oswiecim"]
 def run_batch():
     for city in cities:
         print(f"\n--- STARTING: {city} ---")
