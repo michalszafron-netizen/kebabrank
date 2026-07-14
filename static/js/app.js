@@ -3,19 +3,19 @@ const $id = (id) => document.getElementById(id);
 
 // List of available images discovered in static/img/cities/
 const availableCityImages = [
-    "Bydgoszcz.jpeg", "Czestochowa.jpeg", "Dobczyce.jpeg", "Gdansk.jpeg", "Gdynia.jpeg",
-    "Grudziądz.jpeg", "Jastrzebie_zdroj.jpeg", "Katowice.jpeg", "Konin.jpeg", "Kozieglowy.jpeg",
-    "Krakow.jpeg", "Legnica.jpeg", "Lubin.jpeg", "Lublin.jpeg", "Myszkow.jpeg", "Olsztyn.jpeg",
-    "Opole.jpeg", "Pila.jpeg", "Pszczyna.jpeg", "Radom.jpeg", "Rybnik.jpeg", "Slupsk.jpeg",
-    "Szczecin.jpeg", "Tarnow.jpeg", "Torun.jpeg", "Tychy.jpeg", "Warsaw.jpeg", "Wieliczka.jpeg",
-    "Wroclaw.jpeg", "Zabrze.jpeg", "Zarki.jpeg", "bialystok.jpeg", "bielsko-biala.jpeg",
-    "bytom.jpeg", "chorzow.jpeg", "czechowice-dziedzice.jpeg", "dabrawa-gornicza.jpeg",
-    "elbląg.jpeg", "gliwice.jpeg", "gorzów-wielkopolski.jpeg", "jaworzno.jpeg", "jordanow.jpeg",
-    "kalisz.jpeg", "kielce.jpeg", "koszalin.jpeg", "lodz.jpeg", "myslowice.jpeg", "nowy-sacz.jpeg",
-    "oswiecim.jpeg", "piotrkow-trybunalski.jpeg", "plock.jpeg", "poraj.jpeg", "poznan.jpeg",
-    "ruda-slaska.jpeg", "rzeszow.jpeg", "siedlce.jpeg", "skawina.jpeg", "sosnowiec.jpeg",
-    "walbrzych.jpeg", "wlocalwek.jpeg", "wolbrom.jpeg", "włocławek.jpeg", "zakopane.jpeg",
-    "zielona-gora.jpeg"
+    "Bydgoszcz.webp", "Czestochowa.webp", "Dobczyce.webp", "Gdansk.webp", "Gdynia.webp",
+    "Grudziądz.webp", "Jastrzebie_zdroj.webp", "Katowice.webp", "Konin.webp", "Kozieglowy.webp",
+    "Krakow.webp", "Legnica.webp", "Lubin.webp", "Lublin.webp", "Myszkow.webp", "Olsztyn.webp",
+    "Opole.webp", "Pila.webp", "Pszczyna.webp", "Radom.webp", "Rybnik.webp", "Slupsk.webp",
+    "Szczecin.webp", "Tarnow.webp", "Torun.webp", "Tychy.webp", "Warsaw.webp", "Wieliczka.webp",
+    "Wroclaw.webp", "Zabrze.webp", "Zarki.webp", "bialystok.webp", "bielsko-biala.webp",
+    "bytom.webp", "chorzow.webp", "czechowice-dziedzice.webp", "dabrawa-gornicza.webp",
+    "elbląg.webp", "gliwice.webp", "gorzów-wielkopolski.webp", "jaworzno.webp", "jordanow.webp",
+    "kalisz.webp", "kielce.webp", "koszalin.webp", "lodz.webp", "myslowice.webp", "nowy-sacz.webp",
+    "oswiecim.webp", "piotrkow-trybunalski.webp", "plock.webp", "poraj.webp", "poznan.webp",
+    "ruda-slaska.webp", "rzeszow.webp", "siedlce.webp", "skawina.webp", "sosnowiec.webp",
+    "walbrzych.webp", "wlocalwek.webp", "wolbrom.webp", "włocławek.webp", "zakopane.webp",
+    "zielona-gora.webp"
 ];
 
 /**
@@ -37,12 +37,12 @@ const getCityImageFile = (cityName) => {
     const slug = normalizedCity.replace(/ /g, '-');
     const underscoreSlug = normalizedCity.replace(/ /g, '_').replace(/-/g, '_');
 
-    // 1. Direct match with exact name + .jpeg
-    let m = availableCityImages.find(img => img === cityName + '.jpeg');
+    // 1. Direct match with exact name + .webp
+    let m = availableCityImages.find(img => img === cityName + '.webp');
     if (m) return m;
 
     // 2. Case-insensitive exact match
-    m = availableCityImages.find(img => img.toLowerCase() === cityName.toLowerCase() + '.jpeg');
+    m = availableCityImages.find(img => img.toLowerCase() === cityName.toLowerCase() + '.webp');
     if (m) return m;
 
     // 3. Match normalized versions (slugs with hyphens or underscores)
@@ -52,9 +52,9 @@ const getCityImageFile = (cityName) => {
     });
     if (m) return m;
 
-    // 4. Special case: Warszawa -> Warsaw.jpeg
+    // 4. Special case: Warszawa -> Warsaw.webp
     if (slug === 'warszawa' || slug === 'warsaw') {
-        m = availableCityImages.find(img => img.toLowerCase() === 'warsaw.jpeg');
+        m = availableCityImages.find(img => img.toLowerCase() === 'warsaw.webp');
         if (m) return m;
     }
 
@@ -282,6 +282,12 @@ const aiTranslations = {
         'improving': '📈 Improving',
         'declining': '📉 Declining',
         'stable': '➡️ Stable',
+        'dynamiczny wzrost': '📈 Strong Growth',
+        'lekka poprawa': '📈 Slight Improvement',
+        'pełna stabilizacja': '➡️ Stable',
+        'niepokojący spadek': '📉 Slight Decline',
+        'wyraźny regres': '📉 Clear Decline',
+        'insufficient_data': '— No Data',
         'very-positive': '😍 Very Positive',
         'positive': '😊 Positive',
         'neutral': '😐 Neutral',
@@ -411,38 +417,18 @@ document.addEventListener('DOMContentLoaded', () => {
         // Handle URL routing and initial city
         handleUrlRouting();
 
-        // Auto-load Kraków as default city - fixed approach
-        setTimeout(() => {
-            console.log('🔄 Checking if Kraków should auto-load...');
-            const searchInput = $id('city-search');
+        // Auto-load Kraków as default city on home page
+        const isHomePage = window.location.pathname === '/' || window.location.pathname === '';
+        if (isHomePage) {
             const cityRankings = $id('city-tab');
-
-            // Check if we're on home page (no city-specific URL)
-            const isHomePage = window.location.pathname === '/' || window.location.pathname === '';
-
-            // Check if rankings are empty (showing search prompt)
-            const hasEmptyRankings = cityRankings && cityRankings.innerHTML.includes('search-prompt');
-
-            // Check if search field is empty OR contains Kraków but rankings aren't loaded
+            const searchInput = $id('city-search');
             const searchValue = searchInput ? searchInput.value.trim() : '';
-            const hasKrakowInSearch = searchValue === 'Kraków';
-            const shouldLoadKrakow = !searchValue || (hasKrakowInSearch && hasEmptyRankings);
-
-            console.log('📊 Auto-load conditions:', {
-                isHomePage,
-                hasEmptyRankings,
-                searchInputValue: searchValue,
-                hasKrakowInSearch,
-                shouldLoadKrakow
-            });
-
-            if (isHomePage && shouldLoadKrakow) {
-                console.log('✅ Auto-loading Kraków as default city');
+            const hasEmptyRankings = cityRankings && cityRankings.innerHTML.includes('search-prompt');
+            const shouldLoadKrakow = !searchValue || (searchValue === 'Kraków' && hasEmptyRankings);
+            if (shouldLoadKrakow) {
                 autoLoadKrakowAsDefault();
-            } else {
-                console.log('❌ Skipping auto-load - conditions not met');
             }
-        }, 1000); // Wait 1 second for other initialization to complete
+        }
     }
     const searchInput = $id('city-search');
     if (searchInput) {
@@ -582,6 +568,14 @@ document.addEventListener('DOMContentLoaded', () => {
     
     if (closeMegaMenu) {
         closeMegaMenu.onclick = () => toggleMegaMenu(false);
+    }
+
+    const megaMenuTop10 = $id('mega-menu-top10');
+    if (megaMenuTop10) {
+        megaMenuTop10.onclick = () => {
+            toggleMegaMenu(false);
+            showTab('global');
+        };
     }
     
     // Close on background click
@@ -1359,11 +1353,37 @@ async function loadGlobalRankings(limit = null) {
     }
     const container = $id('global-tab');
     try {
-        const response = await fetch(`/api/rankings/global?limit=${limit}`);
-        const data = await response.json();
+        const [rankResp, statsResp] = await Promise.all([
+            fetch(`/api/rankings/global?limit=${limit}`),
+            fetch('/api/stats'),
+        ]);
+        const data = await rankResp.json();
+        const stats = await statsResp.json();
+
         if (data.status === 'success') {
-            displayRankings(data.data, container, null, true);
-            // Update global map with markers
+            // Stats bar
+            const isEn = (window.currentLang || 'pl') === 'en';
+            const placesLabel = isEn
+                ? `<strong>${(stats.total_places || 0).toLocaleString()}</strong> kebab spots analyzed`
+                : `Zbadano <strong>${(stats.total_places || 0).toLocaleString()}</strong> kebabów`;
+            const citiesLabel = isEn
+                ? `across <strong>${stats.total_cities || 0}</strong> cities in Poland`
+                : `w <strong>${stats.total_cities || 0}</strong> miastach w Polsce`;
+
+            const statsBar = `<div style="display:flex;align-items:center;gap:10px;padding:10px 16px;margin-bottom:12px;border-radius:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);font-size:13px;color:#cbd5e1;">
+                <span style="position:relative;display:inline-flex;width:10px;height:10px;flex-shrink:0;">
+                    <span style="position:absolute;display:inline-flex;width:100%;height:100%;border-radius:50%;background:#f97316;opacity:0.75;animation:kebab-ping 1.4s cubic-bezier(0,0,0.2,1) infinite;"></span>
+                    <span style="position:relative;display:inline-flex;width:10px;height:10px;border-radius:50%;background:#ea580c;"></span>
+                </span>
+                <span>${placesLabel} ${citiesLabel}</span>
+            </div>
+            <style>@keyframes kebab-ping{75%,100%{transform:scale(2);opacity:0;}}</style>`;
+
+            container.innerHTML = statsBar;
+            const listWrapper = document.createElement('div');
+            container.appendChild(listWrapper);
+            displayRankings(data.data, listWrapper, null, true);
+
             window.globalRankingCache = data.data;
             updateGlobalMapWithKebabs(data.data);
         } else {
@@ -1591,57 +1611,25 @@ function autoLoadKrakowImmediately() {
     }
 }
 
-// Robust auto-load function for Kraków as default city
+// Auto-load Kraków as default city on home page
 function autoLoadKrakowAsDefault() {
-    console.log('🚀 autoLoadKrakowAsDefault() function called');
+    const searchInput = $id('city-search');
+    const cityRankings = $id('city-tab');
+    const searchValue = searchInput ? searchInput.value.trim() : '';
+    const hasEmptyRankings = cityRankings && cityRankings.innerHTML.includes('search-prompt');
+    const shouldLoadKrakow = !searchValue || (searchValue === 'Kraków' && hasEmptyRankings);
 
-    // Wait a bit for other initialization to complete
-    setTimeout(() => {
-        console.log('🔍 Starting auto-load check after timeout');
+    if (searchInput && shouldLoadKrakow) {
+        if (!searchValue) searchInput.value = 'Kraków';
 
-        // Check desktop version first
-        const searchInput = $id('city-search');
-        const cityRankings = $id('city-tab');
-
-        // Check if search field is empty OR contains Kraków but rankings aren't loaded
-        const searchValue = searchInput ? searchInput.value.trim() : '';
-        const hasKrakowInSearch = searchValue === 'Kraków';
-        const hasEmptyRankings = cityRankings && cityRankings.innerHTML.includes('search-prompt');
-        const shouldLoadKrakow = !searchValue || (hasKrakowInSearch && hasEmptyRankings);
-
-        if (searchInput && shouldLoadKrakow) {
-            console.log('✅ Auto-loading Kraków as default city');
-
-            // Set Kraków as default value in search field if empty
-            if (!searchValue) {
-                searchInput.value = 'Kraków';
-                console.log('✅ Set search input value to "Kraków"');
-            } else {
-                console.log('ℹ️ Search field already has "Kraków"');
-            }
-
-            // Switch to City Rankings tab if not already there
-            const cityTabButton = document.querySelector('.tab-button[onclick*="city"]');
-            console.log('📝 City tab button found:', !!cityTabButton);
-            if (cityTabButton) {
-                console.log('📝 City tab button active status:', cityTabButton.classList.contains('active'));
-                if (!cityTabButton.classList.contains('active')) {
-                    console.log('✅ Switching to City Rankings tab');
-                    cityTabButton.click();
-                } else {
-                    console.log('ℹ️ City tab already active');
-                }
-            }
-
-            // Load Kraków rankings
-            const limit = $id('kebab-count')?.value || 10;
-            console.log('📝 Loading Kraków rankings with limit:', limit);
-            checkAndLoadRankings('Kraków', limit);
-
-            // Update URL for sharing
-            updateCityUrl('Kraków');
+        const cityTabButton = document.querySelector('.tab-button[onclick*="city"]');
+        if (cityTabButton && !cityTabButton.classList.contains('active')) {
+            cityTabButton.click();
         }
-    }, 1000); // 1 second delay to ensure other initialization completes
+
+        checkAndLoadRankings('Kraków', $id('kebab-count')?.value || 10);
+        updateCityUrl('Kraków');
+    }
 }
 
 
@@ -1684,50 +1672,102 @@ function getTrendLabel(trend) {
 
 // --- MAP FUNCTIONS ---
 
+function loadLeafletCSS() {
+    if (!document.querySelector('link[href*="leaflet.css"]')) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = '/static/js/leaflet/leaflet.css';
+        document.head.appendChild(link);
+    }
+}
+
+// Queue-based loader: only one <script> ever created; all callers share the same onload
+let _leafletLoadCallbacks = [];
+let _leafletLoading = false;
+
+function loadLeafletJS(callback) {
+    if (window.L) { callback(); return; }
+    _leafletLoadCallbacks.push(callback);
+    if (_leafletLoading) return;
+    _leafletLoading = true;
+    const script = document.createElement('script');
+    script.src = '/static/js/leaflet/leaflet.js';
+    script.onload = function() {
+        _leafletLoadCallbacks.forEach(function(cb) { cb(); });
+        _leafletLoadCallbacks = [];
+    };
+    document.head.appendChild(script);
+}
+
 // Initialize the city map
 function initializeMap() {
-    const mapContainer = document.getElementById('kebab-map');
-    if (!mapContainer) return;
+    if (window.kebabMap) return;
+    loadLeafletCSS();
+    loadLeafletJS(function() {
+        if (window.kebabMap) return;
+        const mapContainer = document.getElementById('kebab-map');
+        if (!mapContainer) return;
 
-    // Remove placeholder if it exists
-    const placeholder = mapContainer.querySelector('.map-placeholder');
-    if (placeholder) {
-        placeholder.style.display = 'none';
-    }
+        // Remove placeholder if it exists
+        const placeholder = mapContainer.querySelector('.map-placeholder');
+        if (placeholder) {
+            placeholder.style.display = 'none';
+        }
 
-    // Initialize map centered on Poland
-    kebabMap = L.map('kebab-map').setView([52.2370, 21.0175], 6);
+        // Initialize map centered on Poland
+        kebabMap = L.map('kebab-map').setView([52.2370, 21.0175], 6);
 
-    // Add OpenStreetMap tiles
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        maxZoom: 18
-    }).addTo(kebabMap);
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            maxZoom: 18
+        }).addTo(kebabMap);
 
-    console.log('City map initialized successfully');
+        // Auto-populate markers from cache (fixes race condition when map init is async)
+        if (window.currentCity && window.rankingCache) {
+            const limit = document.getElementById('kebab-count')?.value || 10;
+            const lang = window.currentLang || 'pl';
+            const cacheKey = `${window.currentCity}_${limit}_${lang}`;
+            if (window.rankingCache[cacheKey]) {
+                addKebabMarkers(window.rankingCache[cacheKey]);
+            }
+        }
+
+        console.log('City map initialized successfully');
+    });
 }
 
 // Initialize the global map
 function initializeGlobalMap() {
-    const mapContainer = document.getElementById('kebab-map-global');
-    if (!mapContainer) return;
+    if (window.globalKebabMap) return;
+    loadLeafletCSS();
+    loadLeafletJS(function() {
+        if (window.globalKebabMap) return;
+        const mapContainer = document.getElementById('kebab-map-global');
+        if (!mapContainer) return;
 
-    // Remove placeholder if it exists
-    const placeholder = mapContainer.querySelector('.map-placeholder');
-    if (placeholder) {
-        placeholder.style.display = 'none';
-    }
+        // Remove placeholder if it exists
+        const placeholder = mapContainer.querySelector('.map-placeholder');
+        if (placeholder) {
+            placeholder.style.display = 'none';
+        }
 
-    // Initialize map with better view for Poland
-    globalKebabMap = L.map('kebab-map-global').setView([52.0, 19.0], 6);
+        // Initialize map with better view for Poland
+        globalKebabMap = L.map('kebab-map-global').setView([52.0, 19.0], 6);
 
-    // Add OpenStreetMap tiles
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        maxZoom: 18
-    }).addTo(globalKebabMap);
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            maxZoom: 18
+        }).addTo(globalKebabMap);
 
-    console.log('Global map initialized successfully');
+        // Auto-populate markers from cache (fixes race condition when map init is async)
+        if (window.globalRankingCache) {
+            addGlobalKebabMarkers(window.globalRankingCache);
+        }
+
+        console.log('Global map initialized successfully');
+    });
 }
 
 // Clear all existing markers from the city map
@@ -1836,9 +1876,11 @@ function addKebabMarkers(kebabPlaces) {
                         </span>
                         <span style="padding: 2px 8px; border-radius: 4px; background: ${getMarkerColor(index + 1)}15; color: ${getMarkerColor(index + 1)};">${translations[currentLang]['rank']} #${index + 1}</span>
                     </div>
-                    
+
+                    ${(() => { const s = getOpenNowStatus(place.opening_hours); return s ? `<div style="margin-top:8px; padding:5px 8px; border-radius:6px; font-size:12px; font-weight:700; background:${s.open ? '#dcfce7' : '#fee2e2'}; color:${s.open ? '#16a34a' : '#dc2626'};">● ${s.label}</div>` : ''; })()}
+
                     <div style="text-align: center; margin-top: 8px;">
-                        <a href="https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}" 
+                        <a href="https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}"
                            target="_blank" rel="noopener"
                            class="navigate-btn">
                             <span class="material-icons">directions</span>
@@ -1954,9 +1996,11 @@ function addGlobalKebabMarkers(kebabPlaces) {
                         </span>
                         <span style="padding: 2px 8px; border-radius: 4px; background: ${getMarkerColor(index + 1)}15; color: ${getMarkerColor(index + 1)};">${translations[currentLang]['rank']} #${index + 1}</span>
                     </div>
-                    
+
+                    ${(() => { const s = getOpenNowStatus(place.opening_hours); return s ? `<div style="margin-top:8px; padding:5px 8px; border-radius:6px; font-size:12px; font-weight:700; background:${s.open ? '#dcfce7' : '#fee2e2'}; color:${s.open ? '#16a34a' : '#dc2626'};">● ${s.label}</div>` : ''; })()}
+
                     <div style="text-align: center; margin-top: 8px;">
-                        <a href="https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}" 
+                        <a href="https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}"
                            target="_blank" rel="noopener"
                            class="navigate-btn">
                             <span class="material-icons">directions</span>
@@ -2039,9 +2083,14 @@ function centerMapOnKebab(index) {
 
 // Initialize map when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    // Only initialize map on desktop immediately to save TBT on mobile
+    // Delay map init on desktop to prevent Leaflet tiles from becoming LCP element.
+    // requestIdleCallback defers until after main content paints; setTimeout fallback for Safari.
     if (window.innerWidth > 768) {
-        initializeMap();
+        if ('requestIdleCallback' in window) {
+            requestIdleCallback(() => initializeMap(), { timeout: 2000 });
+        } else {
+            setTimeout(initializeMap, 300);
+        }
     }
 
     // Add Intersection Observer for map containers
@@ -2066,7 +2115,8 @@ document.addEventListener('DOMContentLoaded', () => {
             // Save consent
             localStorage.setItem('cookie-consent', 'true');
 
-            // Smoothly hide banner
+            // Apply close transition only at dismiss time (kept off initial paint to help LCP)
+            cookieBanner.style.transition = 'transform 500ms, opacity 500ms';
             cookieBanner.style.transform = 'translateY(100%)';
             cookieBanner.style.opacity = '0';
 
@@ -2147,17 +2197,26 @@ function populateCitySelector(cities) {
     if (divider) selector.appendChild(divider);
 
     // Render ALL Cities as Cards
+    let firstCard = true;
     cities.forEach(city => {
         const imageFile = getCityImageFile(city);
         const card = document.createElement('button');
         const isActive = window.currentCity === city;
-        card.className = `compact-city-card group snap-start ${isActive ? 'active' : ''}`;
+        card.className = `compact-city-card group ${isActive ? 'active' : ''}`;
         card.onclick = () => selectCity(city);
         card.setAttribute('data-city', city);
 
         if (imageFile) {
+            const smFile = imageFile.replace('.webp', '-sm.webp');
+            const priority = firstCard ? 'fetchpriority="high" loading="eager"' : 'loading="lazy"';
+            firstCard = false;
             card.innerHTML = `
-                <img src="/static/img/cities/${imageFile}" alt="${city}">
+                <img src="/static/img/cities/${imageFile}"
+                     srcset="/static/img/cities/${smFile} 400w, /static/img/cities/${imageFile} 800w"
+                     sizes="(max-width: 767px) 180px, 140px"
+                     width="800" height="500"
+                     ${priority}
+                     alt="${city}">
                 <div class="overlay"></div>
                 <div class="label">${city}</div>
             `;
@@ -2177,20 +2236,6 @@ function populateCitySelector(cities) {
         selector.appendChild(card);
     });
 
-    // --- AUTO-CENTERING FIX ---
-    // If a city is active, scroll it into the center of the scroller
-    if (window.currentCity) {
-        requestAnimationFrame(() => {
-            const activeCard = selector.querySelector('.compact-city-card.active');
-            if (activeCard) {
-                activeCard.scrollIntoView({ 
-                    behavior: 'smooth', 
-                    block: 'nearest', 
-                    inline: 'center' 
-                });
-            }
-        });
-    }
 }
 
 // Handle horizontal scrolling of cities
@@ -2274,6 +2319,7 @@ function displayRankings(rankings, container, cityName, isGlobal = false) {
                     <p class="text-[9px] text-gray-400 text-center leading-tight break-words w-full opacity-80">
                         ${kebab.address}, ${kebab.city || window.currentCity || ''}
                     </p>
+                    ${(() => { const s = getOpenNowStatus(kebab.opening_hours); return s ? `<span style="display:inline-block;font-size:9px;font-weight:700;padding:2px 7px;border-radius:9999px;background:${s.open ? '#16a34a' : '#dc2626'};color:#fff;">● ${s.label}</span>` : ''; })()}
                 </div>
 
                 <!-- Content -->
@@ -2386,6 +2432,59 @@ function displayRankings(rankings, container, cityName, isGlobal = false) {
     container.classList.add('ranking-fade-in');
 }
 
+function getOpenNowStatus(openingHoursJson) {
+    if (!openingHoursJson) return null;
+    let hours;
+    try { hours = typeof openingHoursJson === 'string' ? JSON.parse(openingHoursJson) : openingHoursJson; }
+    catch(e) { return null; }
+
+    const isEn = (window.currentLang || currentLang) === 'en';
+    const T = {
+        open:        isEn ? 'Open'   : 'Otwarte',
+        closed:      isEn ? 'Closed' : 'Zamknięte',
+        closes:      isEn ? 'closes' : 'zamyka',
+        opens:       isEn ? 'opens'  : 'otwiera',
+    };
+
+    // Fallback: place has no timetable but known current status (e.g. all-days-closed or open-now-no-hours)
+    if (hours._status) {
+        const isOpen = hours._status === 'open';
+        return { open: isOpen, label: isOpen ? T.open : T.closed };
+    }
+
+    const now = new Date();
+    const todayDay = now.getDay();
+    const curMin = now.getHours() * 60 + now.getMinutes();
+
+    function parseRange(s) {
+        if (!s) return null;
+        const dash = s.lastIndexOf('-');
+        if (dash < 1) return null;
+        const [oh, om] = s.slice(0, dash).trim().split(':').map(Number);
+        const [ch, cm] = s.slice(dash + 1).trim().split(':').map(Number);
+        return { openMin: oh * 60 + om, closeMin: ch * 60 + cm, openStr: s.slice(0, dash).trim(), closeStr: s.slice(dash + 1).trim() };
+    }
+
+    // Check yesterday's crossover (e.g. open 22:00–03:00, now it's 01:00)
+    const yDay = (todayDay + 6) % 7;
+    const yRange = parseRange(hours[String(yDay)]);
+    if (yRange && yRange.closeMin < yRange.openMin && curMin < yRange.closeMin) {
+        return { open: true, label: `${T.open} · ${T.closes} ${yRange.closeStr}` };
+    }
+
+    const tRange = parseRange(hours[String(todayDay)]);
+    if (!tRange) return { open: false, label: T.closed };
+
+    const closeAdj = tRange.closeMin < tRange.openMin ? tRange.closeMin + 1440 : tRange.closeMin;
+    if (curMin >= tRange.openMin && curMin < closeAdj) {
+        return { open: true, label: `${T.open} · ${T.closes} ${tRange.closeStr}` };
+    }
+    if (curMin < tRange.openMin) {
+        return { open: false, label: `${T.closed} · ${T.opens} ${tRange.openStr}` };
+    }
+    return { open: false, label: T.closed };
+}
+
 // Add CSS Helper for sentiment color if not exists
 function getSentimentColorClass(sentiment) {
     if (typeof sentiment === 'number') {
@@ -2472,9 +2571,13 @@ function refreshCityPhotography() {
         
         if (imageFile) {
             // Apply high-res background
+            const smFile = imageFile.replace('.webp', '-sm.webp');
             imgWrapper.innerHTML = `
-                <img src="/static/img/cities/${imageFile}" 
-                     alt="${cityName}" 
+                <img src="/static/img/cities/${imageFile}"
+                     srcset="/static/img/cities/${smFile} 400w, /static/img/cities/${imageFile} 800w"
+                     sizes="(max-width: 767px) 220px, 400px"
+                     width="800" height="500"
+                     alt="${cityName}"
                      class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
             `;
             // Hide generic icons for a premium look

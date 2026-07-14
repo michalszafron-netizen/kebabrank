@@ -108,20 +108,35 @@ class PocketbaseService:
             print(f"Error getting cities: {e}")
             return []
 
+    @staticmethod
+    def _normalize_city(s: str) -> str:
+        return s.lower().translate(str.maketrans('ąćęłńóśźż', 'acelnoszz'))
+
     def get_city_id(self, city_name: str) -> Optional[str]:
-        """Get city ID by name (Pocketbase IDs are strings)"""
+        """Get city ID by name (Pocketbase IDs are strings).
+        Falls back to diacritics-insensitive match (e.g. 'Bielsko-Biala' → 'Bielsko-Biała')."""
         if city_name in self._city_cache:
             return self._city_cache[city_name]
         try:
-            # Use auth retry wrapper
             def _get_city_id():
-                # Filter by name
-                record = self.client.collection('cities').get_first_list_item(f'name="{city_name}"')
-                if record:
-                    self._city_cache[city_name] = record.id
-                    return record.id
+                # 1. Exact match
+                try:
+                    record = self.client.collection('cities').get_first_list_item(f'name="{city_name}"')
+                    if record:
+                        self._city_cache[city_name] = record.id
+                        return record.id
+                except Exception:
+                    pass
+                # 2. Fuzzy fallback — normalize diacritics on both sides
+                all_cities = self.client.collection('cities').get_full_list()
+                norm_input = self._normalize_city(city_name)
+                for c in all_cities:
+                    if self._normalize_city(c.name) == norm_input:
+                        print(f"  ✓ Matched '{city_name}' → '{c.name}'")
+                        self._city_cache[city_name] = c.id
+                        return c.id
                 return None
-            
+
             result = self._execute_with_auth_retry(_get_city_id)
             if result is None:
                 print(f"Error getting city ID for {city_name}: Not found or authentication failed")
@@ -286,7 +301,8 @@ class PocketbaseService:
                         'rank_change_indicator': trend['rank_change_indicator'],
                         'is_new': trend['is_new'],
                         'has_ai_analysis': base_ai_score > 0,
-                        'ai_score': base_ai_score if base_ai_score > 0 else r.rank_score
+                        'ai_score': base_ai_score if base_ai_score > 0 else r.rank_score,
+                        'opening_hours': getattr(p, 'opening_hours', None),
                     })
 
                 return rankings
@@ -331,6 +347,7 @@ class PocketbaseService:
                                 'rank_score': r.rank_score,
                                 'ai_score': getattr(r, 'ai_score', r.rank_score),
                                 'has_ai_analysis': getattr(r, 'has_ai_analysis', False),
+                                'opening_hours': getattr(r, 'opening_hours', None),
                                 'global_rank': i + 1
                             })
                         return results
@@ -412,6 +429,7 @@ class PocketbaseService:
                         'rank_score': r.rank_score,
                         'ai_score': getattr(r, 'ai_score', r.rank_score),
                         'has_ai_analysis': getattr(r, 'ai_score', 0) > 0,
+                        'opening_hours': getattr(p, 'opening_hours', None),
                         'global_rank': 0
                     })
                 
@@ -834,10 +852,16 @@ class PocketbaseService:
             print(f"Error in get_ai_for_places: {e}")
             return {}
 
-    def upsert_kebab_place(self, google_place_id: str, name: str, address: str, 
-                          city_id: str, latitude: float, longitude: float, photo_url: Optional[str] = None) -> str:
+    def upsert_kebab_place(self, google_place_id: str, name: str, address: str,
+                          city_id: str, latitude: float, longitude: float,
+                          photo_url: Optional[str] = None,
+                          opening_hours: Optional[str] = None) -> str:
         """Insert or update a kebab place in Pocketbase"""
         self._ensure_auth()
+        extra = {}
+        if opening_hours is not None:
+            extra["opening_hours"] = opening_hours
+        # photo is a PocketBase File field (binary storage) — not updated here
         try:
             # Check if place exists
             try:
@@ -849,20 +873,20 @@ class PocketbaseService:
                     "city": city_id,
                     "lat": latitude,
                     "lng": longitude,
+                    **extra,
                 })
                 return existing.id
             except:
                 # 2. Secondary match by Name + City (prevents duplicates if API ID changed)
                 try:
-                    # Sanitize name for filter
                     safe_name = name.replace('"', '\\"')
                     existing = self.client.collection('kebab_places').get_first_list_item(f'name="{safe_name}" && city="{city_id}"')
-                    # Update the ID if we found a name match but ID was different
                     self.client.collection('kebab_places').update(existing.id, {
                         "google_place_id": google_place_id,
                         "address": address,
                         "lat": latitude,
-                        "lng": longitude
+                        "lng": longitude,
+                        **extra,
                     })
                     return existing.id
                 except:
@@ -873,7 +897,8 @@ class PocketbaseService:
                         "address": address,
                         "city": city_id,
                         "lat": latitude,
-                        "lng": longitude
+                        "lng": longitude,
+                        **extra,
                     })
                     return new_record.id
         except Exception as e:

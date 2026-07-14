@@ -1,8 +1,10 @@
 import os
 import sys
 import io
+import json
+import re
 from dotenv import load_dotenv
-from services.gmaps_extractor import GmapsextractorService
+from services.dataforseo import DataForSEOService
 from services.pocketbase_db import PocketbaseService
 from services.ranking import RankingService
 from datetime import datetime
@@ -11,7 +13,6 @@ from datetime import datetime
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
 # ── Kebab Qualification Filter ──────────────────────────────────────────
-# Name keywords that STRONGLY indicate a kebab place
 KEBAB_NAME_WHITELIST = [
     'kebab', 'kebap', 'kebaya', 'keb', 'ke-bab', 'kabab',
     'doner', 'döner', 'dürüm', 'durum',
@@ -25,7 +26,6 @@ KEBAB_NAME_WHITELIST = [
     'kraft', 'alibaba', 'złota kura',
 ]
 
-# Name keywords that indicate NOT a kebab place (override only if NO whitelist match)
 KEBAB_NAME_BLACKLIST = [
     'sushi', 'ramen', 'pho', 'wok', 'china', 'chiński', 'chinski',
     'indian', 'indyjska', 'indyjski', 'india', 'curry house', 'tandoori',
@@ -38,248 +38,366 @@ KEBAB_NAME_BLACKLIST = [
     'mexican', 'meksykańska', 'meksykanska',
 ]
 
-# Google Maps categories that indicate a kebab-related place
+# DataForSEO category_ids that confirm a kebab place
+KEBAB_CAT_IDS = [
+    'kebab_shop', 'doner_kebab_restaurant', 'shawarma_restaurant',
+    'gyros_restaurant', 'falafel_restaurant', 'middle_eastern_restaurant',
+]
+
+# DataForSEO category names (category + additional_categories fields)
 KEBAB_CATEGORY_WHITELIST = [
     'kebab', 'doner', 'döner', 'turkish', 'middle eastern',
     'fast food', 'shawarma', 'gyro', 'falafel', 'pita',
     'take out', 'takeaway', 'meal takeaway',
 ]
 
-# Google Maps categories that indicate NOT a kebab place
 KEBAB_CATEGORY_BLACKLIST = [
     'sushi', 'indian', 'chinese', 'japanese', 'thai', 'vietnamese',
     'steakhouse', 'ice cream', 'bakery', 'hotel', 'bar',
     'italian restaurant', 'french restaurant', 'spanish restaurant',
 ]
 
+# Cities large enough to exceed 100 results in Google Maps kebab search
+LARGE_CITIES = {
+    'krakow', 'kraków',
+    'warszawa', 'warsaw',
+    'katowice',
+    'poznan', 'poznań',
+    'wroclaw', 'wrocław',
+    'gdansk', 'gdańsk',
+    'gdynia',
+    'lodz', 'łódź',
+}
+
+def normalize_polish(s: str) -> str:
+    return s.lower().translate(str.maketrans('ąćęłńóśźż', 'acelnoszz'))
+
+
+def parse_opening_hours(work_hours: dict) -> dict:
+    """
+    Convert DataForSEO work_hours.timetable to our JSON format.
+    Input: {"timetable": {"monday": [{"open": {"hour": 10, "minute": 30}, "close": {...}}], ...}}
+    Output: {"1": "10:30-22:30", "0": "11:00-22:30", ...}  (0=Sun, 1=Mon, ..., 6=Sat)
+
+    Edge cases:
+    - No timetable but current_status="open"  → {"_status": "open"}   (show Otwarte badge)
+    - No timetable but current_status="closed" → {"_status": "closed"} (show Zamknięte badge)
+    """
+    if not work_hours:
+        return {}
+    timetable = work_hours.get('timetable') or {}
+
+    if not timetable:
+        status = work_hours.get('current_status', '')
+        if status in ('open', 'closed', 'temporarily_closed', 'permanently_closed'):
+            return {'_status': 'closed' if 'closed' in status else 'open'}
+        return {}
+    day_map = {
+        'sunday': '0', 'monday': '1', 'tuesday': '2',
+        'wednesday': '3', 'thursday': '4', 'friday': '5', 'saturday': '6',
+    }
+    result = {}
+    for day_name, slots in timetable.items():
+        day_num = day_map.get(day_name.lower())
+        if not day_num:
+            continue
+        if not slots:
+            result[day_num] = None
+            continue
+        slot = slots[0]
+        o = slot.get('open') or {}
+        c = slot.get('close') or {}
+        if o and c and 'hour' in o and 'hour' in c:
+            result[day_num] = (
+                f"{o['hour']:02d}:{o.get('minute', 0):02d}"
+                f"-{c['hour']:02d}:{c.get('minute', 0):02d}"
+            )
+        else:
+            result[day_num] = None
+    return result
+
+
 def is_kebab_place(item: dict) -> bool:
     """
-    Strict kebab qualification filter.
+    Strict kebab qualification filter for DataForSEO SERP Maps items.
     Returns True ONLY if there is positive evidence the place serves kebab.
-    
-    Rules:
-    1. Name contains a kebab whitelist keyword → INCLUDE
-    2. Name contains a blacklist keyword (and no whitelist) → EXCLUDE
-    3. Google Maps categories contain a kebab-related category → INCLUDE
-    4. Default → EXCLUDE (no evidence this is a kebab place)
     """
-    name = (item.get('Name') or '').lower()
-    categories = item.get('Categories', [])
-    if not categories:
-        categories = []
-    categories_lower = ' '.join([c.lower() for c in categories])
+    name = (item.get('title') or '').lower()
+    cats = [item.get('category', '')] + (item.get('additional_categories') or [])
+    cat_ids = item.get('category_ids') or []
+    categories_lower = ' '.join(c.lower() for c in cats if c)
+    cat_ids_str = ' '.join(c.lower() for c in cat_ids)
 
-    # Stage 1: Name-based check
-    has_whitelist_name = any(kw in name for kw in KEBAB_NAME_WHITELIST)
-    has_blacklist_name = any(kw in name for kw in KEBAB_NAME_BLACKLIST)
-
-    # If name explicitly contains a kebab keyword, always include
-    if has_whitelist_name:
+    # category_ids are most reliable (standardized Google taxonomy)
+    if any(kw in cat_ids_str for kw in KEBAB_CAT_IDS):
         return True
 
-    # If name contains a blacklist keyword (and no whitelist), reject immediately
-    if has_blacklist_name:
+    # Name whitelist → always include
+    if any(kw in name for kw in KEBAB_NAME_WHITELIST):
+        return True
+
+    # Name blacklist (no whitelist match) → exclude
+    if any(kw in name for kw in KEBAB_NAME_BLACKLIST):
         return False
 
-    # Stage 2: Category-based check (for places with generic names like "Good Food")
-    has_whitelist_cat = any(kw in categories_lower for kw in KEBAB_CATEGORY_WHITELIST)
-
-    # If categories contain a kebab-related one, include
-    if has_whitelist_cat:
+    # Category name whitelist → include
+    if any(kw in categories_lower for kw in KEBAB_CATEGORY_WHITELIST):
         return True
 
-    # DEFAULT: EXCLUDE — no evidence this is a kebab place
-    # (Catches: "Tyska stołówka", "warzywniak", "Giovani", "Stacja Tychy Miasto", etc.)
+    # No evidence → exclude
     return False
 
 
-def update_city_with_gmaps(city_name: str, api_key: str):
+def update_city(city_name: str, login: str, password: str):
     load_dotenv()
-    
-    # 1. Initialize services
-    gmaps = GmapsextractorService(api_key)
+
+    dfs = DataForSEOService(login, password)
     pb = PocketbaseService(os.getenv('PB_URL'))
     ranker = RankingService()
-    
-    print(f"--- Updating {city_name} via Gmapsextractor ---")
-    
-    # 2. Get city ID
+
+    print(f"--- Updating {city_name} via DataForSEO ---")
+
     city_id = pb.get_city_id(city_name)
     if not city_id:
         print(f"Error: City '{city_name}' not found in database.")
         return
 
-    # NEW: Reset existing ranks for this city before update
     pb.reset_city_ranks(city_id)
 
-    # 3. Search for kebabs in city
-    # Gmapsextractor v2 API works best with coordinates (ll)
-    ll = None
-    try:
-        # Try to get coordinates from an existing place in this city
-        sample_place = pb.client.collection('kebab_places').get_first_list_item(f'city="{city_id}"')
-        if sample_place and getattr(sample_place, 'lat', None):
-            ll = f"@{sample_place.lat},{sample_place.lng},13z"
-            print(f"Using coordinates for {city_name}: {ll}")
-    except:
-        pass
+    # 1. Search for kebabs in city
+    is_large = normalize_polish(city_name) in LARGE_CITIES
+    depth = 400 if is_large else 100
+    print(f"Searching DataForSEO for: 'kebab {city_name}' (depth={depth})...")
+    all_results = dfs.search_places(f"kebab {city_name}", depth=depth)
 
-    query = f"kebab" # Just 'kebab' if using coords
-    if not ll:
-        query = f"kebab {city_name}"
-        
-    print(f"Searching Google Maps for: '{query}'...")
-    all_results = []
-    for p in range(1, 5): # Fetch up to 3 pages (60 places)
-        print(f"Fetching page {p}...")
-        results = gmaps.search_places(query, page=p, extra=True, ll=ll)
-        if not results:
-            break
-        all_results.extend(results)
-        if len(results) < 20: # Gmapsextractor usually returns 20 per page
-            break
-    
     if not all_results:
-        print("No results found or API error.")
+        print("No results from DataForSEO.")
         return
 
-    # NEW LOGIC: Prevent dropping existing places due to Google pagination limits!
-    # Instead of losing top places, we cross-check with what we already have in the database.
-    # If the broad search missed a place we already know about, we explicitly query for it.
-    
-    found_google_ids = {item.get('Place Id') for item in all_results if item.get('Place Id')}
-    
-    print(f"Cross-checking against existing database to catch skipped places...")
+    # For large cities: if we still hit the cap, supplement with alternative keywords
+    if len(all_results) >= depth:
+        found_ids = {item.get('place_id') for item in all_results}
+        for extra_kw in [f"döner {city_name}", f"shawarma {city_name}"]:
+            print(f"  Hit cap ({depth}), supplementing with: '{extra_kw}'...")
+            extra = dfs.search_places(extra_kw, depth=100)
+            added = 0
+            for item in extra:
+                if item.get('place_id') and item.get('place_id') not in found_ids:
+                    all_results.append(item)
+                    found_ids.add(item['place_id'])
+                    added += 1
+            print(f"  Added {added} new places from '{extra_kw}'")
+            if added == 0:
+                break  # no new results, stop trying
+
+    found_google_ids = {item.get('place_id') for item in all_results if item.get('place_id')}
+
+    # 2. Cross-check top-10 existing places (catch any missed by search)
     existing_places = pb.client.collection('kebab_places').get_full_list(
         query_params={"filter": f'city="{city_id}"'}
     )
-    
+    existing_ids_before = {
+        getattr(p, 'google_place_id', '') for p in existing_places
+        if getattr(p, 'google_place_id', '')
+    }
+
+    report_closed_temp = []
+    report_closed_perm = []
+    report_new = []
+
+    top_existing = sorted(
+        existing_places,
+        key=lambda p: getattr(p, 'city_rank', 999) or 999
+    )[:10]
+
     missed_count = 0
-    for ep in existing_places:
+    for ep in top_existing:
         g_id = getattr(ep, 'google_place_id', '')
         if g_id and g_id not in found_google_ids:
-            # Google's general search missed it. Let's explicitly search for it to update its stats!
-            print(f"  Explicitly fetching missing known place: {ep.name}")
-            # Search by specific name and city
+            print(f"  Explicitly fetching missing top place: {ep.name}")
             try:
-                explicit_results = gmaps.search_places(f"{ep.name} {city_name}", page=1, extra=True, ll=ll)
-                
-                if explicit_results:
-                    # Find the exact match
-                    for raw_item in explicit_results:
-                        if raw_item.get('Place Id') == g_id:
-                            all_results.append(raw_item)
-                            found_google_ids.add(g_id)
-                            missed_count += 1
-                            print(f"    ✓ Found and updated: {ep.name}")
-                            break
+                explicit = dfs.search_places(f"{ep.name} {city_name}")
+                for raw in explicit:
+                    if raw.get('place_id') == g_id:
+                        all_results.append(raw)
+                        found_google_ids.add(g_id)
+                        missed_count += 1
+                        print(f"    ✓ Found and recovered: {ep.name}")
+                        break
             except Exception as e:
                 print(f"    Failed to fetch {ep.name}: {e}")
 
-    print(f"Found {len(all_results)} places total ({missed_count} recovered from explicit search). Processing...")
+    print(f"Found {len(all_results)} places total ({missed_count} recovered). Processing...")
 
-    # 4. Filter and prepare data
+    # 3. Filter and prepare data
     places_to_save = []
     skipped_non_kebab = 0
-    seen_ids = set() # For deduplication
+    seen_ids = set()
+
     for item in all_results:
-        # Gmapsextractor v2 API response keys (case-sensitive)
-        g_id = item.get('Place Id')
+        g_id = item.get('place_id')
         if not g_id or g_id in seen_ids:
             continue
         seen_ids.add(g_id)
-            
-        import re
-        full_address = item.get('Fulladdress', '')
-        # Smart city filter: find the address chunk containing Polish postal code (XX-XXX).
-        # That chunk contains the REAL city name, e.g. "41-800 Zabrze" or "41-506 Chorzów".
-        # This ignores misleading country suffixes like "..., Stany Zjednoczone, Chorzów"
-        # or neighboring city names appended at the end by Google Maps.
-        parts = [p.strip() for p in full_address.split(',')]
-        city_chunk = None
-        for part in parts:
-            if re.search(r'\b\d{2}-\d{3}\b', part):
-                city_chunk = part.lower()
-                break
 
-        if city_chunk is None:
-            # No Polish postal code at all - foreign address (Los Angeles etc.)
-            print(f"  ⛔ Skipping {item.get('Name')} - No Polish postal code (Address: {full_address})")
-            continue
+        # City filter using address_info (DataForSEO gives parsed city directly)
+        address_info = item.get('address_info') or {}
+        item_city = (address_info.get('city') or '').strip()
 
-        def normalize_polish(s):
-            mapping = str.maketrans('ąćęłńóśźż', 'acelnoszz')
-            return s.lower().translate(mapping)
+        if item_city:
+            if normalize_polish(city_name) not in normalize_polish(item_city) and \
+               normalize_polish(item_city) not in normalize_polish(city_name):
+                print(f"  ⛔ Skipping {item.get('title')} - Not in {city_name} (city: {item_city})")
+                continue
+        else:
+            # Fallback: postal code check in full address string
+            full_address = item.get('address') or ''
+            parts = [p.strip() for p in full_address.split(',')]
+            city_chunk = None
+            for part in parts:
+                if re.search(r'\b\d{2}-\d{3}\b', part):
+                    city_chunk = part
+                    break
+            if city_chunk is None:
+                print(f"  ⛔ Skipping {item.get('title')} - No Polish postal code ({full_address})")
+                continue
+            if normalize_polish(city_name) not in normalize_polish(city_chunk):
+                print(f"  ⛔ Skipping {item.get('title')} - Not in {city_name} (chunk: {city_chunk})")
+                continue
 
-        normalized_city_name = normalize_polish(city_name)
-        normalized_city_chunk = normalize_polish(city_chunk)
-
-        if normalized_city_name not in normalized_city_chunk:
-            print(f"  ⛔ Skipping {item.get('Name')} - Not in {city_name} (Postal chunk: {city_chunk})")
-            continue
-        # Kebab Qualification Filter:
+        # Kebab qualification
         if not is_kebab_place(item):
-            cats = item.get('Categories', [])
-            print(f"  🚫 Skipping {item.get('Name')} - Not a kebab place (Categories: {cats})")
+            cats = [item.get('category', '')] + (item.get('additional_categories') or [])
+            print(f"  🚫 Skipping {item.get('title')} - Not a kebab place (cats: {cats})")
             skipped_non_kebab += 1
             continue
 
+        # Parse opening hours from DataForSEO work_hours
+        opening_hours = parse_opening_hours(item.get('work_hours'))
+
+        rating_obj = item.get('rating') or {}
         place_data = {
-            'name': item.get('Name'),
-            'address': full_address,
+            'name': item.get('title'),
+            'address': item.get('address', ''),
             'google_place_id': g_id,
-            'rating': float(item.get('Average Rating') or 0),
-            'total_reviews': int(item.get('Review Count') or 0),
-            'lat': float(item.get('Latitude') or 0),
-            'lng': float(item.get('Longitude') or 0)
+            'rating': float(rating_obj.get('value') or 0),
+            'total_reviews': int(rating_obj.get('votes_count') or 0),
+            'lat': float(item.get('latitude') or 0),
+            'lng': float(item.get('longitude') or 0),
+            'opening_hours': json.dumps(opening_hours, ensure_ascii=False) if opening_hours else None,
+            'photo': item.get('main_image'),
         }
         places_to_save.append(place_data)
-    
+
     if skipped_non_kebab > 0:
         print(f"  ℹ️ Filtered out {skipped_non_kebab} non-kebab places.")
 
-    # 5. Rank the kebabs (to get current city_rank)
+    # 3b. Closed status check for places with no opening hours (null timetable in SERP)
+    # — Temporarily/permanently closed places typically have no timetable in Google Maps.
+    # — Batch-check these via my_business_info to get definitive status.
+    suspects = [
+        p for p in places_to_save
+        if not p.get('opening_hours')  # null timetable from SERP → might be closed
+    ]
+    if suspects:
+        print(f"\n  Checking closed status for {len(suspects)} place(s) with no hours...")
+        check_list = [
+            {'google_place_id': p['google_place_id'], 'name': p['name'], 'city': city_name}
+            for p in suspects
+        ]
+        status_map = dfs.check_businesses_status(check_list)
+        confirmed_open = []
+        for p in places_to_save:
+            status = status_map.get(p['google_place_id'])
+            if status == 'temporarily_closed':
+                report_closed_temp.append({'name': p['name'], 'google_place_id': p['google_place_id']})
+                print(f"  ⏸️  Removing {p['name']} - Temporarily closed")
+            elif status == 'permanently_closed':
+                report_closed_perm.append({'name': p['name'], 'google_place_id': p['google_place_id']})
+                print(f"  🔒 Removing {p['name']} - Permanently closed")
+            else:
+                confirmed_open.append(p)
+        places_to_save = confirmed_open
+
+    # 4. Rank
     ranked_kebabs = ranker.rank_kebabs(places_to_save)
     print(f"Ranked {len(ranked_kebabs)} places.")
 
-    # 6. Save to PocketBase
-    # We insert into 'kebab_places' (upsert) and then 'ratings' (new history record)
+    # 5. Save to PocketBase
     count = 0
     for kebab in ranked_kebabs:
         try:
             print(f"Saving #{kebab.get('city_rank', 'N/A')} {kebab['name']} (Score: {kebab.get('rank_score', 0)})")
-            # a. Upsert place
             pb_place_id = pb.upsert_kebab_place(
                 google_place_id=kebab['google_place_id'],
                 name=kebab['name'],
                 address=kebab['address'],
                 city_id=city_id,
                 latitude=kebab['lat'],
-                longitude=kebab['lng']
+                longitude=kebab['lng'],
+                opening_hours=kebab.get('opening_hours'),
+                photo_url=kebab.get('photo'),
             )
-            
-            # b. Insert rating history (this creates the 'arrow' logic foundation)
             pb.insert_rating_history(
                 kebab_place_id=pb_place_id,
                 rating=kebab['rating'],
                 total_reviews=kebab['total_reviews'],
-                positive_percentage=0, # Ignored in ranking logic
+                positive_percentage=0,
                 rank_score=kebab['rank_score'],
                 city_rank=kebab['city_rank']
             )
+            if kebab['google_place_id'] not in existing_ids_before:
+                report_new.append({'name': kebab['name'], 'google_place_id': kebab['google_place_id']})
+                print(f"    🆕 New place detected: {kebab['name']}")
             count += 1
         except Exception as e:
             print(f"Error saving {kebab['name']}: {e}")
 
     print(f"✓ Saved {count} records for {city_name}.")
-    print(f"The rankings will now show trends (arrows) when compared to the previous update.")
+
+    # 6. Detect disappeared places: were in DB before, not in this update, not in closed reports
+    saved_ids = {kebab['google_place_id'] for kebab in ranked_kebabs}
+    closed_ids = {p['google_place_id'] for p in report_closed_temp + report_closed_perm}
+    report_disappeared = []
+    for ep in existing_places:
+        g_id = getattr(ep, 'google_place_id', '')
+        if g_id and g_id not in saved_ids and g_id not in closed_ids:
+            report_disappeared.append({'name': ep.name, 'google_place_id': g_id})
+            print(f"  👻 Disappeared from search: {ep.name}")
+
+    # 7. Save update report
+    report_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'update_reports')
+    os.makedirs(report_dir, exist_ok=True)
+    report = {
+        'city': city_name,
+        'date': datetime.now().strftime('%Y-%m-%d'),
+        'timestamp': datetime.now().isoformat(),
+        'total_active': count,
+        'new_places': report_new,
+        'closed_temporarily': report_closed_temp,
+        'closed_permanently': report_closed_perm,
+        'disappeared_from_search': report_disappeared,
+    }
+    report_path = os.path.join(report_dir, f"{city_name}_{datetime.now().strftime('%Y-%m-%d')}.json")
+    with open(report_path, 'w', encoding='utf-8') as f:
+        json.dump(report, f, ensure_ascii=False, indent=2)
+    print(f"\n📊 Raport zapisany: {report_path}")
+    print(f"   🆕 Nowe miejsca:          {len(report_new)}")
+    print(f"   ⏸️  Tymczasowo zamknięte:  {len(report_closed_temp)}")
+    print(f"   🔒 Na stałe zamknięte:    {len(report_closed_perm)}")
+    print(f"   👻 Zniknęły z wyszukiwarki: {len(report_disappeared)}")
+
 
 if __name__ == "__main__":
     import argparse
+    load_dotenv()
     parser = argparse.ArgumentParser()
     parser.add_argument("city", nargs="?", default="Zakopane")
-    parser.add_argument("--key", default="ZUaHNRMieiVzFcAOvmyZ6tMjK9U4HDLN4MVejoLgmyn0K7LB")
-    parser.add_argument("--limit", type=int, default=10, help="Ignored, just for backwards compat")
+    parser.add_argument("--limit", type=int, default=10, help="Ignored, backwards compat")
     args = parser.parse_args()
-    
-    update_city_with_gmaps(args.city, args.key)
+
+    update_city(
+        args.city,
+        os.getenv('DATAFORSEO_LOGIN'),
+        os.getenv('DATAFORSEO_PASSWORD'),
+    )

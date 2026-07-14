@@ -56,7 +56,8 @@ def create_global_top_collection():
             {"name": "global_rank", "type": "number"},
             {"name": "rank_change", "type": "number"},
             {"name": "rank_change_indicator", "type": "text"},
-            {"name": "is_new", "type": "bool"}
+            {"name": "is_new", "type": "bool"},
+            {"name": "opening_hours", "type": "json"}
         ]
     }
     
@@ -187,7 +188,8 @@ def populate_global_top():
             "global_rank": r.get('global_rank', 0),
             "rank_change": r.get('rank_change', 0),
             "rank_change_indicator": r.get('rank_change_indicator', 'neutral'),
-            "is_new": r.get('is_new', False)
+            "is_new": r.get('is_new', False),
+            "opening_hours": r.get('opening_hours')
         }
         resp = requests.post(
             f"{PB_URL}/api/collections/global_top/records",

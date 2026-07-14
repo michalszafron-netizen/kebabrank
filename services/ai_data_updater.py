@@ -26,7 +26,7 @@ class AIDataUpdater:
             self._clear_ai_scores_for_city(city_name)
         
         # Get all top kebabs in the city and filter out "ghost" ranks (city_rank = 0)
-        all_rankings = self.db_service.get_city_rankings(city_name)
+        all_rankings = self.db_service.get_city_rankings(city_name, limit=limit)
         rankings = [k for k in all_rankings if k.get('city_rank', 0) > 0]
         
         if skip_existing:

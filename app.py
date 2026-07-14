@@ -25,6 +25,16 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app)
 
+# Enable gzip compression for all text responses
+from flask_compress import Compress
+app.config['COMPRESS_MIMETYPES'] = [
+    'text/html', 'text/css', 'application/javascript',
+    'application/json', 'text/plain'
+]
+app.config['COMPRESS_LEVEL'] = 6
+app.config['COMPRESS_MIN_SIZE'] = 500
+Compress(app)
+
 # Configure caching
 cache_config = {
     'CACHE_TYPE': 'SimpleCache',  # In-memory cache for development
@@ -98,8 +108,12 @@ def redirect_to_www():
 @app.context_processor
 def inject_cities():
     """Make cities available to all templates for the Mega Menu"""
+    cached = cache.get('inject_cities_result')
+    if cached:
+        return cached
+
     all_cities = db_service.get_cities()
-    
+
     # Sort A-Z
     all_cities.sort(key=lambda x: x.get('name', ''))
     
@@ -123,13 +137,17 @@ def inject_cities():
     for city in popular_cities:
         city['slug'] = slugify(city['name'])
         
-    return dict(available_cities=all_cities, popular_cities=popular_cities)
+    result = dict(available_cities=all_cities, popular_cities=popular_cities)
+    cache.set('inject_cities_result', result, timeout=3600)
+    return result
 
 @app.route('/')
 def index():
     """Main page"""
-    # Fetch top rankings for SEO structured data
-    seo_rankings = db_service.get_global_rankings(limit=5)
+    seo_rankings = cache.get('index_seo_rankings')
+    if seo_rankings is None:
+        seo_rankings = db_service.get_global_rankings(limit=5)
+        cache.set('index_seo_rankings', seo_rankings, timeout=3600)
     
     return render_template('index.html', 
                          page_title="Kebab Rank 2026 - Ranking Najlepszych Kebabów w Polsce | Wspierany AI",
@@ -312,6 +330,7 @@ def get_city_rankings(city):
 
 
 @app.route('/api/rankings/global')
+@cache.cached(timeout=300, query_string=True)
 def get_global_rankings():
     """Get global kebab rankings with AI data"""
     try:
@@ -343,6 +362,22 @@ def get_global_rankings():
         return jsonify({'status': 'success', 'data': rankings})
     except Exception as e:
         print(f"Error in global rankings: {e}")
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+
+@app.route('/api/stats')
+@cache.cached(timeout=86400)
+def get_stats():
+    """Total kebab places and cities in the database."""
+    try:
+        places = db_service.client.collection('kebab_places').get_list(1, 1)
+        cities = db_service.client.collection('cities').get_list(1, 1)
+        return jsonify({
+            'status': 'success',
+            'total_places': places.total_items,
+            'total_cities': cities.total_items,
+        })
+    except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
 
@@ -547,6 +582,7 @@ def blog_index():
         {"slug": "najlepszy-kebab-wroclaw", "title": "Najlepszy kebab we Wrocławiu – TOP 10", "excerpt": "Odkryj najlepsze lokale we Wrocławiu, w tym miejsce nr 1 w skali całego kraju!", "cover": "/static/img/blog/wroclaw.jpeg", "date": "2025-06-15"},
         {"slug": "gdzie-na-kebaba", "title": "Gdzie na kebaba? Ogólnopolski przewodnik", "excerpt": "Praktyczne wskazówki i linki do rankingów ponad 50 miast.", "cover": "/static/img/blog/przewodnik.jpg", "date": "2025-06-12"},
         {"slug": "ai-sentiment-analysis", "title": "AI Sentiment Analysis dla Recenzji Restauracyjnych", "excerpt": "Czy wiesz, że sztuczna inteligencja rewolucjonizuje sposób, w jaki oceniane są kebaby? Sprawdź najnowsze trendy.", "cover": "/static/img/blog/guide.jpg", "date": "2026-04-08"},
+        {"slug": "rynek-kebabow-w-polsce-statystyki-2026", "title": "Rynek Kebabów w Polsce – Statystyki 2026", "excerpt": "Kebab = 21% zamówień online, ~2,5 mld PLN wartości rynku, 25 000 lokali. 55+ punktów danych z Pyszne.pl, GUS i PMR.", "cover": "/static/img/blog/kebab-statystyki-rynek-2026.webp", "date": "2026-04-28"},
     ]
     return render_template('blog/index.html', articles=articles,
                          page_title="Blog Kebab Rank - Porady, Rankingi i Ciekawostki o Kebabach",
@@ -600,6 +636,10 @@ def blog_page(slug):
             'ai-sentiment-analysis': {
                 'title': "AI Sentiment Analysis dla Kebabów - Przewodnik 2026 | Kebab Rank",
                 'desc': "Kompletny przewodnik po AI sentiment analysis. Dowiedz się, jak sztuczna inteligencja zmienia ocenianie i jak wpływa na ranking restauracji w Polsce."
+            },
+            'rynek-kebabow-w-polsce-statystyki-2026': {
+                'title': "Rynek Kebabów w Polsce – Statystyki 2026: 55+ Punktów Danych | Kebab Rank",
+                'desc': "Kompletny raport: kebab = 21% zamówień online, wartość rynku ~2,5 mld PLN, 25 000 lokali. Dane z Pyszne.pl, GUS i PMR Market Experts."
             }
         }
 
