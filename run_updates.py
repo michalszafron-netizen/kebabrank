@@ -11,17 +11,16 @@ sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
 def run_updates(cities=None, all_cities=False, ai_limit=10, run_ai=True):
     load_dotenv()
-    pb = PocketbaseService(os.getenv('PB_URL'))
-    
+    pb = PocketbaseService(os.getenv('PB_URL'), os.getenv('PB_EMAIL'), os.getenv('PB_PASSWORD'))
+
     target_cities = []
-    
+
     if all_cities:
-        # Fetch all cities from DB
         print("Fetching all cities from database...")
         records = pb.client.collection('cities').get_full_list()
         target_cities = [r.name for r in records]
     elif cities:
-        target_cities = cities
+        target_cities = cities  # fuzzy matching handled in get_city_id
     else:
         print("Error: No cities specified. Use --city Name or --all.")
         return
@@ -57,7 +56,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Elastic Kebab Update Script")
     parser.add_argument('--city', nargs='+', help='One or more cities to update (e.g. --city Tychy Zakopane)')
     parser.add_argument('--all', action='store_true', help='Update ALL cities in the database')
-    parser.add_argument('--limit', type=int, default=5, help='AI analysis limit (default: 5)')
+    parser.add_argument('--limit', type=int, default=10, help='AI analysis limit (default: 10)')
     parser.add_argument('--no-ai', action='store_false', dest='run_ai', help='Skip AI analysis')
     
     args = parser.parse_args()

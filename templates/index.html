@@ -26,10 +26,10 @@
         <span class="material-icons text-sm">chevron_left</span>
     </button>
 
-    <div class="flex gap-3 overflow-x-auto py-5 px-1 custom-scrollbar snap-x scroll-smooth" id="city-selector">
+    <div class="flex gap-3 overflow-x-auto py-5 px-1 custom-scrollbar" id="city-selector">
         <!-- Select City Action (Pinned Search) -->
         <div class="sticky left-0 z-20 bg-[#0f172a] pr-1 flex items-center shrink-0">
-            <button id="mega-menu-trigger" class="flex flex-col items-center gap-1.5 group min-w-[70px] md:min-w-[100px] snap-start">
+            <button id="mega-menu-trigger" class="flex flex-col items-center gap-1.5 group min-w-[70px] md:min-w-[100px]">
                 <div class="w-10 h-10 md:w-16 md:h-16 rounded-full bg-primary flex items-center justify-center relative group-hover:scale-105 transition-all shadow-[0_0_15px_rgba(255,107,0,0.3)] interactive-card overflow-hidden">
                     <span class="material-icons text-white text-lg md:text-2xl">search</span>
                 </div>
@@ -39,10 +39,10 @@
         </div>
 
         <!-- Top 10 Button -->
-        <button class="tab-button flex flex-col items-center gap-2 group min-w-[64px] md:min-w-[100px] shrink-0 snap-start"
+        <button class="tab-button flex flex-col items-center gap-2 group min-w-[64px] md:min-w-[100px] shrink-0"
             onclick="showTab('global')">
             <div class="tab-icon-wrapper w-10 h-10 md:w-16 md:h-16 rounded-full border border-white/10 bg-surface-dark flex items-center justify-center relative group-hover:scale-105 transition-all overflow-hidden shadow-lg interactive-card">
-                <img src="{{ url_for('static', filename='img/top10.png') }}?v=1" alt="Top 10" class="w-full h-full object-cover">
+                <img src="{{ url_for('static', filename='img/top10.webp') }}?v=1" alt="Top 10" class="w-full h-full object-cover">
             </div>
             <span class="text-[9px] md:text-[11px] font-black text-gray-400 group-hover:text-primary tracking-wide uppercase text-center w-16 md:w-24 leading-tight transition-colors"
                 data-translate-html="top-poland">Top 10<br />W Polsce</span>
@@ -77,7 +77,6 @@
     .compact-city-card.active {
         border: 2.5px solid #34d399; /* Emerald Green */
         box-shadow: 0 0 30px rgba(52, 211, 153, 0.4), inset 0 0 12px rgba(52, 211, 153, 0.2);
-        transform: scale(1.1);
         z-index: 5;
     }
 
@@ -144,7 +143,7 @@
             bottom: 6px;
         }
         .compact-city-card.active {
-            transform: scale(1.04);
+            /* no scale — green border is enough to indicate active state */
         }
     }
 
