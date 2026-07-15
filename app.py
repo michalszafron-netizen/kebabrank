@@ -7,6 +7,9 @@ from datetime import datetime, timedelta
 from dotenv import load_dotenv
 import threading
 import requests
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 from flask import Response
 
 from services.google_places import GooglePlacesService
@@ -865,11 +868,83 @@ def index_now_verification():
     return send_from_directory(os.path.dirname(os.path.abspath(__file__)), 'eu194yp2dtsh23cy4aapz6pequxv3f2w.txt')
 
 
+def _build_email_html(kebab_name=None, kebab_rating=None, kebab_address=None, kebab_gmaps_url=None, city=None):
+    if kebab_name:
+        rating_stars = ('★' * round(float(kebab_rating))) if kebab_rating else ''
+        kebab_block = f"""
+        <div style="background:#fffbeb;border:2px solid #fbbf24;border-radius:12px;padding:20px 24px;margin:24px 0;">
+          <p style="margin:0 0 4px;font-size:12px;color:#92400e;font-weight:600;letter-spacing:.05em;">TWÓJ LOSOWY KEBAB</p>
+          <p style="margin:0 0 8px;font-size:22px;font-weight:800;color:#1e293b;">{kebab_name}</p>
+          {"<p style='margin:0 0 4px;font-size:18px;color:#d97706;font-weight:700;'>"+rating_stars+" "+str(kebab_rating)+"</p>" if kebab_rating else ''}
+          {"<p style='margin:0 0 16px;font-size:13px;color:#64748b;'>"+kebab_address+"</p>" if kebab_address else ''}
+          {"<a href='"+kebab_gmaps_url+"' style='display:inline-block;padding:11px 24px;background:linear-gradient(135deg,#1d4ed8,#7c3aed);color:#fff;font-size:14px;font-weight:700;text-decoration:none;border-radius:10px;'>🗺️ Prowadź do kebaba</a>" if kebab_gmaps_url else ''}
+        </div>
+        <p style="color:#475569;font-size:14px;">Subskrybujesz też powiadomienia o zmianach w rankingu — poinformujemy Cię gdy pojawi się nowy lider lub duże zmiany.</p>"""
+        subject_preview = f"Twój losowy kebab: {kebab_name}"
+    else:
+        city_txt = f" w <strong>{city}</strong>" if city else ""
+        kebab_block = f"""
+        <p style="color:#1e293b;font-size:15px;line-height:1.7;">Zapisałeś się na powiadomienia KebabRank{city_txt}. Wyślemy Ci maila gdy:</p>
+        <ul style="color:#475569;font-size:14px;line-height:2;padding-left:20px;">
+          <li>Pojawi się <strong>nowy nr 1</strong> w rankingu</li>
+          <li>Nowe miejsce wejdzie do top 10</li>
+          <li>Nastąpi duży spad popularnego kebabowni</li>
+        </ul>"""
+        subject_preview = "Jesteś na liście KebabRank"
+
+    return f"""<!DOCTYPE html><html><head><meta charset="utf-8"></head><body style="margin:0;padding:0;background:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#f8fafc;padding:32px 16px;">
+      <tr><td align="center">
+        <table width="560" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.08);">
+          <tr><td style="background:linear-gradient(135deg,#1e293b,#0f172a);padding:28px 32px;text-align:center;">
+            <p style="margin:0;font-size:26px;font-weight:900;color:#fbbf24;letter-spacing:-.5px;">🥙 KebabRank</p>
+            <p style="margin:6px 0 0;font-size:13px;color:#94a3b8;">kebabrank.com</p>
+          </td></tr>
+          <tr><td style="padding:32px;">
+            <p style="margin:0 0 16px;font-size:20px;font-weight:800;color:#1e293b;">{subject_preview} 🎉</p>
+            {kebab_block}
+            <hr style="border:none;border-top:1px solid #e2e8f0;margin:24px 0;">
+            <p style="color:#94a3b8;font-size:12px;margin:0;">Otrzymujesz tego maila bo podałeś adres na <a href="https://kebabrank.com" style="color:#fbbf24;">kebabrank.com</a>.<br>
+            Aby się wypisać, odpowiedz na tego maila z treścią "wypisz".</p>
+          </td></tr>
+        </table>
+      </td></tr>
+    </table></body></html>"""
+
+
+def _send_email_async(to_email, subject, html):
+    smtp_host = os.environ.get('SMTP_HOST', '')
+    smtp_port = int(os.environ.get('SMTP_PORT', 587))
+    smtp_user = os.environ.get('SMTP_USER', '')
+    smtp_pass = os.environ.get('SMTP_PASS', '')
+    from_name = os.environ.get('FROM_NAME', 'KebabRank')
+    from_email = os.environ.get('FROM_EMAIL', smtp_user)
+    if not smtp_host or not smtp_user or not smtp_pass:
+        return
+    try:
+        msg = MIMEMultipart('alternative')
+        msg['From'] = f'{from_name} <{from_email}>'
+        msg['To'] = to_email
+        msg['Subject'] = subject
+        msg.attach(MIMEText(html, 'html', 'utf-8'))
+        with smtplib.SMTP(smtp_host, smtp_port) as srv:
+            srv.ehlo()
+            srv.starttls()
+            srv.login(smtp_user, smtp_pass)
+            srv.sendmail(from_email, to_email, msg.as_string())
+    except Exception:
+        pass  # nie blokuj API jeśli email się nie wyśle
+
+
 @app.route('/api/subscribe', methods=['POST'])
 def subscribe_email():
     data = request.get_json(silent=True) or {}
     email = (data.get('email') or '').strip().lower()
     source = (data.get('source') or 'unknown')[:50]
+    kebab_name    = data.get('kebab_name') or None
+    kebab_rating  = data.get('kebab_rating') or None
+    kebab_address = data.get('kebab_address') or None
+    kebab_gmaps   = data.get('kebab_gmaps_url') or None
     if not email or '@' not in email or '.' not in email.split('@')[-1]:
         return jsonify({'error': 'invalid_email'}), 400
     db_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'subscribers.db')
@@ -881,9 +956,24 @@ def subscribe_email():
                          email TEXT UNIQUE NOT NULL,
                          source TEXT,
                          created_at TEXT)''')
-        conn.execute('INSERT OR IGNORE INTO subscribers (email, source, created_at) VALUES (?,?,?)',
+        result = conn.execute('INSERT OR IGNORE INTO subscribers (email, source, created_at) VALUES (?,?,?)',
                      (email, source, datetime.now().isoformat()))
         conn.commit()
+        is_new = result.rowcount > 0
+
+        if is_new:
+            city = None
+            if source.startswith('city_watch:'):
+                city = source.split(':', 1)[1] or None
+            if kebab_name:
+                subject = f'Twój losowy kebab: {kebab_name} 🥙'
+            elif city:
+                subject = f'Obserwujesz {city} na KebabRank 🥙'
+            else:
+                subject = 'Jesteś na liście KebabRank 🥙'
+            html = _build_email_html(kebab_name, kebab_rating, kebab_address, kebab_gmaps, city)
+            threading.Thread(target=_send_email_async, args=(email, subject, html), daemon=True).start()
+
         return jsonify({'ok': True}), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500

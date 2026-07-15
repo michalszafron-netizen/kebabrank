@@ -3085,6 +3085,12 @@ function spinRoulette(isGlobal) {
         const rating = pick.rating ? pick.rating.toFixed(1) : '–';
         const reviews = pick.total_reviews ? pick.total_reviews.toLocaleString() : '–';
         const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${pick.latitude},${pick.longitude}`;
+        window._roulettePick = {
+            name: pick.name,
+            rating: pick.rating ? pick.rating.toFixed(1) : null,
+            address: pick.address || pick.formatted_address || null,
+            gmaps_url: mapsUrl
+        };
         const openStatus = getOpenNowStatus(pick.opening_hours);
         const openBadge = openStatus
             ? `<span style="display:inline-block;padding:3px 10px;border-radius:9999px;font-size:11px;font-weight:700;background:${openStatus.open ? 'rgba(52,211,153,0.15)' : 'rgba(248,113,113,0.12)'};color:${openStatus.open ? '#34d399' : '#f87171'};border:1px solid ${openStatus.open ? 'rgba(52,211,153,0.3)' : 'rgba(248,113,113,0.3)'}">${openStatus.label}</span>`
@@ -3132,10 +3138,18 @@ function rouletteSubscribe(kebabName) {
         input.style.borderColor = '#f87171';
         return;
     }
+    const pick = window._roulettePick || {};
     fetch('/api/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, source: 'roulette' })
+        body: JSON.stringify({
+            email,
+            source: 'roulette',
+            kebab_name:    pick.name || decodeURIComponent(kebabName || ''),
+            kebab_rating:  pick.rating || null,
+            kebab_address: pick.address || null,
+            kebab_gmaps_url: pick.gmaps_url || null
+        })
     }).then(r => r.json()).then(data => {
         const area = document.getElementById('roul-email-area');
         if (area) area.innerHTML = `<div style="text-align:center;color:#34d399;font-size:13px;font-weight:700;padding:8px 0;">✓ ${isEn ? 'Saved! Bon appétit 🥙' : 'Zapisano! Smacznego 🥙'}</div>`;
