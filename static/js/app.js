@@ -345,6 +345,38 @@ let globalMapMarkers = [];
 window.currentCityBounds = null;
 window.globalCityBounds = null;
 const rankingCache = window.rankingCache;
+window.activeFilters = { city: {}, global: {} };
+
+const CITY_VOIVODESHIP = {
+    'Warszawa': 'Mazowieckie', 'Radom': 'Mazowieckie', 'Płock': 'Mazowieckie',
+    'Pruszków': 'Mazowieckie', 'Ostrołęka': 'Mazowieckie',
+    'Kraków': 'Małopolskie', 'Tarnów': 'Małopolskie', 'Nowy Sącz': 'Małopolskie',
+    'Zakopane': 'Małopolskie', 'Skawina': 'Małopolskie', 'Wieliczka': 'Małopolskie',
+    'Dobczyce': 'Małopolskie', 'Oświęcim': 'Małopolskie', 'Jordanów': 'Małopolskie',
+    'Łódź': 'Łódzkie', 'Piotrków Trybunalski': 'Łódzkie',
+    'Wrocław': 'Dolnośląskie', 'Legnica': 'Dolnośląskie', 'Wałbrzych': 'Dolnośląskie',
+    'Lubin': 'Dolnośląskie', 'Głogów': 'Dolnośląskie',
+    'Poznań': 'Wielkopolskie', 'Kalisz': 'Wielkopolskie', 'Konin': 'Wielkopolskie',
+    'Ostrow Wielkopolski': 'Wielkopolskie', 'Leszno': 'Wielkopolskie',
+    'Gdańsk': 'Pomorskie', 'Gdynia': 'Pomorskie', 'Słupsk': 'Pomorskie',
+    'Szczecin': 'Zachodniopomorskie', 'Koszalin': 'Zachodniopomorskie', 'Stargard': 'Zachodniopomorskie',
+    'Bydgoszcz': 'Kujawsko-Pomorskie', 'Toruń': 'Kujawsko-Pomorskie',
+    'Grudziądz': 'Kujawsko-Pomorskie', 'Włocławek': 'Kujawsko-Pomorskie', 'Inowrocław': 'Kujawsko-Pomorskie',
+    'Lublin': 'Lubelskie', 'Zamość': 'Lubelskie', 'Chełm': 'Lubelskie',
+    'Białystok': 'Podlaskie', 'Suwalki': 'Podlaskie',
+    'Ełk': 'Warmińsko-Mazurskie', 'Olsztyn': 'Warmińsko-Mazurskie', 'Elbląg': 'Warmińsko-Mazurskie',
+    'Rzeszów': 'Podkarpackie', 'Przemyśl': 'Podkarpackie',
+    'Kielce': 'Świętokrzyskie', 'Starachowice': 'Świętokrzyskie',
+    'Katowice': 'Śląskie', 'Zabrze': 'Śląskie', 'Gliwice': 'Śląskie',
+    'Bytom': 'Śląskie', 'Rybnik': 'Śląskie', 'Ruda Śląska': 'Śląskie',
+    'Tychy': 'Śląskie', 'Chorzów': 'Śląskie', 'Jaworzno': 'Śląskie',
+    'Jastrzębie-Zdrój': 'Śląskie', 'Bielsko-Biała': 'Śląskie', 'Mysłowice': 'Śląskie',
+    'Czechowice-Dziedzice': 'Śląskie', 'Żarki': 'Śląskie', 'Myszków': 'Śląskie',
+    'Zawiercie': 'Śląskie', 'Pszczyna': 'Śląskie', 'Tarnowskie Góry': 'Śląskie',
+    'Koziegłowy': 'Śląskie', 'Zory': 'Śląskie',
+    'Opole': 'Opolskie',
+    'Zielona Góra': 'Lubuskie', 'Gorzów Wielkopolski': 'Lubuskie',
+};
 
 // Search city function (moved to global scope)
 function searchCity() {
@@ -1222,6 +1254,10 @@ function selectCity(cityName) {
     }
 
     const limit = $id('kebab-count')?.value || 10;
+    // Reset city filters only when switching to a different city
+    if (cityName !== window.currentCity) {
+        window.activeFilters.city = {};
+    }
     // Set active city for UI highlighting
     window.currentCity = cityName;
     checkAndLoadRankings(cityName, limit);
@@ -2071,13 +2107,26 @@ function getMarkerColor(rank) {
 // MOVED UP to line 1222 for better organization
 
 
-// Center map on specific kebab place
-function centerMapOnKebab(index) {
-    if (!kebabMap || !mapMarkers[index]) return;
+// Center map on specific kebab place (identified by lat/lng)
+function centerMapOnKebab(lat, lng) {
+    if (!kebabMap || !mapMarkers.length) return;
+    const marker = mapMarkers.find(m => {
+        const ll = m.getLatLng();
+        return Math.abs(ll.lat - lat) < 0.0002 && Math.abs(ll.lng - lng) < 0.0002;
+    });
+    if (!marker) return;
+    kebabMap.setView([lat, lng], 15);
+    marker.openPopup();
+}
 
-    const marker = mapMarkers[index];
-    const latLng = marker.getLatLng();
-    kebabMap.setView(latLng, 15);
+function centerGlobalMapOnKebab(lat, lng) {
+    if (!globalKebabMap || !globalMapMarkers.length) return;
+    const marker = globalMapMarkers.find(m => {
+        const ll = m.getLatLng();
+        return Math.abs(ll.lat - lat) < 0.0002 && Math.abs(ll.lng - lng) < 0.0002;
+    });
+    if (!marker) return;
+    globalKebabMap.setView([lat, lng], 15);
     marker.openPopup();
 }
 
@@ -2251,6 +2300,101 @@ function scrollCities(direction) {
     }
 }
 
+// Toggle the mobile map filter panel (remembers open state across re-renders)
+if (!window.mobileFilterPanelOpen) window.mobileFilterPanelOpen = { city: false, global: false };
+function toggleMobileFilterPanel(scope) {
+    window.mobileFilterPanelOpen[scope] = !window.mobileFilterPanelOpen[scope];
+    const panel  = document.getElementById(`mob-${scope}-panel`);
+    const arrow  = document.getElementById(`mob-${scope}-arrow`);
+    if (panel) panel.style.display = window.mobileFilterPanelOpen[scope] ? 'block' : 'none';
+    if (arrow) arrow.style.transform = window.mobileFilterPanelOpen[scope] ? 'rotate(180deg)' : '';
+}
+
+// Sync the mobile map filter overlay (shown above map on mobile map view)
+function syncMobileMapFilter(isGlobal) {
+    const overlay = document.getElementById('mobile-map-filterbar');
+    if (!overlay) return;
+    const scope = isGlobal ? 'global' : 'city';
+    const filters = window.activeFilters[scope] || {};
+    const anyFilter = !!(filters.open_now || filters.nocne || (isGlobal && filters.voivodeship));
+    const sort = filters.sort || 'score';
+    const anySort = sort !== 'score';
+    const anyNon = anyFilter || anySort;
+    const isEn = (window.currentLang || 'pl') === 'en';
+    const panelOpen = !!(window.mobileFilterPanelOpen && window.mobileFilterPanelOpen[scope]);
+
+    const allData = isGlobal ? window.globalRankingData : window.cityRankingData;
+    const total = allData ? allData.length : 0;
+    let cnt = total;
+    if (allData && anyFilter) {
+        let f = [...allData];
+        if (filters.open_now) f = f.filter(k => getOpenNowStatus(k.opening_hours)?.open === true);
+        if (filters.nocne) f = f.filter(k => isNightKebab(k.opening_hours));
+        if (isGlobal && filters.voivodeship) f = f.filter(k => CITY_VOIVODESHIP[k.city] === filters.voivodeship);
+        cnt = f.length;
+    }
+
+    const mInfo = (k) => `<span onclick="event.stopPropagation();showFilterTooltip(event,'${k}')" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;border:1px solid currentColor;font-size:8px;opacity:0.55;cursor:help;flex-shrink:0;margin-left:1px;">i</span>`;
+    const pill = (type, label, active, tipKey) => {
+        const s = active
+            ? 'background:rgba(52,211,153,0.2);color:#34d399;border:1px solid #34d399;font-weight:700'
+            : 'background:rgba(255,255,255,0.06);color:#94a3b8;border:1px solid rgba(255,255,255,0.15)';
+        return `<button onclick="applyRankingFilter('${type}',${isGlobal})" style="flex-shrink:0;display:inline-flex;align-items:center;gap:3px;padding:6px 13px;border-radius:20px;font-size:12px;cursor:pointer;${s}">${label}${tipKey ? mInfo(tipKey) : ''}</button>`;
+    };
+    const spill = (type, label, active, tipKey) => {
+        const s = active
+            ? 'background:rgba(96,165,250,0.18);color:#60a5fa;border:1px solid #60a5fa;font-weight:700'
+            : 'background:rgba(255,255,255,0.04);color:#64748b;border:1px solid rgba(255,255,255,0.12)';
+        return `<button onclick="applyRankingFilter('${type}',${isGlobal})" style="flex-shrink:0;display:inline-flex;align-items:center;gap:3px;padding:6px 13px;border-radius:20px;font-size:12px;cursor:pointer;${s}">${label}${tipKey ? mInfo(tipKey) : ''}</button>`;
+    };
+
+    const triggerBorder = anyNon ? '#34d399' : 'rgba(255,255,255,0.15)';
+    const triggerBg     = anyNon ? 'rgba(52,211,153,0.12)' : 'rgba(255,255,255,0.05)';
+    const triggerColor  = anyNon ? '#34d399' : '#94a3b8';
+
+    // Trigger row
+    let html = `<div style="display:flex;align-items:center;gap:8px;">`;
+    html += `<button onclick="toggleMobileFilterPanel('${scope}')" style="display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:9999px;font-size:13px;font-weight:700;border:1px solid ${triggerBorder};background:${triggerBg};color:${triggerColor};cursor:pointer;">
+        <span style="font-size:15px;">⚙</span>
+        ${isEn ? 'Filters' : 'Filtry'}
+        <span id="mob-${scope}-arrow" style="font-size:10px;transition:transform 0.2s;${panelOpen ? 'transform:rotate(180deg)' : ''}">▾</span>
+        ${anyNon ? `<span style="color:#34d399;font-size:16px;line-height:0.8;">●</span>` : ''}
+    </button>`;
+    if (anyNon) {
+        html += `<button onclick="applyRankingFilter('all',${isGlobal})" style="display:inline-flex;align-items:center;gap:4px;padding:6px 12px;border-radius:9999px;font-size:12px;font-weight:700;border:1px solid rgba(248,113,113,0.4);background:rgba(248,113,113,0.08);color:#f87171;cursor:pointer;">✕ ${isEn ? 'Clear' : 'Kasuj'}</button>`;
+    }
+    if (anyFilter) {
+        html += `<span style="font-size:11px;color:#34d399;font-weight:700;">${cnt}/${total}</span>`;
+    }
+    html += `<div style="margin-left:auto;display:flex;gap:6px;">`;
+    if (!isGlobal) {
+        html += `<button onclick="openWatchCityModal(window.currentCity||'')" style="display:inline-flex;align-items:center;gap:4px;padding:7px 12px;border-radius:9999px;font-size:13px;font-weight:700;border:1px solid rgba(96,165,250,0.35);background:rgba(96,165,250,0.07);color:#60a5fa;cursor:pointer;">🔔</button>`;
+    }
+    html += `<button onclick="openRouletteModal(${isGlobal})" style="display:inline-flex;align-items:center;gap:4px;padding:7px 12px;border-radius:9999px;font-size:13px;font-weight:700;border:1px solid rgba(251,191,36,0.4);background:rgba(251,191,36,0.08);color:#fbbf24;cursor:pointer;">🎲</button>`;
+    html += `</div>`;
+    html += `</div>`;
+
+    // Expandable panel (floating over map)
+    html += `<div id="mob-${scope}-panel" style="display:${panelOpen ? 'block' : 'none'};margin-top:10px;padding:12px;background:#111827;border:1px solid rgba(255,255,255,0.1);border-radius:14px;">`;
+    html += `<div style="margin-bottom:10px;">`;
+    html += `<div style="font-size:10px;color:#475569;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px;">${isEn ? 'Filter' : 'Filtruj'}</div>`;
+    html += `<div style="display:flex;flex-wrap:wrap;gap:7px;">`;
+    html += pill('all',      isEn ? '✕ All' : '✕ Wszystkie',  !anyFilter);
+    html += pill('open_now', isEn ? '● Open' : '● Otwarte',   !!filters.open_now, 'open_now');
+    html += pill('nocne',    isEn ? '🌙 Night' : '🌙 Nocne',  !!filters.nocne,    'nocne');
+    html += `</div></div>`;
+    html += `<div>`;
+    html += `<div style="font-size:10px;color:#475569;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px;">${isEn ? 'Sort by' : 'Sortuj wg'}</div>`;
+    html += `<div style="display:flex;flex-wrap:wrap;gap:7px;">`;
+    html += spill('sort_score',   isEn ? '↕ Score'  : '↕ Wynik',  sort === 'score',   'sort_score');
+    html += spill('sort_rating',  isEn ? '★ Rating' : '★ Ocena',  sort === 'rating',  'sort_rating');
+    html += spill('sort_reviews', isEn ? '💬 Pop'   : '💬 Pop',   sort === 'reviews', 'sort_reviews');
+    html += `</div></div>`;
+    html += `</div>`;
+
+    overlay.innerHTML = html;
+}
+
 // Regular rankings display function
 function displayRankings(rankings, container, cityName, isGlobal = false) {
     if (rankings.length === 0) {
@@ -2258,178 +2402,50 @@ function displayRankings(rankings, container, cityName, isGlobal = false) {
         return;
     }
 
-    // Ensure rankings are properly sorted by rank_score descending
-    const sortedRankings = [...rankings].sort((a, b) => {
-        if (b.rank_score !== a.rank_score) {
-            return b.rank_score - a.rank_score;
-        }
-        // Secondary sort by rating if scores are equal
-        return b.rating - a.rating;
-    });
+    // Store full data; do NOT reset filters here — city change reset happens in selectCity
+    if (isGlobal) {
+        window.globalRankingData = rankings;
+    } else {
+        window.cityRankingData = rankings;
+    }
 
-    let html = '';
+    // Apply any currently active filters + sort to initial render
+    const scope = isGlobal ? 'global' : 'city';
+    const filters = window.activeFilters[scope];
+    let dataToRender = rankings;
+    if (filters.open_now) dataToRender = dataToRender.filter(k => getOpenNowStatus(k.opening_hours)?.open === true);
+    if (filters.nocne) dataToRender = dataToRender.filter(k => isNightKebab(k.opening_hours));
+    if (isGlobal && filters.voivodeship) dataToRender = dataToRender.filter(k => CITY_VOIVODESHIP[k.city] === filters.voivodeship);
+    dataToRender = applySortToData(dataToRender, filters.sort);
 
-    sortedRankings.forEach((kebab, index) => {
-        const rank = kebab.rank || index + 1;
-        const hasAI = kebab.has_ai_analysis === true || (kebab.ai_summary && kebab.ai_summary.length > 0);
-
-        // Rank Colors/Styles
-        let rankBadgeClass = "bg-surface-dark text-gray-400";
-        if (rank === 1) rankBadgeClass = "bg-yellow-500 text-black";
-        else if (rank === 2) rankBadgeClass = "bg-gray-400 text-black";
-        else if (rank === 3) rankBadgeClass = "bg-orange-700 text-white";
-
-        // Rank change indicator
-        let rankChangeHtml = '';
-        if (kebab.is_new) {
-            rankChangeHtml = `<span class="rank-badge-mini rank-new ml-2">NEW</span>`;
-        } else if (kebab.rank_change_indicator === 'up' && kebab.rank_change) {
-            rankChangeHtml = `<span class="rank-badge-mini rank-up ml-2"><span class="text-[8px]">▲</span> +${kebab.rank_change}</span>`;
-        } else if (kebab.rank_change_indicator === 'down' && kebab.rank_change) {
-            const absChange = Math.abs(kebab.rank_change);
-            rankChangeHtml = `<span class="rank-badge-mini rank-down ml-2"><span class="text-[8px]">▼</span> -${absChange}</span>`;
-        } else {
-            rankChangeHtml = `<span class="rank-badge-mini rank-neutral ml-2">-</span>`;
-        }
-
-        const photoUrl = kebab.photo_url;
-        const hasValidPhoto = photoUrl && photoUrl !== 'NONE' && photoUrl.length > 10;
-        const kebabImage = hasValidPhoto ? photoUrl : (kebab.image_url || "https://lh3.googleusercontent.com/aida-public/AB6AXuAPZml7HBCvOmxHc3pErimDG6i7ruSOL6NrxB8S8CkUtAIZ9sjOe5U0TSzY4AbGN8NSPkGQZHCdrnALIQoLgGNrze3MwVl9x7OGSn2Gz7CvsUTB4izX8Xatv_tIbLYX6kiuSDVdT3HoS7MKLCnQparIKmg8UVIl7QU1CTAKEBVF9M8_NiLS2ccsanJPm-7kevE10rqP_NKMyBgiXUpcsUtj4e9eJlwKM02h-oL83bYxG2QwVRiuDKWgPfePcvFNWLVGzfpHYYn_Nl4");
-
-        html += `
-            <div class="glass-card rounded-xl p-3 md:p-4 flex gap-3 md:gap-4 relative overflow-hidden group cursor-pointer hover:bg-white/5 hover:border-primary/30 mb-2 md:mb-3 transition-all duration-300"
-                 onclick="${isGlobal ? `centerGlobalMapOnKebab(${index})` : `centerMapOnKebab(${index})`}"
-                 data-rank="${rank}">
-                 
-                <!-- Rank Badge -->
-                <div class="absolute top-3 left-3 md:top-4 md:left-4 ${rankBadgeClass} font-black text-[10px] md:text-xs px-1.5 md:px-2 py-0.5 rounded flex items-center gap-1 z-20 shadow-lg">
-                    <span class="material-icons text-[10px] md:text-xs">emoji_events</span> #${rank}
-                </div>
-
-                <!-- Left Column: Image + Address -->
-                <div class="flex flex-col items-center gap-2 shrink-0 w-20 md:w-24">
-                    <div class="w-20 h-20 md:w-24 md:h-24 rounded-lg overflow-hidden shadow-lg bg-surface-dark mt-1 relative">
-                        <img alt="${kebab.name}" 
-                             class="w-full h-full object-cover transition-transform duration-500" 
-                             src="${kebabImage}"
-                             loading="lazy"
-                             width="96" height="96"
-                             onerror="console.warn('⚠️ Photo load error'); this.onerror=null; this.src='https://lh3.googleusercontent.com/aida-public/AB6AXuAPZml7HBCvOmxHc3pErimDG6i7ruSOL6NrxB8S8CkUtAIZ9sjOe5U0TSzY4AbGN8NSPkGQZHCdrnALIQoLgGNrze3MwVl9x7OGSn2Gz7CvsUTB4izX8Xatv_tIbLYX6kiuSDVdT3HoS7MKLCnQparIKmg8UVIl7QU1CTAKEBVF9M8_NiLS2ccsanJPm-7kevE10rqP_NKMyBgiXUpcsUtj4e9eJlwKM02h-oL83bYxG2QwVRiuDKWgPfePcvFNWLVGzfpHYYn_Nl4'"/>
-                    </div>
-                    <p class="text-[9px] text-gray-400 text-center leading-tight break-words w-full opacity-80">
-                        ${kebab.address}, ${kebab.city || window.currentCity || ''}
-                    </p>
-                    ${(() => { const s = getOpenNowStatus(kebab.opening_hours); return s ? `<span style="display:inline-block;font-size:9px;font-weight:700;padding:2px 7px;border-radius:9999px;background:${s.open ? '#16a34a' : '#dc2626'};color:#fff;">● ${s.label}</span>` : ''; })()}
-                </div>
-
-                <!-- Content -->
-                <div class="flex-1 flex flex-col min-w-0">
-                    <div>
-                        <div class="flex justify-between items-start">
-                             <!-- Middle Column: Title & Button -->
-                             <div class="flex flex-col gap-1 min-w-0 flex-1 pr-2">
-                                 <h3 class="text-xs md:text-lg font-bold text-white group-hover:text-primary transition-colors mb-0.5 md:truncate leading-tight">${kebab.name} ${rankChangeHtml}</h3>
-                                 
-                                 <!-- Navigate Button -->
-                                 ${kebab.latitude && kebab.longitude ? `
-                                <a href="https://www.google.com/maps/dir/?api=1&destination=${kebab.latitude},${kebab.longitude}" 
-                                   target="_blank" rel="noopener" 
-                                   onclick="event.stopPropagation()"
-                                   class="premium-navigate-btn" title="${translations[currentLang]['go-to-kebab']}">
-                                    <span class="material-icons text-sm">directions</span>
-                                    <span>${translations[currentLang]['go-to-kebab']}</span>
-                                </a>
-                                ` : ''}
-                             </div>
-
-                              <!-- Right Column: Scores & Stats Matrix -->
-                              <div class="flex flex-col items-center gap-1 shrink-0 ml-1">
-                                  <div class="flex flex-row items-center gap-2">
-                                    <div class="px-1 py-0.5 md:px-2 md:py-1 rounded bg-[#1e293b] border border-white/10 flex flex-col items-center justify-center w-[52px] md:w-[70px] h-[34px] md:h-[42px]">
-                                        <span class="text-[8px] md:text-[10px] text-gray-400 uppercase font-bold leading-none mb-0.5">${translations[currentLang]['score'] || 'Wynik'}</span>
-                                        <span class="text-sm md:text-base font-black text-primary leading-none">${kebab.rank_score ? kebab.rank_score.toFixed(1) : 'N/A'}</span>
-                                    </div>
-                                     ${hasAI && kebab.ai_score ? `
-                                     <div class="px-1 py-0.5 md:px-2 md:py-1 rounded bg-indigo-500/10 border border-indigo-500/30 flex flex-col items-center justify-center shadow-[0_0_10px_rgba(99,102,241,0.15)] w-[52px] md:w-[70px] h-[34px] md:h-[42px]">
-                                         <span class="text-[8px] md:text-[10px] text-indigo-300 uppercase font-bold tracking-tight leading-none mb-0.5">${translations[currentLang]['ai-score'] || 'AI'}</span>
-                                         <span class="text-sm md:text-base font-black text-indigo-400 drop-shadow-[0_0_8px_rgba(129,140,248,0.4)] leading-none">${kebab.ai_score.toFixed(1)}</span>
-                                     </div>
-                                     ` : ''}
-                                 </div>
-                                 <div class="flex flex-row items-start gap-2 w-full mt-1">
-                                    <div class="flex items-center justify-center gap-1 w-[52px] md:w-[70px]">
-                                        <span class="font-bold text-white text-xs md:text-sm">${kebab.rating.toFixed(1)}</span>
-                                        <span class="material-icons text-yellow-500 text-[10px] md:text-xs">star</span>
-                                    </div>
-                                    <div class="flex items-center justify-center gap-1 w-[52px] md:w-[70px]">
-                                        <span class="font-bold text-white text-xs md:text-sm">${kebab.total_reviews.toLocaleString()}</span>
-                                        <span class="material-icons text-blue-400 text-[10px] md:text-xs">reviews</span>
-                                    </div>
-                                </div>
-                             </div>
-                        </div>
-                    </div>
-
-                    <!-- AI Sections -->
-                     <div class="space-y-1 md:space-y-2 mt-auto pt-2">
-                        ${hasAI ? `
-                         <div class="border border-indigo-500/20 bg-indigo-500/5 rounded overflow-hidden">
-                            <button onclick="event.stopPropagation(); toggleSection('ai-summary-${index}-${isGlobal ? 'g' : 'c'}')" 
-                                    class="w-full flex items-center justify-between px-2 py-1 md:px-3 md:py-1.5 hover:bg-white/5 transition-colors">
-                                <span class="text-[9px] md:text-[11px] font-bold uppercase tracking-widest text-indigo-300 flex items-center gap-1 md:gap-2">
-                                    <span class="material-icons text-[10px] md:text-xs">auto_awesome</span> ${aiTranslations[currentLang]['ai-summary'] || 'Podsumowanie AI'}
-                                </span>
-                                <span class="material-icons text-indigo-300/50 text-[10px] md:text-xs arrow">expand_more</span>
-                            </button>
-                            <div id="ai-summary-${index}-${isGlobal ? 'g' : 'c'}" class="hidden ai-summary-box border-t border-indigo-500/20 p-2 italic text-gray-300 text-[10px] md:text-xs leading-relaxed">
-                                ${kebab.ai_summary ? `"${kebab.ai_summary}"` : `<em class="text-gray-500 opacity-60">${translations[currentLang]['ai-forthcoming'] || 'Analiza AI wkrótce...'}</em>`}
-                            </div>
-                         </div>
-                        ` : ''}
-
-                        ${hasAI && kebab.ai_insights ? `
-                            <div class="border border-fuchsia-500/20 bg-fuchsia-500/5 rounded overflow-hidden">
-                                <button onclick="event.stopPropagation(); toggleSection('ai-insights-${index}-${isGlobal ? 'g' : 'c'}')" 
-                                        class="w-full flex items-center justify-between px-2 py-1 md:px-3 md:py-1.5 hover:bg-white/5 transition-colors">
-                                    <span class="text-[9px] md:text-[11px] font-bold uppercase tracking-widest text-fuchsia-300 flex items-center gap-1 md:gap-2">
-                                        <span class="material-icons text-[10px] md:text-xs">analytics</span> ${aiTranslations[currentLang]['ai-insights'] || 'Analiza AI'}
-                                    </span>
-                                    <span class="material-icons text-fuchsia-300/50 text-[10px] md:text-xs arrow">expand_more</span>
-                                </button>
-                                <div id="ai-insights-${index}-${isGlobal ? 'g' : 'c'}" class="hidden ai-insights-box border-t border-fuchsia-500/20 p-2">
-                                    <div class="grid grid-cols-3 gap-1 md:gap-2">
-                                        <div class="flex flex-col items-center text-center">
-                                            <span class="text-[8px] text-gray-500 uppercase font-bold tracking-tighter mb-0.5">${aiTranslations[currentLang]['sentiment'] || 'Nastroje'}</span>
-                                            <span class="text-[9px] md:text-[10px] font-black px-1.5 py-0.5 rounded-full bg-white/5 ${getSentimentColorClass(kebab.ai_insights.sentiment)}">
-                                                ${getSentimentLabel(kebab.ai_insights.sentiment)}
-                                            </span>
-                                        </div>
-                                        <div class="flex flex-col items-center text-center">
-                                            <span class="text-[8px] text-gray-500 uppercase font-bold tracking-tighter mb-0.5">${aiTranslations[currentLang]['trending'] || 'Trend'}</span>
-                                            <span class="text-[9px] md:text-[10px] font-black text-gray-100 italic">
-                                                ${getTrendLabel(kebab.ai_insights.trend)}
-                                            </span>
-                                        </div>
-                                        <div class="flex flex-col items-center text-center">
-                                            <span class="text-[8px] text-gray-500 uppercase font-bold tracking-tighter mb-0.5">${aiTranslations[currentLang]['authenticity'] || 'Autentyczność'}</span>
-                                            <span class="text-[9px] md:text-[10px] font-black text-blue-400">
-                                                ${kebab.ai_insights.authenticity || '100'}%
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        ` : ''}
-                    </div>
-                </div>
-            </div>
-        `;
-    });
+    const cardsId = isGlobal ? 'global-ranking-cards' : 'city-ranking-cards';
+    const filterBarHtml = buildFilterBar(isGlobal, rankings);
 
     container.classList.remove('ranking-fade-in');
-    void container.offsetWidth; // Force reflow to restart animation
-    container.innerHTML = html;
+    void container.offsetWidth;
+    container.innerHTML = filterBarHtml + `<div id="${cardsId}"></div>`;
     container.classList.add('ranking-fade-in');
+
+    const cardsEl = document.getElementById(cardsId);
+    renderRankingCards(dataToRender, cardsEl, isGlobal, cityName);
+
+    // Sync map with filtered data (overrides the full-dataset map update from checkAndLoadRankings)
+    if (!isGlobal) {
+        if (window.kebabMap) updateMapWithKebabs(dataToRender);
+    } else {
+        if (window.globalKebabMap) updateGlobalMapWithKebabs(dataToRender);
+    }
+
+    // Update count badge if filters are active
+    const anyActive = !!(filters.open_now || filters.nocne || (isGlobal && filters.voivodeship));
+    const countEl = document.getElementById(`${scope}-fb-count`);
+    if (countEl) {
+        countEl.style.display = anyActive ? '' : 'none';
+        if (anyActive) countEl.textContent = `${dataToRender.length}/${rankings.length}`;
+    }
+
+    updateFilterBarHeader(scope, isGlobal);
+    syncMobileMapFilter(isGlobal);
 }
 
 function getOpenNowStatus(openingHoursJson) {
@@ -2484,6 +2500,802 @@ function getOpenNowStatus(openingHoursJson) {
     }
     return { open: false, label: T.closed };
 }
+
+function isNightKebab(openingHoursJson) {
+    if (!openingHoursJson) return false;
+    let hours;
+    try { hours = typeof openingHoursJson === 'string' ? JSON.parse(openingHoursJson) : openingHoursJson; }
+    catch(e) { return false; }
+    if (hours._status) return false;
+    for (let d = 0; d <= 6; d++) {
+        const s = hours[String(d)];
+        if (!s) continue;
+        const dash = s.lastIndexOf('-');
+        if (dash < 1) continue;
+        const openMin = s.slice(0, dash).trim().split(':').reduce((h, m, i) => i === 0 ? h + Number(m) * 60 : h + Number(m), 0);
+        const closeMin = s.slice(dash + 1).trim().split(':').reduce((h, m, i) => i === 0 ? h + Number(m) * 60 : h + Number(m), 0);
+        if (closeMin < openMin && closeMin > 0 && closeMin <= 540) return true; // closes strictly after 00:00 and before 09:00
+    }
+    return false;
+}
+
+const FILTER_TIPS = {
+    pl: {
+        sort_score:   'Wynik KebabRank — ważona kombinacja gwiazdek, liczby recenzji i analizy AI. W większości przypadków pokrywa się z Oceną. Najlepszy punkt startowy.',
+        sort_rating:  'Czyste gwiazdki Google. Przy remisie wygrywa to z większą liczbą recenzji — trudniej utrzymać wysoką ocenę przy dużej popularności.',
+        sort_reviews: 'Popularność — liczba komentarzy Google. Więcej recenzji = więcej odwiedzin. Nie zawsze najlepszy jakościowo, ale sprawdzony przez tłumy.',
+        open_now:     'Pokazuje tylko miejsca otwarte w tej chwili. W nocy może się pokrywać z filtrem Nocne.',
+        nocne:        'Miejsca z nocnymi godzinami — zamykają się po północy (max do 9:00). W nocy filtr Nocne pokrywa się z Otwarte.',
+    },
+    en: {
+        sort_score:   'KebabRank Score — weighted blend of stars, reviews and AI. Usually close to Rating. Best starting point.',
+        sort_rating:  'Pure Google stars. Ties broken by review count — harder to keep a high rating with more reviews.',
+        sort_reviews: 'Popularity — number of Google reviews. More reviews = more visits. Not always top quality, but proven by crowds.',
+        open_now:     'Shows only places open right now. At night may overlap with the Night filter.',
+        nocne:        'Places with night hours — close after midnight (max 9 AM). At night overlaps with Open Now.',
+    }
+};
+
+function showFilterTooltip(event, key) {
+    event.stopPropagation();
+    const lang = window.currentLang || 'pl';
+    const text = (FILTER_TIPS[lang] || FILTER_TIPS.pl)[key];
+    if (!text) return;
+    let tip = document.getElementById('filter-tooltip');
+    if (!tip) {
+        tip = document.createElement('div');
+        tip.id = 'filter-tooltip';
+        tip.style.cssText = 'position:fixed;z-index:9999;max-width:240px;padding:10px 14px;background:#1e293b;color:#e2e8f0;font-size:12px;line-height:1.6;border-radius:10px;border:1px solid rgba(255,255,255,0.12);box-shadow:0 8px 32px rgba(0,0,0,0.6);pointer-events:none;display:none;';
+        document.body.appendChild(tip);
+    }
+    tip.textContent = text;
+    tip.style.display = 'block';
+    const rect = event.target.closest('span,button').getBoundingClientRect();
+    let left = rect.left;
+    let top = rect.bottom + 8;
+    if (left + 240 > window.innerWidth - 12) left = window.innerWidth - 252;
+    if (left < 8) left = 8;
+    if (top + 100 > window.innerHeight) top = rect.top - 108;
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+    clearTimeout(tip._t);
+    tip._t = setTimeout(() => { tip.style.display = 'none'; }, 5000);
+    const hide = () => { tip.style.display = 'none'; document.removeEventListener('click', hide); };
+    setTimeout(() => document.addEventListener('click', hide), 50);
+}
+
+function applySortToData(data, sort) {
+    if (!sort || sort === 'score') return data;
+    return [...data].sort((a, b) => {
+        if (sort === 'rating') {
+            const diff = (b.rating || 0) - (a.rating || 0);
+            return diff !== 0 ? diff : (b.total_reviews || 0) - (a.total_reviews || 0);
+        }
+        if (sort === 'reviews') {
+            const diff = (b.total_reviews || 0) - (a.total_reviews || 0);
+            return diff !== 0 ? diff : (b.rating || 0) - (a.rating || 0);
+        }
+        return 0;
+    });
+}
+
+function toggleFilterPanel(scope) {
+    const panel = document.getElementById(`${scope}-filter-panel`);
+    if (!panel) return;
+    const opening = panel.style.display === 'none';
+    panel.style.display = opening ? 'block' : 'none';
+    const arrow = document.getElementById(`${scope}-fb-arrow`);
+    if (arrow) arrow.style.transform = opening ? 'rotate(180deg)' : 'rotate(0deg)';
+    if (opening) {
+        const close = (e) => {
+            const bar = document.getElementById(`${scope}-filter-bar`);
+            if (bar && !bar.contains(e.target)) {
+                panel.style.display = 'none';
+                if (arrow) arrow.style.transform = 'rotate(0deg)';
+                document.removeEventListener('click', close);
+            }
+        };
+        setTimeout(() => document.addEventListener('click', close), 50);
+    }
+}
+
+function updateFilterBarHeader(scope, isGlobal) {
+    const filters = window.activeFilters[scope] || {};
+    const anyFilter = !!(filters.open_now || filters.nocne || (isGlobal && filters.voivodeship));
+    const anySort   = (filters.sort || 'score') !== 'score';
+    const anyNon    = anyFilter || anySort;
+    const trigger = document.getElementById(`${scope}-fb-trigger`);
+    if (trigger) {
+        trigger.style.borderColor = anyNon ? '#34d399' : 'rgba(255,255,255,0.15)';
+        trigger.style.background  = anyNon ? 'rgba(52,211,153,0.12)' : 'rgba(255,255,255,0.05)';
+        trigger.style.color       = anyNon ? '#34d399' : '#94a3b8';
+        const dot = trigger.querySelector('.fb-dot');
+        if (dot) dot.style.display = anyNon ? '' : 'none';
+    }
+    const kasuj = document.getElementById(`${scope}-fb-kasuj`);
+    if (kasuj) kasuj.style.display = anyNon ? 'inline-flex' : 'none';
+}
+
+function buildFilterBar(isGlobal, rankings) {
+    const isEn = (window.currentLang || 'pl') === 'en';
+    const scope = isGlobal ? 'global' : 'city';
+    const filters = window.activeFilters[scope] || {};
+    const anyFilter = !!(filters.open_now || filters.nocne || (isGlobal && filters.voivodeship));
+    const sort = filters.sort || 'score';
+    const anySort = sort !== 'score';
+    const anyNon = anyFilter || anySort;
+
+    const infoIcon = (tipKey) =>
+        `<span onclick="event.stopPropagation();showFilterTooltip(event,'${tipKey}')" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;border:1px solid currentColor;font-size:8px;font-style:normal;opacity:0.55;cursor:help;flex-shrink:0;margin-left:1px;">i</span>`;
+
+    const pill = (id, label, active, onclick, tipKey) => {
+        const border = active ? '#34d399' : 'rgba(255,255,255,0.15)';
+        const bg     = active ? 'rgba(52,211,153,0.18)' : 'rgba(255,255,255,0.06)';
+        const color  = active ? '#34d399' : '#94a3b8';
+        return `<button id="${id}" onclick="${onclick}" style="cursor:pointer;display:inline-flex;align-items:center;gap:4px;padding:6px 14px;border-radius:9999px;font-size:12px;font-weight:700;border:1px solid ${border};background:${bg};color:${color};transition:all 0.2s;white-space:nowrap;">${label}${tipKey ? infoIcon(tipKey) : ''}</button>`;
+    };
+    const sortPill = (id, label, active, onclick, tipKey) => {
+        const border = active ? '#60a5fa' : 'rgba(255,255,255,0.12)';
+        const bg     = active ? 'rgba(96,165,250,0.15)' : 'rgba(255,255,255,0.04)';
+        const color  = active ? '#60a5fa' : '#64748b';
+        return `<button id="${id}" onclick="${onclick}" style="cursor:pointer;display:inline-flex;align-items:center;gap:4px;padding:6px 14px;border-radius:9999px;font-size:12px;font-weight:700;border:1px solid ${border};background:${bg};color:${color};transition:all 0.2s;white-space:nowrap;">${label}${tipKey ? infoIcon(tipKey) : ''}</button>`;
+    };
+
+    // Outer sticky wrapper
+    let bar = `<div id="${scope}-filter-bar" style="position:sticky;top:0;z-index:50;background:#0b1121;border-bottom:1px solid rgba(255,255,255,0.06);padding:8px 0 10px;margin-bottom:8px;">`;
+
+    // Header row: trigger + count badge + kasuj
+    bar += `<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">`;
+    bar += `<button id="${scope}-fb-trigger" onclick="toggleFilterPanel('${scope}')" style="display:inline-flex;align-items:center;gap:6px;padding:7px 16px;border-radius:9999px;font-size:13px;font-weight:700;border:1px solid ${anyNon ? '#34d399' : 'rgba(255,255,255,0.15)'};background:${anyNon ? 'rgba(52,211,153,0.12)' : 'rgba(255,255,255,0.05)'};color:${anyNon ? '#34d399' : '#94a3b8'};cursor:pointer;transition:all 0.2s;">
+        <span style="font-size:15px;">⚙</span>
+        ${isEn ? 'Filters' : 'Filtry'}
+        <span id="${scope}-fb-arrow" style="font-size:10px;transition:transform 0.2s;">▾</span>
+        <span class="fb-dot" style="display:${anyNon ? '' : 'none'};color:#34d399;font-size:16px;line-height:0.8;">●</span>
+    </button>`;
+    bar += `<span id="${scope}-fb-count" style="display:${anyFilter ? '' : 'none'};font-size:12px;font-weight:700;color:#34d399;"></span>`;
+    bar += `<button id="${scope}-fb-kasuj" onclick="applyRankingFilter('all',${isGlobal})" style="display:${anyNon ? 'inline-flex' : 'none'};align-items:center;gap:4px;padding:6px 12px;border-radius:9999px;font-size:12px;font-weight:700;border:1px solid rgba(248,113,113,0.4);background:rgba(248,113,113,0.08);color:#f87171;cursor:pointer;">✕ ${isEn ? 'Clear' : 'Kasuj'}</button>`;
+    bar += `<div style="margin-left:auto;display:flex;gap:6px;align-items:center;">`;
+    if (!isGlobal) {
+        bar += `<button onclick="openWatchCityModal(window.currentCity||'')" style="display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:9999px;font-size:13px;font-weight:700;border:1px solid rgba(96,165,250,0.35);background:rgba(96,165,250,0.07);color:#60a5fa;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='rgba(96,165,250,0.16)'" onmouseout="this.style.background='rgba(96,165,250,0.07)'">🔔 ${isEn ? 'Follow' : 'Obserwuj'}</button>`;
+    }
+    bar += `<button onclick="openRouletteModal(${isGlobal})" style="display:inline-flex;align-items:center;gap:6px;padding:7px 16px;border-radius:9999px;font-size:13px;font-weight:700;border:1px solid rgba(251,191,36,0.4);background:rgba(251,191,36,0.08);color:#fbbf24;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='rgba(251,191,36,0.18)'" onmouseout="this.style.background='rgba(251,191,36,0.08)'">🎲 ${isEn ? 'Roulette' : 'Ruletka'}</button>`;
+    bar += `</div>`;
+    bar += `</div>`;
+
+    // Expandable panel (inline, not floating)
+    bar += `<div id="${scope}-filter-panel" style="display:none;margin-top:10px;padding:14px;background:#111827;border:1px solid rgba(255,255,255,0.1);border-radius:14px;">`;
+
+    // Filter section
+    bar += `<div style="margin-bottom:12px;">`;
+    bar += `<div style="font-size:10px;color:#475569;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px;">${isEn ? 'Filter' : 'Filtruj'}</div>`;
+    bar += `<div style="display:flex;flex-wrap:wrap;gap:8px;">`;
+    bar += pill(`${scope}-fb-all`,   isEn ? '✕ All' : '✕ Wszystkie',  !anyFilter,         `applyRankingFilter('all',${isGlobal})`);
+    bar += pill(`${scope}-fb-open`,  isEn ? '● Open Now' : '● Otwarte', !!filters.open_now, `applyRankingFilter('open_now',${isGlobal})`, 'open_now');
+    bar += pill(`${scope}-fb-night`, isEn ? '🌙 Night' : '🌙 Nocne',   !!filters.nocne,    `applyRankingFilter('nocne',${isGlobal})`,    'nocne');
+    if (isGlobal) {
+        const voivs = [...new Set(rankings.map(k => CITY_VOIVODESHIP[k.city]).filter(Boolean))].sort();
+        if (voivs.length > 0) {
+            const active = filters.voivodeship || '';
+            const selBorder = active ? '#34d399' : 'rgba(255,255,255,0.15)';
+            const selColor  = active ? '#34d399' : '#94a3b8';
+            bar += `<select id="global-fb-voiv" onchange="applyRankingFilter('voivodeship',true)" style="cursor:pointer;background:#111827;border:1px solid ${selBorder};color:${selColor};border-radius:9999px;padding:6px 12px;font-size:12px;font-weight:700;outline:none;">
+                <option value="">${isEn ? '🗺️ Region' : '🗺️ Województwo'}</option>
+                ${voivs.map(v => `<option value="${v}" ${v === active ? 'selected' : ''}>${v}</option>`).join('')}
+            </select>`;
+        }
+    }
+    bar += `</div></div>`;
+
+    // Sort section
+    bar += `<div>`;
+    bar += `<div style="font-size:10px;color:#475569;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px;">${isEn ? 'Sort by' : 'Sortuj wg'}</div>`;
+    bar += `<div style="display:flex;flex-wrap:wrap;gap:8px;">`;
+    bar += sortPill(`${scope}-fb-sort-score`,   isEn ? '↕ Score'  : '↕ Wynik',  sort === 'score',   `applyRankingFilter('sort_score',${isGlobal})`,   'sort_score');
+    bar += sortPill(`${scope}-fb-sort-rating`,  isEn ? '★ Rating' : '★ Ocena',  sort === 'rating',  `applyRankingFilter('sort_rating',${isGlobal})`,  'sort_rating');
+    bar += sortPill(`${scope}-fb-sort-reviews`, isEn ? '💬 Pop'   : '💬 Pop',   sort === 'reviews', `applyRankingFilter('sort_reviews',${isGlobal})`, 'sort_reviews');
+    bar += `</div></div>`;
+
+    bar += `</div>`; // end panel
+    bar += `</div>`; // end bar
+    return bar;
+}
+
+function renderRankingCards(rankings, cardsContainer, isGlobal, cityName) {
+    if (!rankings || rankings.length === 0) {
+        const isEn = (window.currentLang || 'pl') === 'en';
+        cardsContainer.innerHTML = `<p class="text-center text-gray-500 py-4">${isEn ? 'No kebabs match the current filter.' : 'Brak kebabów spełniających filtr.'}</p>`;
+        return;
+    }
+
+    let html = '';
+    rankings.forEach((kebab, index) => {
+        const rank = kebab.rank || kebab.global_rank || index + 1;
+        const hasAI = kebab.has_ai_analysis === true || (kebab.ai_summary && kebab.ai_summary.length > 0);
+
+        let rankBadgeClass = "bg-surface-dark text-gray-400";
+        if (rank === 1) rankBadgeClass = "bg-yellow-500 text-black";
+        else if (rank === 2) rankBadgeClass = "bg-gray-400 text-black";
+        else if (rank === 3) rankBadgeClass = "bg-orange-700 text-white";
+
+        let rankChangeHtml = '';
+        if (kebab.is_new) {
+            rankChangeHtml = `<span class="rank-badge-mini rank-new ml-2">NEW</span>`;
+        } else if (kebab.rank_change_indicator === 'up' && kebab.rank_change) {
+            rankChangeHtml = `<span class="rank-badge-mini rank-up ml-2"><span class="text-[8px]">▲</span> +${kebab.rank_change}</span>`;
+        } else if (kebab.rank_change_indicator === 'down' && kebab.rank_change) {
+            rankChangeHtml = `<span class="rank-badge-mini rank-down ml-2"><span class="text-[8px]">▼</span> -${Math.abs(kebab.rank_change)}</span>`;
+        } else {
+            rankChangeHtml = `<span class="rank-badge-mini rank-neutral ml-2">-</span>`;
+        }
+
+        const photoUrl = kebab.photo_url;
+        const hasValidPhoto = photoUrl && photoUrl !== 'NONE' && photoUrl.length > 10;
+        const kebabImage = hasValidPhoto ? photoUrl : (kebab.image_url || "https://lh3.googleusercontent.com/aida-public/AB6AXuAPZml7HBCvOmxHc3pErimDG6i7ruSOL6NrxB8S8CkUtAIZ9sjOe5U0TSzY4AbGN8NSPkGQZHCdrnALIQoLgGNrze3MwVl9x7OGSn2Gz7CvsUTB4izX8Xatv_tIbLYX6kiuSDVdT3HoS7MKLCnQparIKmg8UVIl7QU1CTAKEBVF9M8_NiLS2ccsanJPm-7kevE10rqP_NKMyBgiXUpcsUtj4e9eJlwKM02h-oL83bYxG2QwVRiuDKWgPfePcvFNWLVGzfpHYYn_Nl4");
+
+        const kLat = isGlobal ? (kebab.lat || 0) : (kebab.latitude || 0);
+        const kLng = isGlobal ? (kebab.lng || 0) : (kebab.longitude || 0);
+        const mapFn = isGlobal ? `centerGlobalMapOnKebab(${kLat},${kLng})` : `centerMapOnKebab(${kLat},${kLng})`;
+
+        html += `
+            <div class="glass-card rounded-xl p-3 md:p-4 flex gap-3 md:gap-4 relative overflow-hidden group cursor-pointer hover:bg-white/5 hover:border-primary/30 mb-2 md:mb-3 transition-all duration-300"
+                 onclick="${mapFn}"
+                 data-rank="${rank}">
+
+                <!-- Rank Badge -->
+                <div class="absolute top-3 left-3 md:top-4 md:left-4 ${rankBadgeClass} font-black text-[10px] md:text-xs px-1.5 md:px-2 py-0.5 rounded flex items-center gap-1 z-20 shadow-lg">
+                    <span class="material-icons text-[10px] md:text-xs">emoji_events</span> #${rank}
+                </div>
+
+                <!-- Left Column: Image + Address -->
+                <div class="flex flex-col items-center gap-2 shrink-0 w-20 md:w-24">
+                    <div class="w-20 h-20 md:w-24 md:h-24 rounded-lg overflow-hidden shadow-lg bg-surface-dark mt-1 relative">
+                        <img alt="${kebab.name}"
+                             class="w-full h-full object-cover transition-transform duration-500"
+                             src="${kebabImage}"
+                             loading="lazy"
+                             width="96" height="96"
+                             onerror="this.onerror=null; this.src='https://lh3.googleusercontent.com/aida-public/AB6AXuAPZml7HBCvOmxHc3pErimDG6i7ruSOL6NrxB8S8CkUtAIZ9sjOe5U0TSzY4AbGN8NSPkGQZHCdrnALIQoLgGNrze3MwVl9x7OGSn2Gz7CvsUTB4izX8Xatv_tIbLYX6kiuSDVdT3HoS7MKLCnQparIKmg8UVIl7QU1CTAKEBVF9M8_NiLS2ccsanJPm-7kevE10rqP_NKMyBgiXUpcsUtj4e9eJlwKM02h-oL83bYxG2QwVRiuDKWgPfePcvFNWLVGzfpHYYn_Nl4'"/>
+                    </div>
+                    <p class="text-[9px] text-gray-400 text-center leading-tight break-words w-full opacity-80">
+                        ${kebab.address}, ${kebab.city || cityName || window.currentCity || ''}
+                    </p>
+                    ${(() => { const s = getOpenNowStatus(kebab.opening_hours); return s ? `<span style="display:inline-block;font-size:9px;font-weight:700;padding:2px 7px;border-radius:9999px;background:${s.open ? '#16a34a' : '#dc2626'};color:#fff;">● ${s.label}</span>` : ''; })()}
+                </div>
+
+                <!-- Content -->
+                <div class="flex-1 flex flex-col min-w-0">
+                    <div>
+                        <div class="flex justify-between items-start">
+                             <!-- Middle Column: Title & Button -->
+                             <div class="flex flex-col gap-1 min-w-0 flex-1 pr-2">
+                                 <h3 class="text-xs md:text-lg font-bold text-white group-hover:text-primary transition-colors mb-0.5 md:truncate leading-tight">${kebab.name} ${rankChangeHtml}</h3>
+
+                                 <!-- Navigate Button -->
+                                 ${kLat && kLng ? `
+                                <a href="https://www.google.com/maps/dir/?api=1&destination=${kLat},${kLng}"
+                                   target="_blank" rel="noopener"
+                                   onclick="event.stopPropagation()"
+                                   class="premium-navigate-btn" title="${translations[currentLang]['go-to-kebab']}">
+                                    <span class="material-icons text-sm">directions</span>
+                                    <span>${translations[currentLang]['go-to-kebab']}</span>
+                                </a>
+                                ` : ''}
+                             </div>
+
+                              <!-- Right Column: Scores & Stats Matrix -->
+                              <div class="flex flex-col items-center gap-1 shrink-0 ml-1">
+                                  <div class="flex flex-row items-center gap-2">
+                                    <div class="px-1 py-0.5 md:px-2 md:py-1 rounded bg-[#1e293b] border border-white/10 flex flex-col items-center justify-center w-[52px] md:w-[70px] h-[34px] md:h-[42px]">
+                                        <span class="text-[8px] md:text-[10px] text-gray-400 uppercase font-bold leading-none mb-0.5">${translations[currentLang]['score'] || 'Wynik'}</span>
+                                        <span class="text-sm md:text-base font-black text-primary leading-none">${kebab.rank_score ? kebab.rank_score.toFixed(1) : 'N/A'}</span>
+                                    </div>
+                                     ${hasAI && kebab.ai_score ? `
+                                     <div class="px-1 py-0.5 md:px-2 md:py-1 rounded bg-indigo-500/10 border border-indigo-500/30 flex flex-col items-center justify-center shadow-[0_0_10px_rgba(99,102,241,0.15)] w-[52px] md:w-[70px] h-[34px] md:h-[42px]">
+                                         <span class="text-[8px] md:text-[10px] text-indigo-300 uppercase font-bold tracking-tight leading-none mb-0.5">${translations[currentLang]['ai-score'] || 'AI'}</span>
+                                         <span class="text-sm md:text-base font-black text-indigo-400 drop-shadow-[0_0_8px_rgba(129,140,248,0.4)] leading-none">${kebab.ai_score.toFixed(1)}</span>
+                                     </div>
+                                     ` : ''}
+                                 </div>
+                                 <div class="flex flex-row items-start gap-2 w-full mt-1">
+                                    <div class="flex items-center justify-center gap-1 w-[52px] md:w-[70px]">
+                                        <span class="font-bold text-white text-xs md:text-sm">${kebab.rating.toFixed(1)}</span>
+                                        <span class="material-icons text-yellow-500 text-[10px] md:text-xs">star</span>
+                                    </div>
+                                    <div class="flex items-center justify-center gap-1 w-[52px] md:w-[70px]">
+                                        <span class="font-bold text-white text-xs md:text-sm">${kebab.total_reviews.toLocaleString()}</span>
+                                        <span class="material-icons text-blue-400 text-[10px] md:text-xs">reviews</span>
+                                    </div>
+                                </div>
+                             </div>
+                        </div>
+                    </div>
+
+                    <!-- AI Sections -->
+                     <div class="space-y-1 md:space-y-2 mt-auto pt-2">
+                        ${hasAI ? `
+                         <div class="border border-indigo-500/20 bg-indigo-500/5 rounded overflow-hidden">
+                            <button onclick="event.stopPropagation(); toggleSection('ai-summary-${index}-${isGlobal ? 'g' : 'c'}')"
+                                    class="w-full flex items-center justify-between px-2 py-1 md:px-3 md:py-1.5 hover:bg-white/5 transition-colors">
+                                <span class="text-[9px] md:text-[11px] font-bold uppercase tracking-widest text-indigo-300 flex items-center gap-1 md:gap-2">
+                                    <span class="material-icons text-[10px] md:text-xs">auto_awesome</span> ${aiTranslations[currentLang]['ai-summary'] || 'Podsumowanie AI'}
+                                </span>
+                                <span class="material-icons text-indigo-300/50 text-[10px] md:text-xs arrow">expand_more</span>
+                            </button>
+                            <div id="ai-summary-${index}-${isGlobal ? 'g' : 'c'}" class="hidden ai-summary-box border-t border-indigo-500/20 p-2 italic text-gray-300 text-[10px] md:text-xs leading-relaxed">
+                                ${kebab.ai_summary ? `"${kebab.ai_summary}"` : `<em class="text-gray-500 opacity-60">${translations[currentLang]['ai-forthcoming'] || 'Analiza AI wkrótce...'}</em>`}
+                            </div>
+                         </div>
+                        ` : ''}
+
+                        ${hasAI && kebab.ai_insights ? `
+                            <div class="border border-fuchsia-500/20 bg-fuchsia-500/5 rounded overflow-hidden">
+                                <button onclick="event.stopPropagation(); toggleSection('ai-insights-${index}-${isGlobal ? 'g' : 'c'}')"
+                                        class="w-full flex items-center justify-between px-2 py-1 md:px-3 md:py-1.5 hover:bg-white/5 transition-colors">
+                                    <span class="text-[9px] md:text-[11px] font-bold uppercase tracking-widest text-fuchsia-300 flex items-center gap-1 md:gap-2">
+                                        <span class="material-icons text-[10px] md:text-xs">analytics</span> ${aiTranslations[currentLang]['ai-insights'] || 'Analiza AI'}
+                                    </span>
+                                    <span class="material-icons text-fuchsia-300/50 text-[10px] md:text-xs arrow">expand_more</span>
+                                </button>
+                                <div id="ai-insights-${index}-${isGlobal ? 'g' : 'c'}" class="hidden ai-insights-box border-t border-fuchsia-500/20 p-2">
+                                    <div class="grid grid-cols-3 gap-1 md:gap-2">
+                                        <div class="flex flex-col items-center text-center">
+                                            <span class="text-[8px] text-gray-500 uppercase font-bold tracking-tighter mb-0.5">${aiTranslations[currentLang]['sentiment'] || 'Nastroje'}</span>
+                                            <span class="text-[9px] md:text-[10px] font-black px-1.5 py-0.5 rounded-full bg-white/5 ${getSentimentColorClass(kebab.ai_insights.sentiment)}">
+                                                ${getSentimentLabel(kebab.ai_insights.sentiment)}
+                                            </span>
+                                        </div>
+                                        <div class="flex flex-col items-center text-center">
+                                            <span class="text-[8px] text-gray-500 uppercase font-bold tracking-tighter mb-0.5">${aiTranslations[currentLang]['trending'] || 'Trend'}</span>
+                                            <span class="text-[9px] md:text-[10px] font-black text-gray-100 italic">
+                                                ${getTrendLabel(kebab.ai_insights.trend)}
+                                            </span>
+                                        </div>
+                                        <div class="flex flex-col items-center text-center">
+                                            <span class="text-[8px] text-gray-500 uppercase font-bold tracking-tighter mb-0.5">${aiTranslations[currentLang]['authenticity'] || 'Autentyczność'}</span>
+                                            <span class="text-[9px] md:text-[10px] font-black text-blue-400">
+                                                ${kebab.ai_insights.authenticity || '100'}%
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+
+    cardsContainer.innerHTML = html;
+}
+
+function applyRankingFilter(type, isGlobal) {
+    const scope = isGlobal ? 'global' : 'city';
+    const filters = window.activeFilters[scope];
+
+    if (type === 'sort_score' || type === 'sort_rating' || type === 'sort_reviews') {
+        filters.sort = type.replace('sort_', '');
+    } else if (type === 'all') {
+        filters.open_now = false;
+        filters.nocne = false;
+        filters.sort = 'score';
+        if (isGlobal) {
+            filters.voivodeship = '';
+            const voivSel = document.getElementById('global-fb-voiv');
+            if (voivSel) voivSel.value = '';
+        }
+    } else if (type === 'voivodeship') {
+        const sel = document.getElementById('global-fb-voiv');
+        filters.voivodeship = sel ? sel.value : '';
+    } else {
+        filters[type] = !filters[type];
+    }
+
+    // Update filter pill visual states in-place
+    const anyActive = !!(filters.open_now || filters.nocne || (isGlobal && filters.voivodeship));
+    const updatePill = (id, active) => {
+        const btn = document.getElementById(id);
+        if (!btn) return;
+        btn.style.border = active ? '1px solid #34d399' : '1px solid rgba(255,255,255,0.15)';
+        btn.style.background = active ? 'rgba(52,211,153,0.18)' : 'rgba(255,255,255,0.05)';
+        btn.style.color = active ? '#34d399' : '#94a3b8';
+    };
+    updatePill(`${scope}-fb-all`, !anyActive);
+    updatePill(`${scope}-fb-open`, !!filters.open_now);
+    updatePill(`${scope}-fb-night`, !!filters.nocne);
+    if (isGlobal) {
+        const voivSel = document.getElementById('global-fb-voiv');
+        if (voivSel) {
+            const active = !!filters.voivodeship;
+            voivSel.style.border = active ? '1px solid #34d399' : '1px solid rgba(255,255,255,0.15)';
+            voivSel.style.color = active ? '#34d399' : '#94a3b8';
+        }
+    }
+
+    // Update sort pill visual states
+    const sort = filters.sort || 'score';
+    const updateSortPill = (id, active) => {
+        const btn = document.getElementById(id);
+        if (!btn) return;
+        btn.style.border = active ? '1px solid #60a5fa' : '1px solid rgba(255,255,255,0.12)';
+        btn.style.background = active ? 'rgba(96,165,250,0.15)' : 'rgba(255,255,255,0.04)';
+        btn.style.color = active ? '#60a5fa' : '#64748b';
+    };
+    updateSortPill(`${scope}-fb-sort-score`,   sort === 'score');
+    updateSortPill(`${scope}-fb-sort-rating`,  sort === 'rating');
+    updateSortPill(`${scope}-fb-sort-reviews`, sort === 'reviews');
+
+    const allData = isGlobal ? window.globalRankingData : window.cityRankingData;
+    if (!allData) return;
+
+    let filtered = allData;
+    if (filters.open_now) filtered = filtered.filter(k => getOpenNowStatus(k.opening_hours)?.open === true);
+    if (filters.nocne) filtered = filtered.filter(k => isNightKebab(k.opening_hours));
+    if (isGlobal && filters.voivodeship) filtered = filtered.filter(k => CITY_VOIVODESHIP[k.city] === filters.voivodeship);
+    filtered = applySortToData(filtered, sort);
+
+    // Re-render cards
+    const cardsId = isGlobal ? 'global-ranking-cards' : 'city-ranking-cards';
+    const cardsEl = document.getElementById(cardsId);
+    if (cardsEl) renderRankingCards(filtered, cardsEl, isGlobal, null);
+
+    // Update map to reflect filter
+    if (isGlobal) {
+        if (window.globalKebabMap) updateGlobalMapWithKebabs(filtered);
+    } else {
+        if (window.kebabMap) updateMapWithKebabs(filtered);
+    }
+
+    // Update count badge
+    const countEl = document.getElementById(`${scope}-fb-count`);
+    if (countEl) {
+        countEl.style.display = anyActive ? '' : 'none';
+        if (anyActive) countEl.textContent = `${filtered.length}/${allData.length}`;
+    }
+
+    updateFilterBarHeader(scope, isGlobal);
+    syncMobileMapFilter(isGlobal);
+}
+
+// ─── KEBAB ROULETTE ──────────────────────────────────────────────────────────
+
+function openRouletteModal(isGlobal) {
+    const isEn = (window.currentLang || 'pl') === 'en';
+    const allData = isGlobal ? window.globalRankingData : window.cityRankingData;
+    if (!allData || allData.length === 0) return;
+
+    // Inject keyframe CSS once
+    if (!document.getElementById('roulette-styles')) {
+        const s = document.createElement('style');
+        s.id = 'roulette-styles';
+        s.textContent = `
+@keyframes roulette-spin {
+  0%   { transform: rotate(0deg) scale(1); }
+  40%  { transform: rotate(720deg) scale(1.15); }
+  70%  { transform: rotate(1040deg) scale(0.95); }
+  85%  { transform: rotate(1080deg) scale(1.05); }
+  100% { transform: rotate(1080deg) scale(1); }
+}
+@keyframes roulette-reveal {
+  from { opacity:0; transform: translateY(18px) scale(0.95); }
+  to   { opacity:1; transform: translateY(0) scale(1); }
+}
+.roulette-spinning { animation: roulette-spin 1.6s cubic-bezier(.36,.07,.19,.97) forwards; }
+.roulette-reveal   { animation: roulette-reveal 0.45s ease forwards; }`;
+        document.head.appendChild(s);
+    }
+
+    // Smart topN options
+    const n = allData.length;
+    let topOptions;
+    if (n <= 5)       topOptions = null;           // too few — always all
+    else if (n <= 15) topOptions = [5, n];
+    else if (n <= 25) topOptions = [5, 10, n];
+    else              topOptions = [5, 10, 20, n];
+
+    const stored = window._rouletteTopN || (topOptions ? topOptions[1] : n);
+    const defaultTopN = Math.min(stored, n);
+
+    // Build modal
+    const overlay = document.createElement('div');
+    overlay.id = 'roulette-overlay';
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,0.75);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:16px;';
+    overlay.onclick = (e) => { if (e.target === overlay) closeRouletteModal(); };
+
+    const optionsHtml = topOptions
+        ? topOptions.map(v => {
+            const label = v === n ? (isEn ? `All (${n})` : `Wszystkie (${n})`) : `Top ${v}`;
+            return `<button onclick="window._rouletteTopN=${v};document.querySelectorAll('.roul-opt').forEach(b=>b.classList.remove('roul-sel'));this.classList.add('roul-sel');spinRoulette(${isGlobal})"
+                class="roul-opt${v === defaultTopN ? ' roul-sel' : ''}"
+                style="padding:7px 16px;border-radius:9999px;font-size:13px;font-weight:700;cursor:pointer;border:1px solid rgba(251,191,36,${v===defaultTopN?'0.7':'0.25'});background:rgba(251,191,36,${v===defaultTopN?'0.18':'0.05'});color:${v===defaultTopN?'#fbbf24':'#94a3b8'};transition:all 0.2s;"
+                onmouseover="this.style.borderColor='rgba(251,191,36,0.5)';this.style.color='#fbbf24'"
+                onmouseout="if(!this.classList.contains('roul-sel')){this.style.borderColor='rgba(251,191,36,0.25)';this.style.color='#94a3b8'}"
+            >${label}</button>`;
+          }).join('')
+        : `<span style="font-size:13px;color:#64748b;">${isEn ? `Picking from all ${n} places` : `Losuję ze wszystkich ${n} miejsc`}</span>`;
+
+    overlay.innerHTML = `
+    <div style="background:#0f172a;border:1px solid rgba(255,255,255,0.1);border-radius:24px;padding:28px 24px;max-width:420px;width:100%;position:relative;box-shadow:0 25px 60px rgba(0,0,0,0.6);">
+        <button onclick="closeRouletteModal()" style="position:absolute;top:16px;right:16px;background:none;border:none;color:#475569;font-size:22px;cursor:pointer;line-height:1;">✕</button>
+        <div style="text-align:center;margin-bottom:20px;">
+            <div style="font-size:13px;color:#64748b;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:6px;">${isEn ? 'Kebab Roulette' : 'Kebab Ruletka'}</div>
+            <div style="font-size:22px;font-weight:800;color:#f1f5f9;">${isEn ? 'Where to eat?' : 'Gdzie zjeść?'} 🥙</div>
+        </div>
+        ${topOptions ? `
+        <div style="margin-bottom:18px;">
+            <div style="font-size:11px;color:#475569;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px;">${isEn ? 'Pick from:' : 'Losuj z:'}</div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">${optionsHtml}</div>
+        </div>` : `<div style="margin-bottom:16px;text-align:center;">${optionsHtml}</div>`}
+        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;margin-bottom:14px;padding:10px 14px;background:#111827;border:1px solid rgba(255,255,255,0.08);border-radius:12px;">
+            <input type="checkbox" id="roul-only-open" checked style="width:18px;height:18px;accent-color:#34d399;cursor:pointer;flex-shrink:0;" />
+            <span style="font-size:13px;color:#cbd5e1;font-weight:600;">🟢 ${isEn ? 'Open now only' : 'Tylko otwarte teraz'}</span>
+        </label>
+        <button onclick="spinRoulette(${isGlobal})" id="roul-spin-btn"
+            style="width:100%;padding:14px;border-radius:14px;font-size:16px;font-weight:800;border:none;background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;cursor:pointer;letter-spacing:0.02em;transition:opacity 0.2s;"
+            onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
+            🎲 ${isEn ? 'Spin!' : 'Losuj!'}
+        </button>
+        <div id="roul-result" style="margin-top:20px;"></div>
+    </div>`;
+
+    document.body.appendChild(overlay);
+    window._rouletteTopN = window._rouletteTopN || defaultTopN;
+}
+
+function closeRouletteModal() {
+    const el = document.getElementById('roulette-overlay');
+    if (el) el.remove();
+}
+
+function spinRoulette(isGlobal) {
+    const isEn = (window.currentLang || 'pl') === 'en';
+    const allData = isGlobal ? window.globalRankingData : window.cityRankingData;
+    if (!allData || allData.length === 0) return;
+
+    const topN = Math.min(window._rouletteTopN || allData.length, allData.length);
+    let pool = allData.slice(0, topN);
+    const onlyOpenChk = document.getElementById('roul-only-open');
+    if (onlyOpenChk && onlyOpenChk.checked) {
+        const openPool = pool.filter(k => getOpenNowStatus(k.opening_hours)?.open === true);
+        if (openPool.length === 0) {
+            const btn2 = document.getElementById('roul-spin-btn');
+            const res2 = document.getElementById('roul-result');
+            if (res2) res2.innerHTML = `<div style="text-align:center;padding:14px;color:#f87171;font-size:13px;font-weight:600;">😴 ${isEn ? 'No open places in top ' + topN + ' right now. Try unchecking "Open now".' : 'Brak otwartych miejsc w top ' + topN + ' w tej chwili. Odznacz "Tylko otwarte".'}</div>`;
+            if (btn2) { btn2.disabled = false; btn2.innerHTML = `🎲 ${isEn ? 'Spin again!' : 'Losuj jeszcze raz!'}`; }
+            return;
+        }
+        pool = openPool;
+    }
+    const pick = pool[Math.floor(Math.random() * pool.length)];
+
+    const btn = document.getElementById('roul-spin-btn');
+    const resultEl = document.getElementById('roul-result');
+    if (!btn || !resultEl) return;
+
+    // Animate button
+    btn.disabled = true;
+    btn.innerHTML = `<span class="roulette-spinning" style="display:inline-block;font-size:22px;">🎲</span>`;
+    resultEl.innerHTML = '';
+
+    setTimeout(() => {
+        btn.disabled = false;
+        btn.innerHTML = `🎲 ${isEn ? 'Spin again!' : 'Losuj jeszcze raz!'}`;
+
+        const rank = (allData.indexOf(pick) + 1);
+        const rating = pick.rating ? pick.rating.toFixed(1) : '–';
+        const reviews = pick.total_reviews ? pick.total_reviews.toLocaleString() : '–';
+        const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${pick.latitude},${pick.longitude}`;
+        const openStatus = getOpenNowStatus(pick.opening_hours);
+        const openBadge = openStatus
+            ? `<span style="display:inline-block;padding:3px 10px;border-radius:9999px;font-size:11px;font-weight:700;background:${openStatus.open ? 'rgba(52,211,153,0.15)' : 'rgba(248,113,113,0.12)'};color:${openStatus.open ? '#34d399' : '#f87171'};border:1px solid ${openStatus.open ? 'rgba(52,211,153,0.3)' : 'rgba(248,113,113,0.3)'}">${openStatus.label}</span>`
+            : '';
+
+        resultEl.innerHTML = `
+        <div class="roulette-reveal" style="background:#111827;border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:18px 16px;">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:12px;">
+                <div>
+                    <div style="font-size:11px;color:#64748b;font-weight:600;margin-bottom:4px;">#${rank} ${isEn ? 'in ranking' : 'w rankingu'}${pick.city ? ' · ' + pick.city : ''}</div>
+                    <div style="font-size:18px;font-weight:800;color:#f1f5f9;line-height:1.2;">${pick.name}</div>
+                </div>
+                <div style="text-align:right;flex-shrink:0;">
+                    <div style="font-size:22px;font-weight:900;color:#fbbf24;">★ ${rating}</div>
+                    <div style="font-size:11px;color:#475569;">${reviews} ${isEn ? 'reviews' : 'recenzji'}</div>
+                </div>
+            </div>
+            ${openBadge ? `<div style="margin-bottom:12px;">${openBadge}</div>` : ''}
+            <a href="${mapsUrl}" target="_blank" rel="noopener"
+               style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;border-radius:12px;background:linear-gradient(135deg,#1d4ed8,#7c3aed);color:#fff;font-size:14px;font-weight:700;text-decoration:none;margin-bottom:10px;">
+               🗺️ ${isEn ? 'Navigate' : 'Prowadź'}
+            </a>
+            <div id="roul-email-area" style="border-top:1px solid rgba(255,255,255,0.07);padding-top:12px;margin-top:2px;">
+                <div style="font-size:12px;color:#475569;margin-bottom:8px;">${isEn ? '📱 Send to your phone (email):' : '📱 Wyślij na maila:'}</div>
+                <div style="display:flex;gap:8px;">
+                    <input id="roul-email-input" type="email" placeholder="${isEn ? 'your@email.com' : 'twoj@email.pl'}"
+                        style="flex:1;background:#1e293b;border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:9px 12px;font-size:13px;color:#f1f5f9;outline:none;"
+                        onfocus="this.style.borderColor='rgba(251,191,36,0.5)'" onblur="this.style.borderColor='rgba(255,255,255,0.12)'" />
+                    <button onclick="rouletteSubscribe('${encodeURIComponent(pick.name)}')"
+                        style="padding:9px 16px;border-radius:10px;border:1px solid rgba(251,191,36,0.4);background:rgba(251,191,36,0.1);color:#fbbf24;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;">
+                        ${isEn ? 'Send' : 'Wyślij'}
+                    </button>
+                </div>
+            </div>
+        </div>`;
+    }, 1650);
+}
+
+function rouletteSubscribe(kebabName) {
+    const isEn = (window.currentLang || 'pl') === 'en';
+    const input = document.getElementById('roul-email-input');
+    if (!input) return;
+    const email = input.value.trim();
+    if (!email || !email.includes('@')) {
+        input.style.borderColor = '#f87171';
+        return;
+    }
+    fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, source: 'roulette' })
+    }).then(r => r.json()).then(data => {
+        const area = document.getElementById('roul-email-area');
+        if (area) area.innerHTML = `<div style="text-align:center;color:#34d399;font-size:13px;font-weight:700;padding:8px 0;">✓ ${isEn ? 'Saved! Bon appétit 🥙' : 'Zapisano! Smacznego 🥙'}</div>`;
+    }).catch(() => {
+        const area = document.getElementById('roul-email-area');
+        if (area) area.innerHTML = `<div style="color:#f87171;font-size:12px;text-align:center;">${isEn ? 'Error, try again.' : 'Błąd, spróbuj ponownie.'}</div>`;
+    });
+}
+
+// ─── END ROULETTE ─────────────────────────────────────────────────────────────
+
+// ─── EMAIL CAPTURE ────────────────────────────────────────────────────────────
+
+function _subscribeEmail(email, source, onSuccess, onError) {
+    fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, source })
+    }).then(r => r.json()).then(d => {
+        if (d.ok) onSuccess();
+        else onError(d.error || 'error');
+    }).catch(() => onError('network'));
+}
+
+// Footer newsletter
+function footerSubscribe() {
+    const isEn = (window.currentLang || 'pl') === 'en';
+    const input = document.getElementById('footer-nl-email');
+    const btn   = document.getElementById('footer-nl-btn');
+    if (!input || !btn) return;
+    const email = input.value.trim();
+    if (!email || !email.includes('@')) {
+        input.style.borderColor = '#f87171';
+        input.focus();
+        return;
+    }
+    btn.disabled = true;
+    btn.textContent = '...';
+    _subscribeEmail(email, 'footer',
+        () => { btn.textContent = isEn ? '✓ Done!' : '✓ Zapisano!'; btn.style.color = '#34d399'; input.value = ''; input.disabled = true; },
+        () => { btn.textContent = isEn ? 'Error' : 'Błąd'; btn.disabled = false; }
+    );
+}
+
+// "Obserwuj miasto" modal
+function openWatchCityModal(cityName) {
+    if (document.getElementById('watch-city-overlay')) return;
+    const isEn = (window.currentLang || 'pl') === 'en';
+    const overlay = document.createElement('div');
+    overlay.id = 'watch-city-overlay';
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,0.72);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:16px;';
+    overlay.onclick = e => { if (e.target === overlay) overlay.remove(); };
+    overlay.innerHTML = `
+    <div style="background:#0f172a;border:1px solid rgba(255,255,255,0.1);border-radius:24px;padding:28px 24px;max-width:380px;width:100%;position:relative;box-shadow:0 25px 60px rgba(0,0,0,0.6);">
+        <button onclick="document.getElementById('watch-city-overlay').remove()" style="position:absolute;top:14px;right:16px;background:none;border:none;color:#475569;font-size:22px;cursor:pointer;">✕</button>
+        <div style="font-size:28px;margin-bottom:8px;">🔔</div>
+        <div style="font-size:20px;font-weight:800;color:#f1f5f9;margin-bottom:6px;">${isEn ? 'Follow' : 'Obserwuj'} ${cityName || 'ranking'}</div>
+        <div style="font-size:13px;color:#64748b;margin-bottom:20px;line-height:1.5;">${isEn ? 'Get an email when the ranking changes — new #1, new entry, big rise or drop.' : 'Wyślemy maila gdy zmieni się ranking — nowy nr 1, nowe miejsce, duży wzrost lub spad.'}</div>
+        <div style="display:flex;gap:8px;margin-bottom:12px;">
+            <input id="watch-email-input" type="email" placeholder="${isEn ? 'your@email.com' : 'twoj@email.pl'}"
+                style="flex:1;background:#1e293b;border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:11px 14px;font-size:14px;color:#f1f5f9;outline:none;"
+                onfocus="this.style.borderColor='rgba(52,211,153,0.5)'" onblur="this.style.borderColor='rgba(255,255,255,0.12)'"
+                onkeydown="if(event.key==='Enter')watchCitySubscribe('${(cityName||'').replace(/'/g,"\\'")}')"/>
+            <button onclick="watchCitySubscribe('${(cityName||'').replace(/'/g,"\\'")}') "
+                style="padding:11px 18px;border-radius:10px;border:none;background:linear-gradient(135deg,#34d399,#059669);color:#fff;font-size:14px;font-weight:700;cursor:pointer;">
+                ${isEn ? 'Follow' : 'Śledź'}
+            </button>
+        </div>
+        <div id="watch-city-msg" style="min-height:18px;font-size:12px;text-align:center;"></div>
+        <div style="font-size:11px;color:#334155;text-align:center;margin-top:10px;">${isEn ? 'No spam. Unsubscribe anytime.' : 'Zero spamu. Wypis jednym klikiem.'}</div>
+    </div>`;
+    document.body.appendChild(overlay);
+    setTimeout(() => { const inp = document.getElementById('watch-email-input'); if (inp) inp.focus(); }, 80);
+}
+
+function watchCitySubscribe(cityName) {
+    const isEn = (window.currentLang || 'pl') === 'en';
+    const input = document.getElementById('watch-email-input');
+    const msg   = document.getElementById('watch-city-msg');
+    if (!input) return;
+    const email = input.value.trim();
+    if (!email || !email.includes('@')) { input.style.borderColor = '#f87171'; return; }
+    _subscribeEmail(email, 'city_watch:' + (cityName || ''),
+        () => {
+            if (msg) { msg.style.color = '#34d399'; msg.textContent = isEn ? '✓ Done! We\'ll notify you.' : '✓ Zapisano! Poinformujemy Cię.'; }
+            input.disabled = true;
+            setTimeout(() => { const ov = document.getElementById('watch-city-overlay'); if (ov) ov.remove(); }, 2200);
+        },
+        () => { if (msg) { msg.style.color = '#f87171'; msg.textContent = isEn ? 'Error, try again.' : 'Błąd, spróbuj ponownie.'; } }
+    );
+}
+
+// Exit intent popup
+(function initExitIntent() {
+    let shown = false;
+    const COOLDOWN_KEY = 'kr_exit_intent_ts';
+    function shouldShow() {
+        if (shown) return false;
+        const last = parseInt(localStorage.getItem(COOLDOWN_KEY) || '0', 10);
+        return Date.now() - last > 7 * 24 * 60 * 60 * 1000; // raz na 7 dni
+    }
+    function showExitIntent() {
+        if (!shouldShow()) return;
+        shown = true;
+        localStorage.setItem(COOLDOWN_KEY, Date.now().toString());
+        const isEn = (window.currentLang || 'pl') === 'en';
+        const overlay = document.createElement('div');
+        overlay.id = 'exit-intent-overlay';
+        overlay.style.cssText = 'position:fixed;inset:0;z-index:9100;background:rgba(0,0,0,0.65);backdrop-filter:blur(5px);display:flex;align-items:center;justify-content:center;padding:16px;animation:roulette-reveal 0.3s ease forwards;';
+        overlay.onclick = e => { if (e.target === overlay) overlay.remove(); };
+        overlay.innerHTML = `
+        <div style="background:#0f172a;border:1px solid rgba(255,255,255,0.1);border-radius:24px;padding:28px 24px;max-width:400px;width:100%;position:relative;box-shadow:0 25px 60px rgba(0,0,0,0.7);text-align:center;">
+            <button onclick="document.getElementById('exit-intent-overlay').remove()" style="position:absolute;top:14px;right:16px;background:none;border:none;color:#475569;font-size:22px;cursor:pointer;">✕</button>
+            <div style="font-size:36px;margin-bottom:10px;">🥙</div>
+            <div style="font-size:21px;font-weight:800;color:#f1f5f9;margin-bottom:8px;">${isEn ? 'Before you go...' : 'Zanim wyjdziesz…'}</div>
+            <div style="font-size:13px;color:#64748b;margin-bottom:22px;line-height:1.6;">${isEn ? 'Rankings update monthly. Leave your email and be the first to know when a new #1 appears in your city.' : 'Rankingi aktualizujemy co miesiąc. Zostaw maila i dowiedz się pierwszy, gdy pojawi się nowy nr 1 w Twoim mieście.'}</div>
+            <div style="display:flex;gap:8px;margin-bottom:12px;">
+                <input id="exit-email-input" type="email" placeholder="${isEn ? 'your@email.com' : 'twoj@email.pl'}"
+                    style="flex:1;background:#1e293b;border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:11px 14px;font-size:14px;color:#f1f5f9;outline:none;"
+                    onfocus="this.style.borderColor='rgba(52,211,153,0.5)'" onblur="this.style.borderColor='rgba(255,255,255,0.12)'"
+                    onkeydown="if(event.key==='Enter')exitIntentSubscribe()" />
+                <button onclick="exitIntentSubscribe()"
+                    style="padding:11px 18px;border-radius:10px;border:none;background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap;">
+                    ${isEn ? 'Notify me' : 'Zapisz'}
+                </button>
+            </div>
+            <div id="exit-intent-msg" style="min-height:18px;font-size:12px;"></div>
+            <button onclick="document.getElementById('exit-intent-overlay').remove()" style="background:none;border:none;color:#334155;font-size:12px;cursor:pointer;margin-top:8px;">${isEn ? 'No thanks' : 'Nie, dziękuję'}</button>
+        </div>`;
+        document.body.appendChild(overlay);
+        setTimeout(() => { const inp = document.getElementById('exit-email-input'); if (inp) inp.focus(); }, 80);
+    }
+    // Desktop: cursor leaves viewport near top
+    document.addEventListener('mouseleave', e => {
+        if (e.clientY < 8) showExitIntent();
+    });
+    // Mobile: page visibility hidden (switch tab / home button)
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'hidden') showExitIntent();
+    });
+})();
+
+function exitIntentSubscribe() {
+    const isEn = (window.currentLang || 'pl') === 'en';
+    const input = document.getElementById('exit-email-input');
+    const msg   = document.getElementById('exit-intent-msg');
+    if (!input) return;
+    const email = input.value.trim();
+    if (!email || !email.includes('@')) { input.style.borderColor = '#f87171'; return; }
+    _subscribeEmail(email, 'exit_intent',
+        () => {
+            if (msg) { msg.style.color = '#34d399'; msg.textContent = isEn ? '✓ Done! Talk soon 🥙' : '✓ Zapisano! Do zobaczenia 🥙'; }
+            input.disabled = true;
+            setTimeout(() => { const ov = document.getElementById('exit-intent-overlay'); if (ov) ov.remove(); }, 2500);
+        },
+        () => { if (msg) { msg.style.color = '#f87171'; msg.textContent = isEn ? 'Error, try again.' : 'Błąd, spróbuj ponownie.'; } }
+    );
+}
+
+// ─── END EMAIL CAPTURE ────────────────────────────────────────────────────────
 
 // Add CSS Helper for sentiment color if not exists
 function getSentimentColorClass(sentiment) {

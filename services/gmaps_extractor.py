@@ -21,12 +21,13 @@ class GmapsextractorService:
         payload = {
             "q": query,
             "page": page,
-            "extra": extra
+            "hl": "pl",
+            "gl": "pl",
         }
+        if extra:
+            payload["extra"] = True
         if ll:
             payload["ll"] = ll
-            payload["hl"] = "pl"
-            payload["gl"] = "pl"
 
         try:
             response = requests.post(url, headers=headers, json=payload, timeout=30)

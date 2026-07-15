@@ -260,7 +260,7 @@
 
 <!-- Map Overlay (AI Badge) -->
 <div id="ai-badge-container"
-    class="absolute top-4 right-4 md:top-8 md:right-8 left-auto z-[400] pointer-events-none transition-all duration-500">
+    class="absolute right-4 md:top-8 md:right-8 left-auto z-[400] pointer-events-none transition-all duration-500" style="top:16px">
     <div id="ai-status-badge" onclick="if(window.innerWidth < 768) toggleAiBadge()"
         class="bg-surface-dark/90 backdrop-blur-xl rounded-xl md:rounded-2xl p-3 md:p-4 border border-white/10 shadow-2xl pointer-events-auto relative overflow-hidden group">
 
@@ -479,12 +479,33 @@
                 }, 200);
             }
         }
+
+        // Show filter overlay on map and sync its state
+        const mf = document.getElementById('mobile-map-filterbar');
+        if (mf) mf.style.display = '';
+        const isGlobal = !!(document.getElementById('global-tab') && !document.getElementById('global-tab').classList.contains('hidden'));
+        if (typeof syncMobileMapFilter === 'function') syncMobileMapFilter(isGlobal);
+
+        // Push AI badge below filter bar on mobile
+        const aiBadge = document.getElementById('ai-badge-container');
+        if (aiBadge && window.innerWidth < 768) {
+            const filterBarH = mf ? mf.offsetHeight : 56;
+            aiBadge.style.top = (filterBarH + 10) + 'px';
+        }
     }
 
     function switchToList() {
         mapContainer.classList.add('hidden');
         mapContainer.classList.remove('flex');
         sidebarContent.classList.remove('hidden');
+
+        // Hide map filter overlay
+        const mf = document.getElementById('mobile-map-filterbar');
+        if (mf) mf.style.display = 'none';
+
+        // Restore AI badge position
+        const aiBadge = document.getElementById('ai-badge-container');
+        if (aiBadge) aiBadge.style.top = '';
 
         // Update Buttons
         btnList.classList.remove('text-gray-400', 'hover:text-white');

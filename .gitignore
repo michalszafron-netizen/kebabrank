@@ -1,5 +1,8 @@
 # Environment files
 .env
+
+# Subscribers database (contains emails — never commit)
+subscribers.db
 .env.local
 .env.production
 
@@ -10,8 +13,15 @@ __pycache__/
 *.so
 .Python
 venv/
+venv_*/
 ENV/
 env/
+
+# Node
+node_modules/
+
+# Update reports (auto-generated, not versioned)
+update_reports/
 
 # Logs
 logs/

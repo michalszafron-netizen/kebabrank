@@ -865,5 +865,49 @@ def index_now_verification():
     return send_from_directory(os.path.dirname(os.path.abspath(__file__)), 'eu194yp2dtsh23cy4aapz6pequxv3f2w.txt')
 
 
+@app.route('/api/subscribe', methods=['POST'])
+def subscribe_email():
+    data = request.get_json(silent=True) or {}
+    email = (data.get('email') or '').strip().lower()
+    source = (data.get('source') or 'unknown')[:50]
+    if not email or '@' not in email or '.' not in email.split('@')[-1]:
+        return jsonify({'error': 'invalid_email'}), 400
+    db_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'subscribers.db')
+    import sqlite3
+    conn = sqlite3.connect(db_path)
+    try:
+        conn.execute('''CREATE TABLE IF NOT EXISTS subscribers
+                        (id INTEGER PRIMARY KEY AUTOINCREMENT,
+                         email TEXT UNIQUE NOT NULL,
+                         source TEXT,
+                         created_at TEXT)''')
+        conn.execute('INSERT OR IGNORE INTO subscribers (email, source, created_at) VALUES (?,?,?)',
+                     (email, source, datetime.now().isoformat()))
+        conn.commit()
+        return jsonify({'ok': True}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    finally:
+        conn.close()
+
+
+@app.route('/api/subscribers/export')
+def export_subscribers():
+    secret = request.args.get('key', '')
+    if secret != os.environ.get('ADMIN_KEY', 'kebab2026'):
+        return jsonify({'error': 'unauthorized'}), 401
+    import sqlite3
+    db_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'subscribers.db')
+    if not os.path.exists(db_path):
+        return jsonify({'count': 0, 'subscribers': []})
+    conn = sqlite3.connect(db_path)
+    try:
+        rows = conn.execute('SELECT email, source, created_at FROM subscribers ORDER BY id DESC').fetchall()
+        data = [{'email': r[0], 'source': r[1], 'created_at': r[2]} for r in rows]
+        return jsonify({'count': len(data), 'subscribers': data})
+    finally:
+        conn.close()
+
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5001, threaded=True)
