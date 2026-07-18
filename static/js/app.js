@@ -579,6 +579,8 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 megaMenu.style.opacity = '1';
                 megaMenu.style.transform = 'translateY(0)';
+                const si = document.getElementById('city-search-input');
+                if (si) { clearCitySearch(); si.focus(); }
             }, 10);
         } else {
             megaMenu.style.opacity = '0';
@@ -3124,6 +3126,7 @@ function spinRoulette(isGlobal) {
                         ${isEn ? 'Send' : 'Wyślij'}
                     </button>
                 </div>
+                <div style="font-size:10px;color:#334155;margin-top:6px;">${isEn ? 'By subscribing you accept our <a href="/privacy" style="color:#475569;text-decoration:underline;">privacy policy</a>.' : 'Zapisując się akceptujesz <a href="/privacy" style="color:#475569;text-decoration:underline;">politykę prywatności</a>.'}</div>
             </div>
         </div>`;
     }, 1650);
@@ -3219,7 +3222,7 @@ function openWatchCityModal(cityName) {
             </button>
         </div>
         <div id="watch-city-msg" style="min-height:18px;font-size:12px;text-align:center;"></div>
-        <div style="font-size:11px;color:#334155;text-align:center;margin-top:10px;">${isEn ? 'No spam. Unsubscribe anytime.' : 'Zero spamu. Wypis jednym klikiem.'}</div>
+        <div style="font-size:11px;color:#334155;text-align:center;margin-top:10px;">${isEn ? 'No spam. By subscribing you accept our <a href="/privacy" style="color:#475569;text-decoration:underline;">privacy policy</a>.' : 'Zero spamu. Zapisując się akceptujesz <a href="/privacy" style="color:#475569;text-decoration:underline;">politykę prywatności</a>.'}</div>
     </div>`;
     document.body.appendChild(overlay);
     setTimeout(() => { const inp = document.getElementById('watch-email-input'); if (inp) inp.focus(); }, 80);
@@ -3277,6 +3280,7 @@ function watchCitySubscribe(cityName) {
                 </button>
             </div>
             <div id="exit-intent-msg" style="min-height:18px;font-size:12px;"></div>
+            <div style="font-size:11px;color:#334155;margin-top:8px;">${isEn ? 'By subscribing you accept our <a href="/privacy" style="color:#475569;text-decoration:underline;">privacy policy</a>.' : 'Zapisując się akceptujesz <a href="/privacy" style="color:#475569;text-decoration:underline;">politykę prywatności</a>.'}</div>
             <button onclick="document.getElementById('exit-intent-overlay').remove()" style="background:none;border:none;color:#334155;font-size:12px;cursor:pointer;margin-top:8px;">${isEn ? 'No thanks' : 'Nie, dziękuję'}</button>
         </div>`;
         document.body.appendChild(overlay);
@@ -3457,3 +3461,118 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 });
+
+// ─── CITY SEARCH ──────────────────────────────────────────────────────────────
+
+function filterCitySearch(query) {
+    const q = (query || '').trim().toLowerCase();
+    const popularSection = document.getElementById('popular-section');
+    const azHeader       = document.getElementById('az-header');
+    const noResults      = document.getElementById('az-no-results');
+    const clearBtn       = document.getElementById('city-search-clear');
+    const links          = document.querySelectorAll('.city-az-link');
+
+    if (clearBtn) clearBtn.style.display = q ? '' : 'none';
+
+    if (!q) {
+        links.forEach(el => el.style.display = '');
+        if (popularSection) popularSection.style.display = '';
+        if (azHeader)       azHeader.style.display = '';
+        if (noResults)      noResults.style.display = 'none';
+        return;
+    }
+
+    if (popularSection) popularSection.style.display = 'none';
+    if (azHeader)       azHeader.style.display = 'none';
+
+    let count = 0;
+    links.forEach(el => {
+        const city = (el.dataset.city || el.textContent).toLowerCase();
+        const match = city.includes(q);
+        el.style.display = match ? '' : 'none';
+        if (match) count++;
+    });
+    if (noResults) noResults.style.display = 'none';
+    if (count === 0) showCityRequestForm(q);
+    else hideCityRequestForm();
+}
+
+function showCityRequestForm(cityName) {
+    const existing = document.getElementById('city-request-box');
+    if (existing) { document.getElementById('city-req-city').value = cityName; return; }
+    const box = document.createElement('div');
+    box.id = 'city-request-box';
+    box.style.cssText = 'grid-column:1/-1;padding:24px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:16px;margin-top:8px;';
+    box.innerHTML = `
+        <div style="font-size:15px;font-weight:700;color:#f1f5f9;margin-bottom:4px;">Nie ma jeszcze tego miasta 😔</div>
+        <div style="font-size:13px;color:#64748b;margin-bottom:18px;">Zgłoś swoje miasto — dodamy je do rankingu i poinformujemy Cię mailem!</div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+            <input id="city-req-city" type="text" placeholder="Nazwa miasta" value="${cityName}"
+                style="background:#1e293b;border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:10px 14px;font-size:14px;color:#f1f5f9;outline:none;width:100%;box-sizing:border-box;"
+                onfocus="this.style.borderColor='rgba(255,106,0,0.5)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'"/>
+            <select id="city-req-voiv"
+                style="background:#1e293b;border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:10px 14px;font-size:14px;color:#94a3b8;outline:none;width:100%;box-sizing:border-box;"
+                onfocus="this.style.borderColor='rgba(255,106,0,0.5)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'">
+                <option value="">Wybierz województwo…</option>
+                <option>Dolnośląskie</option><option>Kujawsko-Pomorskie</option>
+                <option>Lubelskie</option><option>Lubuskie</option>
+                <option>Łódzkie</option><option>Małopolskie</option>
+                <option>Mazowieckie</option><option>Opolskie</option>
+                <option>Podkarpackie</option><option>Podlaskie</option>
+                <option>Pomorskie</option><option>Śląskie</option>
+                <option>Świętokrzyskie</option><option>Warmińsko-Mazurskie</option>
+                <option>Wielkopolskie</option><option>Zachodniopomorskie</option>
+            </select>
+            <input id="city-req-email" type="email" placeholder="Twój e-mail (powiadomimy Cię o dodaniu)"
+                style="background:#1e293b;border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:10px 14px;font-size:14px;color:#f1f5f9;outline:none;width:100%;box-sizing:border-box;"
+                onfocus="this.style.borderColor='rgba(255,106,0,0.5)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'"
+                onkeydown="if(event.key==='Enter')submitCityRequest()"/>
+            <button onclick="submitCityRequest()"
+                style="padding:11px;border-radius:10px;border:none;background:linear-gradient(135deg,#ff6a00,#ee0979);color:#fff;font-size:14px;font-weight:700;cursor:pointer;">
+                Zgłoś miasto →
+            </button>
+        </div>
+        <div id="city-req-msg" style="min-height:16px;font-size:12px;margin-top:10px;text-align:center;"></div>
+        <div style="font-size:10px;color:#334155;margin-top:8px;text-align:center;">Zapisując się akceptujesz <a href="/privacy" style="color:#475569;text-decoration:underline;">politykę prywatności</a>.</div>`;
+    const grid = document.getElementById('az-grid');
+    if (grid) grid.appendChild(box);
+}
+
+function hideCityRequestForm() {
+    const box = document.getElementById('city-request-box');
+    if (box) box.remove();
+}
+
+function submitCityRequest() {
+    const city  = (document.getElementById('city-req-city')?.value || '').trim();
+    const voiv  = (document.getElementById('city-req-voiv')?.value || '').trim();
+    const email = (document.getElementById('city-req-email')?.value || '').trim();
+    const msg   = document.getElementById('city-req-msg');
+    if (!city)  { document.getElementById('city-req-city').style.borderColor  = '#f87171'; return; }
+    if (!voiv)  { document.getElementById('city-req-voiv').style.borderColor  = '#f87171'; return; }
+    if (!email || !email.includes('@')) { document.getElementById('city-req-email').style.borderColor = '#f87171'; return; }
+    fetch('/api/request-city', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ city, voivodeship: voiv, email })
+    }).then(r => r.json()).then(d => {
+        if (msg) { msg.style.color = '#34d399'; msg.textContent = '✓ Zgłoszono! Poinformujemy Cię gdy miasto zostanie dodane.'; }
+        ['city-req-city','city-req-voiv','city-req-email'].forEach(id => { const el = document.getElementById(id); if (el) el.disabled = true; });
+        const btn = document.querySelector('#city-request-box button');
+        if (btn) btn.disabled = true;
+    }).catch(() => {
+        if (msg) { msg.style.color = '#f87171'; msg.textContent = 'Błąd, spróbuj ponownie.'; }
+    });
+}
+
+function clearCitySearch() {
+    const inp = document.getElementById('city-search-input');
+    if (inp) { inp.value = ''; inp.focus(); }
+    filterCitySearch('');
+}
+
+function filterCitySearchEnter() {
+    const links = Array.from(document.querySelectorAll('.city-az-link'))
+                       .filter(el => el.style.display !== 'none');
+    if (links.length === 1) links[0].click();
+}

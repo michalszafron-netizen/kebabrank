@@ -243,6 +243,7 @@
                         Zapisz →
                     </button>
                 </div>
+                <div style="font-size:10px;color:#334155;margin-top:4px;">Zapisując się akceptujesz <a href="/privacy" style="color:#475569;text-decoration:underline;">politykę prywatności</a>.</div>
                 <div class="flex items-center gap-3 text-[11px] text-slate-500 font-medium">
                     <a class="hover:text-primary transition-colors" href="/blog" data-translate="footer-blog">Blog</a>
                     <span class="text-white/10">•</span>
@@ -301,9 +302,24 @@
             </button>
         </div>
 
-        <div class="flex-1 w-full max-w-7xl mx-auto px-4 md:px-8 pt-10 md:pt-16 pb-20">
+        <!-- City Search -->
+        <div class="w-full max-w-lg mx-auto px-4 md:px-8 pb-4 md:pb-6">
+            <div class="relative">
+                <span class="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-xl pointer-events-none">search</span>
+                <input id="city-search-input" type="text" placeholder="Wpisz miasto…" autocomplete="off"
+                    class="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-10 py-3.5 text-white placeholder-gray-600 text-base font-medium focus:outline-none focus:border-primary/50 transition-all"
+                    oninput="filterCitySearch(this.value)"
+                    onkeydown="if(event.key==='Enter')filterCitySearchEnter()">
+                <button id="city-search-clear" onclick="clearCitySearch()" style="display:none"
+                    class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white transition-colors">
+                    <span class="material-icons text-lg">close</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="flex-1 w-full max-w-7xl mx-auto px-4 md:px-8 pt-2 md:pt-4 pb-20">
             <!-- Popular Cities Grid -->
-            <div class="mb-12 md:mb-16">
+            <div id="popular-section" class="mb-12 md:mb-16">
                 <div class="flex items-center gap-4 mb-6 md:mb-8">
                     <div class="h-px flex-1 bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
                     <h2 class="text-[10px] md:text-sm font-bold text-primary uppercase tracking-[0.2em] md:tracking-[0.3em] whitespace-nowrap">Najpopularniejsze</h2>
@@ -341,19 +357,20 @@
             </div>
 
             <!-- All Cities A-Z Grid -->
-            <div class="mt-8 md:mt-0">
-                <div class="flex items-center gap-4 mb-6 md:mb-10 justify-center">
+            <div id="az-section" class="mt-8 md:mt-0">
+                <div id="az-header" class="flex items-center gap-4 mb-6 md:mb-10 justify-center">
                     <div class="h-px w-8 md:w-20 bg-gradient-to-r from-transparent to-white/10"></div>
                     <h2 class="text-[10px] md:text-sm font-bold text-gray-500 uppercase tracking-[0.2em] md:tracking-[0.3em] whitespace-nowrap text-center">Wszystkie Miasta A-Z</h2>
                     <div class="h-px w-8 md:w-20 bg-gradient-to-l from-transparent to-white/10"></div>
                 </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-y-3 md:gap-y-4 gap-x-4 md:gap-x-8 px-2 max-h-[40vh] md:max-h-full overflow-y-auto custom-scrollbar">
+                <div id="az-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-y-3 md:gap-y-4 gap-x-4 md:gap-x-8 px-2 max-h-[40vh] md:max-h-full overflow-y-auto custom-scrollbar">
                     {% for city in available_cities %}
-                    <a href="/kebab-{{ city.slug }}" class="flex items-center gap-3 group py-1 md:py-0" onclick="event.preventDefault(); selectCity('{{ city.name }}')">
+                    <a href="/kebab-{{ city.slug }}" class="city-az-link flex items-center gap-3 group py-1 md:py-0" data-city="{{ city.name }}" onclick="event.preventDefault(); selectCity('{{ city.name }}')">
                         <div class="w-1.5 h-1.5 rounded-full bg-primary/20 group-hover:bg-primary transition-all duration-300 group-hover:scale-150"></div>
                         <span class="text-xs md:text-sm text-gray-400 group-hover:text-white transition-colors duration-300">{{ city.name }}</span>
                     </a>
                     {% endfor %}
+                    <div id="az-no-results" style="display:none" class="col-span-full text-center text-gray-600 text-sm py-6">Nie znaleziono miasta 🥙</div>
                 </div>
             </div>
         </div>

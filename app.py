@@ -888,7 +888,7 @@ def _build_email_html(kebab_name=None, kebab_rating=None, kebab_address=None, ke
         <ul style="color:#475569;font-size:14px;line-height:2;padding-left:20px;">
           <li>Pojawi się <strong>nowy nr 1</strong> w rankingu</li>
           <li>Nowe miejsce wejdzie do top 10</li>
-          <li>Nastąpi duży spad popularnego kebabowni</li>
+          <li>Nastąpi duży wzrost lub spad popularnej kebabowni</li>
         </ul>"""
         subject_preview = "Jesteś na liście KebabRank"
 
@@ -920,6 +920,7 @@ def _send_email_async(to_email, subject, html):
     from_name = os.environ.get('FROM_NAME', 'KebabRank')
     from_email = os.environ.get('FROM_EMAIL', smtp_user)
     if not smtp_host or not smtp_user or not smtp_pass:
+        print(f'[EMAIL] Brak konfiguracji SMTP (SMTP_HOST={smtp_host!r}, SMTP_USER={smtp_user!r})')
         return
     try:
         msg = MIMEMultipart('alternative')
@@ -932,8 +933,38 @@ def _send_email_async(to_email, subject, html):
             srv.starttls()
             srv.login(smtp_user, smtp_pass)
             srv.sendmail(from_email, to_email, msg.as_string())
-    except Exception:
-        pass  # nie blokuj API jeśli email się nie wyśle
+        print(f'[EMAIL] OK → {to_email}')
+    except Exception as e:
+        print(f'[EMAIL] BŁĄD → {e}')
+
+
+def _notify_telegram(msg):
+    token   = os.environ.get('TELEGRAM_BOT_TOKEN', '')
+    chat_id = os.environ.get('TELEGRAM_CHAT_ID', '')
+    if not token or not chat_id:
+        return
+    try:
+        requests.post(
+            f'https://api.telegram.org/bot{token}/sendMessage',
+            json={'chat_id': chat_id, 'text': msg, 'parse_mode': 'HTML'},
+            timeout=8
+        )
+    except Exception as e:
+        print(f'[TELEGRAM] BŁĄD → {e}')
+
+
+@app.route('/api/test-email')
+def test_email():
+    if os.environ.get('FLASK_ENV') == 'production':
+        return jsonify({'error': 'disabled in production'}), 403
+    to = request.args.get('to', '')
+    if not to:
+        return jsonify({'error': 'Podaj ?to=twoj@email.com'}), 400
+    html = _build_email_html(kebab_name='Testowy Kebab Ali', kebab_rating='4.8',
+                             kebab_address='ul. Testowa 1, Kraków',
+                             kebab_gmaps_url='https://kebabrank.com')
+    _send_email_async(to, 'Test KebabRank 🥙', html)
+    return jsonify({'sent': True, 'to': to, 'check': 'sprawdź logi konsoli po błąd'})
 
 
 @app.route('/api/subscribe', methods=['POST'])
@@ -960,6 +991,7 @@ def subscribe_email():
                      (email, source, datetime.now().isoformat()))
         conn.commit()
         is_new = result.rowcount > 0
+        print(f'[SUBSCRIBE] email={email} source={source} is_new={is_new}')
 
         if is_new:
             city = None
@@ -974,9 +1006,107 @@ def subscribe_email():
             html = _build_email_html(kebab_name, kebab_rating, kebab_address, kebab_gmaps, city)
             threading.Thread(target=_send_email_async, args=(email, subject, html), daemon=True).start()
 
+            if kebab_name:
+                tg_source = f'🎲 Ruletka\n🥙 {kebab_name}' + (f' ⭐{kebab_rating}' if kebab_rating else '') + (f'\n📍 {kebab_address}' if kebab_address else '')
+            elif city:
+                tg_source = f'👁 Obserwuj miasto: <b>{city}</b>'
+            else:
+                tg_source = '📬 Newsletter (footer)'
+            tg_msg = f'🎯 <b>Nowa subskrypcja</b>\n📧 {email}\n{tg_source}\n🕐 {datetime.now().strftime("%H:%M")}'
+            threading.Thread(target=_notify_telegram, args=(tg_msg,), daemon=True).start()
+
         return jsonify({'ok': True}), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    finally:
+        conn.close()
+
+
+@app.route('/api/request-city', methods=['POST'])
+def request_city():
+    data = request.get_json(silent=True) or {}
+    city       = (data.get('city') or '').strip()[:100]
+    voivodeship= (data.get('voivodeship') or '').strip()[:60]
+    email      = (data.get('email') or '').strip().lower()
+    if not city or not email or '@' not in email:
+        return jsonify({'error': 'invalid_data'}), 400
+    db_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'subscribers.db')
+    import sqlite3
+    conn = sqlite3.connect(db_path)
+    try:
+        conn.execute('''CREATE TABLE IF NOT EXISTS city_requests
+                        (id INTEGER PRIMARY KEY AUTOINCREMENT,
+                         city TEXT, voivodeship TEXT,
+                         email TEXT, created_at TEXT)''')
+        conn.execute('INSERT INTO city_requests (city, voivodeship, email, created_at) VALUES (?,?,?,?)',
+                     (city, voivodeship, email, datetime.now().isoformat()))
+        conn.commit()
+    finally:
+        conn.close()
+
+    # Email do użytkownika
+    user_html = f"""<!DOCTYPE html><html><head><meta charset="utf-8"></head>
+    <body style="margin:0;padding:0;background:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#f8fafc;padding:32px 16px;">
+      <tr><td align="center">
+        <table width="560" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.08);">
+          <tr><td style="background:linear-gradient(135deg,#1e293b,#0f172a);padding:28px 32px;text-align:center;">
+            <p style="margin:0;font-size:26px;font-weight:900;color:#fbbf24;">🥙 KebabRank</p>
+            <p style="margin:6px 0 0;font-size:13px;color:#94a3b8;">kebabrank.com</p>
+          </td></tr>
+          <tr><td style="padding:32px;">
+            <p style="margin:0 0 16px;font-size:20px;font-weight:800;color:#1e293b;">Zgłoszenie przyjęte! 🎉</p>
+            <p style="color:#475569;font-size:15px;line-height:1.7;">Dziękujemy za zgłoszenie <strong>{city}</strong>
+            {f'({voivodeship})' if voivodeship else ''} do KebabRank!</p>
+            <div style="background:#fffbeb;border:2px solid #fbbf24;border-radius:12px;padding:18px 20px;margin:20px 0;">
+              <p style="margin:0;font-size:14px;color:#92400e;line-height:1.6;">
+                Rozpatrzymy wniosek i zbierzemy dane o kebabowniach w Twoim mieście.<br>
+                <strong>Poinformujemy Cię mailem gdy miasto zostanie dodane do rankingu.</strong>
+              </p>
+            </div>
+            <p style="color:#94a3b8;font-size:13px;margin:0;">Zespół KebabRank •
+              <a href="https://kebabrank.com" style="color:#fbbf24;">kebabrank.com</a></p>
+          </td></tr>
+        </table>
+      </td></tr>
+    </table></body></html>"""
+    threading.Thread(target=_send_email_async,
+                     args=(email, f'Zgłoszenie miasta {city} przyjęte 🥙', user_html),
+                     daemon=True).start()
+
+    # Powiadomienie dla admina — email
+    admin_email = os.environ.get('FROM_EMAIL', '')
+    if admin_email:
+        admin_html = f"<p>Nowe zgłoszenie miasta:</p><ul><li><b>Miasto:</b> {city}</li><li><b>Województwo:</b> {voivodeship}</li><li><b>Email:</b> {email}</li></ul>"
+        threading.Thread(target=_send_email_async,
+                         args=(admin_email, f'[KebabRank] Nowe zgłoszenie: {city}', admin_html),
+                         daemon=True).start()
+
+    # Powiadomienie dla admina — Telegram
+    tg_msg = (f'🏙 <b>Nowe zgłoszenie miasta</b>\n'
+              f'📍 {city}' + (f', {voivodeship}' if voivodeship else '') +
+              f'\n📧 {email}\n🕐 {datetime.now().strftime("%H:%M")}')
+    threading.Thread(target=_notify_telegram, args=(tg_msg,), daemon=True).start()
+
+    return jsonify({'ok': True}), 200
+
+
+@app.route('/api/city-requests/export')
+def export_city_requests():
+    secret = request.args.get('key', '')
+    if secret != os.environ.get('ADMIN_KEY', 'kebab2026'):
+        return jsonify({'error': 'unauthorized'}), 401
+    import sqlite3
+    db_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'subscribers.db')
+    conn = sqlite3.connect(db_path)
+    try:
+        conn.execute('''CREATE TABLE IF NOT EXISTS city_requests
+                        (id INTEGER PRIMARY KEY AUTOINCREMENT,
+                         city TEXT, voivodeship TEXT,
+                         email TEXT, created_at TEXT)''')
+        rows = conn.execute('SELECT city, voivodeship, email, created_at FROM city_requests ORDER BY id DESC').fetchall()
+        return jsonify({'count': len(rows),
+                        'requests': [{'city': r[0], 'voivodeship': r[1], 'email': r[2], 'created_at': r[3]} for r in rows]})
     finally:
         conn.close()
 
