@@ -1322,7 +1322,11 @@ async function checkAndLoadRankings(cityName, limit = 10) {
     const container = $id('city-tab');
 
     // 1. Start Transition (Blur & Fade existing content)
-    const hasExistingContent = container.children.length > 0 && !container.innerHTML.includes('search-prompt');
+    // Blok SSR (#seo-ssr-rankings) to treść dla robotów — traktuj jak pusty kontener,
+    // żeby pierwsze renderowanie nie migało przejściem blur.
+    const hasExistingContent = container.children.length > 0
+        && !container.innerHTML.includes('search-prompt')
+        && !container.querySelector('#seo-ssr-rankings');
     if (hasExistingContent) {
         container.classList.remove('ranking-fade-in');
         container.classList.add('rankings-transitioning');

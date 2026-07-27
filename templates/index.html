@@ -112,9 +112,44 @@
 </div>
 <!-- City Rankings Container -->
 <div id="city-tab" class="tab-content active space-y-4">
+    {% if seo_rankings and initial_city %}
+    {# ---------------------------------------------------------------------
+       Ranking renderowany po stronie serwera — WYŁĄCZNIE dla robotów.
+       app.js podmienia innerHTML #city-tab zaraz po starcie, więc użytkownik
+       widzi normalne karty. Bez tego bloku Googlebot dostawał pustą stronę
+       (2 tys. znaków chrome'u UI, zero nazw lokali).
+       Nie usuwaj — to jedyna treść, którą indeksuje crawler.
+    --------------------------------------------------------------------- #}
+    <div id="seo-ssr-rankings">
+        <p class="text-sm text-gray-400 leading-relaxed px-1 pb-2">
+            Ranking najlepszych kebabów w {{ seo_city_locative }} — {{ seo_rankings|length }} najwyżej
+            ocenianych lokali serwujących kebab, doner i tortillę. Pozycje wyliczane są na podstawie
+            ocen Google, liczby opinii i analizy sentymentu AI. Żaden lokal nie płaci za miejsce w rankingu.
+        </p>
+        <ol class="space-y-2">
+            {% for kebab in seo_rankings %}
+            <li class="flex items-start gap-3 p-3 rounded-xl bg-white/5 border border-white/10">
+                <span class="text-primary font-black text-sm shrink-0 w-7">#{{ loop.index }}</span>
+                <div class="min-w-0">
+                    <h2 class="text-white font-bold text-sm leading-tight">{{ kebab.name }}</h2>
+                    {% if kebab.address %}
+                    <p class="text-gray-400 text-xs mt-0.5">{{ kebab.address }}</p>
+                    {% endif %}
+                    <p class="text-gray-300 text-xs mt-1">
+                        Ocena {{ kebab.rating }}/5
+                        {% if kebab.total_reviews %} · {{ kebab.total_reviews }} opinii{% endif %}
+                        {% if kebab.rank_score %} · wynik {{ kebab.rank_score }}/100{% endif %}
+                    </p>
+                </div>
+            </li>
+            {% endfor %}
+        </ol>
+    </div>
+    {% else %}
     <p class="text-center text-gray-500 py-10" data-translate="search-prompt">
         Search for a city above to see the best kebabs.
     </p>
+    {% endif %}
 </div>
 
 <!-- Global Rankings Container -->

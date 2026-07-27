@@ -15,6 +15,7 @@ from flask import Response
 from services.google_places import GooglePlacesService
 from services.pocketbase_db import PocketbaseService
 from services.ranking import RankingService
+from services.city_grammar import locative
 from services.data_updater import DataUpdater
 # --- START: Add AI-related imports ---
 from services.ai_data_updater import AIDataUpdater
@@ -158,7 +159,30 @@ def index():
                          page_title="Kebab Rank 2026 - Ranking Najlepszych Kebabów w Polsce | Wspierany AI",
                          page_description="Odkryj najlepsze kebaby w Polsce! Kebab Rank 2026 to pierwszy w kraju ranking kebabów wspierany przez sztuczną inteligencję. Znajdź swój ulubiony lokal!",
                          page_keywords="kebab, ranking kebabów, najlepszy kebab w Polsce, doner, tortilla, kebab ranking, jedzenie, rzemieślniczy kebab",
-                         seo_rankings=seo_rankings)
+                         seo_rankings=seo_rankings,
+                         seo_city_locative="Polsce")
+
+
+def _city_seo_meta(city_name):
+    """
+    Buduje meta-tagi strony miasta z poprawną odmianą przez miejscownik.
+    Wcześniej dawało to niegramatyczne "Najlepszy kebab w Kraków" na 71 stronach.
+    Keywords celowo mieszają mianownik i miejscownik — ludzie szukają obu form.
+    """
+    loc = locative(city_name)
+    return {
+        'page_title': f"Najlepszy kebab w {loc} – Ranking kebabów 2026 | KebabRank",
+        'page_description': (
+            f"Ranking najlepszych kebabów w {loc}. Sprawdź, gdzie zjeść najlepszy "
+            f"doner i tortillę w {loc} — na podstawie ocen Google i analizy AI."
+        ),
+        'page_keywords': (
+            f"kebab {city_name}, najlepszy kebab w {loc}, kebaby {city_name}, "
+            f"doner {city_name}, tortilla {city_name}, ranking kebabów {city_name}"
+        ),
+        'page_h1': f"Najlepszy kebab w {loc}",
+        'seo_city_locative': loc,
+    }
 
 
 @app.route('/kebab-<city_slug>')
@@ -186,27 +210,21 @@ def city_page_seo(city_slug):
         if search_slug in city_mapping:
             city_name = city_mapping[search_slug]
             # Fetch city rankings for SEO
-            city_rankings = db_service.get_city_rankings(city_name, limit=5)
+            city_rankings = db_service.get_city_rankings(city_name, limit=10)
             return render_template('index.html', initial_city=city_name,
-                                 page_title=f"Najlepszy Kebab w {city_name} - Ranking {city_name} 2026 | Kebab Rank",
-                                 page_description=f"Ranking najlepszych kebabów w {city_name}. Sprawdź gdzie zjeść najlepszy doner i tortillę w {city_name} na podstawie analizy AI i ocen Google.",
-                                 page_keywords=f"kebab {city_name}, najlepszy kebab w {city_name}, kebaby {city_name}, doner {city_name}, tortilla {city_name}, ranking kebabów {city_name}",
-                                 page_h1=f"Najlepszy kebab w {city_name}",
-                                 seo_rankings=city_rankings)
+                                 seo_rankings=city_rankings,
+                                 **_city_seo_meta(city_name))
         else:
             # Try to find a close match
             for slug, name in city_mapping.items():
                 if search_slug in slug or slug in search_slug:
                     city_name = name
-                    city_rankings = db_service.get_city_rankings(city_name, limit=5)
-                    return render_template('index.html', 
+                    city_rankings = db_service.get_city_rankings(city_name, limit=10)
+                    return render_template('index.html',
                                          initial_city=city_name,
-                                         page_title=f"Najlepszy Kebab w {city_name} - Ranking {city_name} 2026 | Kebab Rank",
-                                         page_description=f"Ranking najlepszych kebabów w {city_name}. Sprawdź gdzie zjeść najlepszy doner i tortillę in {city_name} na podstawie analizy AI i ocen Google.",
-                                         page_keywords=f"kebab {city_name}, najlepszy kebab w {city_name}, kebaby {city_name}, doner {city_name}, tortilla {city_name}, ranking kebabów {city_name}",
-                                         page_h1=f"Najlepszy kebab w {city_name}",
-                                         seo_rankings=city_rankings)
-            
+                                         seo_rankings=city_rankings,
+                                         **_city_seo_meta(city_name))
+
             return render_template('blog/404.html'), 404
     except Exception as e:
         print(f"Error in city_page_seo route: {e}")
@@ -730,9 +748,76 @@ def blog_page(slug):
 
 
 @app.route('/sitemap.xml')
+@cache.cached(timeout=21600)  # 6h — sitemapa zmienia się tylko przy update'cie danych
 def sitemap():
-    """Serve sitemap"""
-    return send_from_directory('static', 'sitemap.xml')
+    """
+    Sitemapa generowana z bazy i z katalogu bloga.
+
+    Wcześniej był to statyczny plik, który zwietrzał: lastmod pokazywał
+    2025-06 przy danych aktualizowanych co tydzień, a nowe miasta i artykuły
+    trzeba było dopisywać ręcznie (jeden artykuł wypadł). Google widząc
+    stary lastmod rzadziej wraca po nowe treści.
+    """
+    import xml.sax.saxutils as su
+
+    BASE = 'https://www.kebabrank.com'
+    PL_MAP = {'ł': 'l', 'ó': 'o', 'ą': 'a', 'ę': 'e', 'ć': 'c',
+              'ń': 'n', 'ś': 's', 'ź': 'z', 'ż': 'z'}
+
+    def slugify(name):
+        s = name.lower()
+        for char, repl in PL_MAP.items():
+            s = s.replace(char, repl)
+        return s.replace(' ', '-')
+
+    today = datetime.now().strftime('%Y-%m-%d')
+
+    # Data ostatniej aktualizacji rankingów — wspólny lastmod dla stron miast
+    try:
+        last_update = db_service.get_most_recent_update()
+        data_date = last_update.strftime('%Y-%m-%d') if last_update else today
+    except Exception as e:
+        print(f"[SITEMAP] Nie udało się pobrać daty update'u: {e}")
+        data_date = today
+
+    urls = [
+        (f'{BASE}/', today, 'daily', '1.0'),
+        (f'{BASE}/blog', today, 'weekly', '0.8'),
+        (f'{BASE}/privacy', '2026-01-01', 'yearly', '0.3'),
+        (f'{BASE}/terms', '2026-01-01', 'yearly', '0.3'),
+    ]
+
+    # Strony miast — prosto z bazy, więc nowe miasto trafia tu automatycznie
+    try:
+        for city in db_service.get_cities():
+            urls.append((f"{BASE}/kebab-{slugify(city['name'])}",
+                         data_date, 'weekly', '0.9'))
+    except Exception as e:
+        print(f"[SITEMAP] Nie udało się pobrać miast: {e}")
+
+    # Artykuły bloga — z katalogu szablonów, więc nowy plik trafia tu automatycznie
+    try:
+        blog_dir = os.path.join(app.root_path, 'templates', 'blog')
+        for fname in sorted(os.listdir(blog_dir)):
+            if not fname.endswith('.html') or fname in ('index.html', '404.html'):
+                continue
+            mtime = os.path.getmtime(os.path.join(blog_dir, fname))
+            urls.append((f'{BASE}/blog/{fname[:-5]}',
+                         datetime.fromtimestamp(mtime).strftime('%Y-%m-%d'),
+                         'monthly', '0.7'))
+    except Exception as e:
+        print(f"[SITEMAP] Nie udało się odczytać bloga: {e}")
+
+    parts = ['<?xml version="1.0" encoding="UTF-8"?>',
+             '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
+    for loc, lastmod, freq, prio in urls:
+        parts.append(
+            f'  <url><loc>{su.escape(loc)}</loc><lastmod>{lastmod}</lastmod>'
+            f'<changefreq>{freq}</changefreq><priority>{prio}</priority></url>'
+        )
+    parts.append('</urlset>')
+
+    return Response('\n'.join(parts), mimetype='application/xml')
 
 
 @app.route('/favicon.ico') 
