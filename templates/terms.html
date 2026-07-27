@@ -5,12 +5,12 @@ Rank{% endif %}{% endblock %}
 
 {% block content %}
 <div class="h-full w-full overflow-y-auto bg-background-dark flex justify-center">
-    <div class="w-full max-w-4xl bg-[#0f172a] border-x border-white/5 relative z-20 shadow-2xl min-h-screen">
+    <div class="w-full max-w-4xl bg-[#14100c] border-x border-white/5 relative z-20 shadow-2xl min-h-screen">
         <header
             class="sticky top-0 z-50 bg-surface-dark/95 backdrop-blur-md border-b border-white/5 px-6 py-4 flex items-center justify-between">
             <a href="/" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
                 <div
-                    class="w-8 h-8 rounded-md bg-primary flex items-center justify-center shadow-[0_0_10px_rgba(255,106,0,0.4)]">
+                    class="w-8 h-8 rounded-md bg-primary flex items-center justify-center shadow-[0_0_10px_rgba(232,160,32,0.4)]">
                     <span class="material-icons text-white text-lg">kebab_dining</span>
                 </div>
                 <div class="text-xl font-black tracking-tighter uppercase italic text-white flex items-center">
@@ -27,90 +27,110 @@ Rank{% endif %}{% endblock %}
         </header>
 
         <article class="p-6 md:p-12 pb-24 prose prose-invert max-w-none">
-            <h1 class="text-3xl md:text-5xl font-black text-white mb-8" data-translate="legal-terms-title">Regulamin
-                Serwisu KebabRank.com</h1>
+            <h1 class="text-3xl md:text-5xl font-black text-white mb-8">Regulamin Serwisu KebabRank.com</h1>
 
             <div class="space-y-8 text-gray-300">
                 <section>
-                    <h2 class="text-xl font-bold text-white mb-4" data-translate="legal-provision-1-title">§ 1.
-                        Postanowienia ogólne</h2>
+                    <h2 class="text-xl font-bold text-white mb-4">§ 1. Postanowienia ogólne</h2>
                     <ol class="list-decimal pl-6 space-y-2">
-                        <li data-translate="legal-provision-1-1">Niniejszy Regulamin określa zasady korzystania z
-                            serwisu internetowego dostępnego pod adresem https://kebabrank.com (dalej: "Serwis").</li>
-                        <li data-translate="legal-provision-1-2">Właścicielem i administratorem Serwisu jest Michal
-                            Szafron, kontakt: kebabrank@gmail.com (dalej: "Administrator").</li>
-                        <li data-translate="legal-provision-1-3">Korzystanie z Serwisu jest bezpłatne i dobrowolne.</li>
-                        <li data-translate="legal-provision-1-4">Serwis ma charakter wyłącznie informacyjny i
-                            hobbystyczny. Jego celem jest prezentacja subiektywnych rankingów punktów gastronomicznych.
-                        </li>
+                        <li>Niniejszy Regulamin określa zasady korzystania z serwisu internetowego dostępnego pod adresem <strong class="text-white">https://kebabrank.com</strong> (dalej: „Serwis").</li>
+                        <li>Właścicielem i administratorem Serwisu jest Michał Szafron, kontakt: <a href="mailto:kebabrank@gmail.com" class="text-primary">kebabrank@gmail.com</a> (dalej: „Administrator").</li>
+                        <li>Korzystanie z Serwisu jest bezpłatne i dobrowolne.</li>
+                        <li>Serwis ma charakter wyłącznie informacyjny i hobbystyczny. Jego celem jest prezentacja rankingów punktów gastronomicznych generowanych przy wsparciu sztucznej inteligencji.</li>
+                        <li>Korzystanie z Serwisu oznacza akceptację niniejszego Regulaminu.</li>
                     </ol>
                 </section>
 
                 <section>
-                    <h2 class="text-xl font-bold text-white mb-4" data-translate="legal-provision-2-title">§ 2. Rodzaj i
-                        zakres usług</h2>
+                    <h2 class="text-xl font-bold text-white mb-4">§ 2. Rodzaj i zakres usług</h2>
+                    <ol class="list-decimal pl-6 space-y-2">
+                        <li>Serwis umożliwia Użytkownikom:
+                            <ul class="list-disc pl-6 mt-2 space-y-1">
+                                <li>przeglądanie rankingu kebabów generowanego przy użyciu algorytmów AI;</li>
+                                <li>przeglądanie lokalizacji punktów gastronomicznych na mapie interaktywnej;</li>
+                                <li>zapoznawanie się z ocenami i statystykami lokali;</li>
+                                <li>korzystanie z funkcji „Radar" — wyszukiwania najbliższych kebabów na podstawie lokalizacji Użytkownika (za jego wyraźną zgodą);</li>
+                                <li>korzystanie z funkcji „Ruletka" — losowego wyboru lokalu;</li>
+                                <li>dobrowolny zapis na powiadomienia e-mail o zmianach w rankingu (newsletter);</li>
+                                <li>zgłaszanie propozycji nowych miast do rankingu.</li>
+                            </ul>
+                        </li>
+                        <li>Serwis nie prowadzi sprzedaży produktów, nie pośredniczy w zamawianiu jedzenia ani nie pobiera opłat od Użytkowników.</li>
+                        <li>W Serwisie nie ma możliwości zakładania konta użytkownika (rejestracji).</li>
+                    </ol>
+                </section>
+
+                <section>
+                    <h2 class="text-xl font-bold text-white mb-4">§ 3. Funkcja Radar — geolokalizacja</h2>
+                    <ol class="list-decimal pl-6 space-y-2">
+                        <li>Funkcja „Radar" umożliwia wyszukanie kebabów w pobliżu aktualnej lokalizacji Użytkownika. Korzystanie z tej funkcji wymaga udzielenia zgody na dostęp do lokalizacji urządzenia za pośrednictwem systemowego okna dialogowego przeglądarki.</li>
+                        <li>Zgoda na dostęp do lokalizacji jest całkowicie dobrowolna. Odmowa jej udzielenia nie ogranicza dostępu do pozostałych funkcji Serwisu (ranking, mapa, ruletka, newsletter).</li>
+                        <li>Dane lokalizacyjne (współrzędne GPS) pobierane przez funkcję Radar <strong class="text-white">nie są zapisywane</strong> na serwerach Administratora. Są używane wyłącznie do obliczenia odległości od lokali w rankingu w trakcie bieżącej sesji i nie są przekazywane osobom trzecim.</li>
+                        <li>Użytkownik może wycofać zgodę na dostęp do lokalizacji w dowolnym momencie, zmieniając ustawienia uprawnień w swojej przeglądarce lub systemie operacyjnym.</li>
+                        <li>Szczegółowe zasady przetwarzania danych lokalizacyjnych opisuje <a href="/privacy" class="text-primary">Polityka Prywatności</a> Serwisu.</li>
+                    </ol>
+                </section>
+
+                <section>
+                    <h2 class="text-xl font-bold text-white mb-4">§ 4. Odpowiedzialność i wyłączenia</h2>
+                    <ol class="list-decimal pl-6 space-y-2">
+                        <li>Administrator dokłada wszelkich starań, aby dane w Serwisie były aktualne, jednakże ranking jest generowany automatycznie (wspierany przez AI) na podstawie ogólnodostępnych danych. Administrator nie gwarantuje pełnej poprawności danych adresowych, godzin otwarcia lokali ani dostępności menu.</li>
+                        <li>Ranking „TOP 10" oraz wskaźniki „Wynik AI" są rezultatem analizy automatycznej i stanowią subiektywną ocenę algorytmu. Administrator nie ponosi odpowiedzialności za niezadowolenie Użytkownika z jakości usług świadczonych przez lokale gastronomiczne wymienione w Serwisie.</li>
+                        <li>Decyzję o skorzystaniu z usług danego lokalu Użytkownik podejmuje na własną odpowiedzialność.</li>
+                        <li>Wyniki funkcji „Radar" (lista najbliższych lokali) zależą od dokładności systemu GPS urządzenia Użytkownika oraz od aktualności bazy danych Serwisu. Administrator nie gwarantuje kompletności wyników w każdej lokalizacji.</li>
+                    </ol>
+                </section>
+
+                <section>
+                    <h2 class="text-xl font-bold text-white mb-4">§ 5. Wymagania techniczne</h2>
+                    <p class="mb-2">Do korzystania z Serwisu niezbędne są:</p>
                     <ul class="list-disc pl-6 space-y-2">
-                        <li data-translate="legal-provision-2-1">Serwis umożliwia Użytkownikom: a) przeglądanie rankingu
-                            kebabów generowanego przy użyciu algorytmów sztucznej inteligencji (AI); b) przeglądanie
-                            lokalizacji punktów na mapie; c) zapoznawanie się z ocenami i statystykami lokali.</li>
-                        <li data-translate="legal-provision-2-2">Serwis nie prowadzi sprzedaży produktów, nie
-                            pośredniczy w zamawianiu jedzenia ani nie pobiera opłat od Użytkowników.</li>
-                        <li>W Serwisie nie ma możliwości zakładania konta użytkownika (rejestracji). Serwis oferuje możliwość dobrowolnego zapisu na powiadomienia e-mail o zmianach w rankingu (newsletter).</li>
+                        <li>Urządzenie z dostępem do Internetu.</li>
+                        <li>Przeglądarka internetowa obsługująca HTML5, JavaScript oraz pliki cookies (np. Chrome, Firefox, Safari, Edge).</li>
+                        <li>Dla funkcji „Radar": urządzenie wyposażone w moduł GPS lub inny mechanizm geolokalizacji (Wi-Fi, sieć komórkowa) oraz przeglądarka obsługująca Geolocation API.</li>
                     </ul>
                 </section>
 
                 <section>
-                    <h2 class="text-xl font-bold text-white mb-4" data-translate="legal-provision-3-title">§ 3.
-                        Odpowiedzialność i wyłączenia</h2>
-                    <ul class="list-disc pl-6 space-y-2">
-                        <li data-translate="legal-provision-3-1">Administrator dokłada wszelkich starań, aby dane w
-                            Serwisie były aktualne, jednakże ranking jest generowany automatycznie (wspierany przez AI)
-                            na podstawie ogólnodostępnych danych. Administrator nie gwarantuje pełnej poprawności danych
-                            adresowych, godzin otwarcia lokali ani dostępności menu.</li>
-                        <li data-translate="legal-provision-3-2">Ranking "TOP 10" oraz wskaźniki "Wynik AI" są
-                            rezultatem analizy automatycznej i stanowią subiektywną ocenę algorytmu. Administrator nie
-                            ponosi odpowiedzialności za niezadowolenie Użytkownika z jakości usług świadczonych przez
-                            lokale gastronomiczne wymienione w Serwisie.</li>
-                        <li data-translate="legal-provision-3-3">Decyzję o skorzystaniu z usług danego lokalu Użytkownik
-                            podejmuje na własną odpowiedzialność.</li>
-                    </ul>
+                    <h2 class="text-xl font-bold text-white mb-4">§ 6. Prawa autorskie</h2>
+                    <ol class="list-decimal pl-6 space-y-2">
+                        <li>Wszelkie treści, grafiki (w tym logo KebabRank), układ strony oraz algorytmy prezentacji danych są własnością Administratora i podlegają ochronie prawnej na podstawie ustawy z dnia 4 lutego 1994 r. o prawie autorskim i prawach pokrewnych.</li>
+                        <li>Kopiowanie, powielanie lub wykorzystywanie elementów Serwisu bez zgody Administratora jest zabronione.</li>
+                        <li>Dane o lokalach gastronomicznych (nazwy, adresy, oceny) pochodzą ze źródeł publicznych. Administrator nie rości sobie praw do tych danych.</li>
+                    </ol>
                 </section>
 
                 <section>
-                    <h2 class="text-xl font-bold text-white mb-4" data-translate="legal-provision-4-title">§ 4.
-                        Wymagania techniczne</h2>
-                    <p class="mb-2" data-translate="legal-provision-4-desc">Do korzystania z Serwisu niezbędne są:</p>
-                    <ul class="list-disc pl-6 space-y-2">
-                        <li data-translate="legal-provision-4-1">Urządzenie z dostępem do Internetu.</li>
-                        <li data-translate="legal-provision-4-2">Przeglądarka internetowa obsługująca HTML5, JavaScript
-                            oraz pliki cookies (np. Chrome, Firefox, Safari).</li>
-                    </ul>
-                </section>
-
-                <section>
-                    <h2 class="text-xl font-bold text-white mb-4" data-translate="legal-provision-5-title">§ 5. Prawa
-                        autorskie</h2>
-                    <ul class="list-disc pl-6 space-y-2">
-                        <li data-translate="legal-provision-5-1">Wszelkie treści, grafiki (w tym logo KebabRank), układ
-                            strony oraz algorytmy prezentacji danych są własnością Administratora i podlegają ochronie
-                            prawnej.</li>
-                        <li data-translate="legal-provision-5-2">Kopiowanie, powielanie lub wykorzystywanie elementów
-                            Serwisu bez zgody Administratora jest zabronione.</li>
-                    </ul>
-                </section>
-
-                <section>
-                    <h2 class="text-xl font-bold text-white mb-4">§ 6. Newsletter i powiadomienia e-mail</h2>
+                    <h2 class="text-xl font-bold text-white mb-4">§ 7. Newsletter i powiadomienia e-mail</h2>
                     <ol class="list-decimal pl-6 space-y-2">
                         <li>Użytkownik może dobrowolnie zapisać się na powiadomienia e-mail o zmianach w rankingu kebabów, podając swój adres e-mail w odpowiednim formularzu w Serwisie.</li>
-                        <li>Zapis na powiadomienia jest dobrowolny i bezpłatny. Podanie adresu e-mail stanowi wyrażenie zgody na przetwarzanie danych w tym celu (art. 6 ust. 1 lit. a RODO).</li>
-                        <li>Użytkownik może w każdej chwili zrezygnować z subskrypcji, wysyłając wiadomość na adres <a href="mailto:info@kebabrank.com" class="text-primary">info@kebabrank.com</a> z treścią "wypisz". Administrator usunie adres e-mail z bazy niezwłocznie, nie później niż w ciągu 7 dni roboczych.</li>
-                        <li>Administrator nie wysyła wiadomości o charakterze reklamowym ani nie udostępnia adresów e-mail podmiotom trzecim w celach marketingowych.</li>
+                        <li>Zapis na powiadomienia jest dobrowolny i bezpłatny. Podanie adresu e-mail stanowi wyrażenie zgody na przetwarzanie danych w tym celu (art. 6 ust. 1 lit. a RODO) oraz na otrzymywanie informacji handlowych drogą elektroniczną (art. 10 ust. 2 Ustawy o świadczeniu usług drogą elektroniczną).</li>
+                        <li>Każda wiadomość e-mail wysyłana przez Serwis zawiera link umożliwiający natychmiastowe wypisanie się z subskrypcji. Użytkownik może również zrezygnować, wysyłając wiadomość na adres <a href="mailto:kebabrank@gmail.com" class="text-primary">kebabrank@gmail.com</a> z treścią „wypisz". Adres e-mail zostanie usunięty niezwłocznie, nie później niż w ciągu 3 dni roboczych.</li>
+                        <li>Administrator nie wysyła wiadomości o charakterze reklamowym na rzecz osób trzecich ani nie udostępnia adresów e-mail podmiotom marketingowym.</li>
+                        <li>Szczegółowe zasady przetwarzania adresów e-mail opisuje <a href="/privacy" class="text-primary">Polityka Prywatności</a> Serwisu.</li>
+                    </ol>
+                </section>
+
+                <section>
+                    <h2 class="text-xl font-bold text-white mb-4">§ 8. Zmiany Regulaminu</h2>
+                    <ol class="list-decimal pl-6 space-y-2">
+                        <li>Administrator zastrzega sobie prawo do zmiany niniejszego Regulaminu w przypadku zmiany funkcjonalności Serwisu, wymogów prawnych lub innych uzasadnionych przyczyn.</li>
+                        <li>O istotnych zmianach Regulaminu subskrybenci newslettera zostaną poinformowani drogą e-mail z co najmniej 7-dniowym wyprzedzeniem.</li>
+                        <li>Aktualna wersja Regulaminu zawsze dostępna jest pod adresem <strong class="text-white">kebabrank.com/terms</strong>.</li>
+                    </ol>
+                </section>
+
+                <section>
+                    <h2 class="text-xl font-bold text-white mb-4">§ 9. Postanowienia końcowe</h2>
+                    <ol class="list-decimal pl-6 space-y-2">
+                        <li>W sprawach nieuregulowanych niniejszym Regulaminem stosuje się przepisy prawa polskiego, w szczególności Kodeksu cywilnego, ustawy o świadczeniu usług drogą elektroniczną oraz RODO.</li>
+                        <li>Wszelkie spory wynikające z korzystania z Serwisu rozstrzygać będzie sąd właściwy dla siedziby Administratora.</li>
+                        <li>Jeśli masz pytania dotyczące Regulaminu, skontaktuj się z nami: <a href="mailto:kebabrank@gmail.com" class="text-primary">kebabrank@gmail.com</a>.</li>
                     </ol>
                 </section>
 
                 <div class="mt-12 pt-8 border-t border-white/5 text-sm text-gray-500 font-mono">
-                    <span data-translate="refreshing">Ostatnia aktualizacja:</span> {{ current_date }}
+                    <span>Ostatnia aktualizacja:</span> {{ current_date }}
                 </div>
             </div>
         </article>

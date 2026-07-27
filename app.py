@@ -141,7 +141,8 @@ def inject_cities():
         city['slug'] = slugify(city['name'])
         
     result = dict(available_cities=all_cities, popular_cities=popular_cities)
-    cache.set('inject_cities_result', result, timeout=3600)
+    if all_cities:  # Don't cache empty result — may be a transient PocketBase error
+        cache.set('inject_cities_result', result, timeout=3600)
     return result
 
 @app.route('/')
@@ -152,7 +153,8 @@ def index():
         seo_rankings = db_service.get_global_rankings(limit=5)
         cache.set('index_seo_rankings', seo_rankings, timeout=3600)
     
-    return render_template('index.html', 
+    return render_template('index.html',
+                         initial_city='Kraków',
                          page_title="Kebab Rank 2026 - Ranking Najlepszych Kebabów w Polsce | Wspierany AI",
                          page_description="Odkryj najlepsze kebaby w Polsce! Kebab Rank 2026 to pierwszy w kraju ranking kebabów wspierany przez sztuczną inteligencję. Znajdź swój ulubiony lokal!",
                          page_keywords="kebab, ranking kebabów, najlepszy kebab w Polsce, doner, tortilla, kebab ranking, jedzenie, rzemieślniczy kebab",
@@ -290,7 +292,7 @@ def get_city_rankings(city):
         
         last_update = db_service.get_last_update_time(city)
         update_interval_days = int(os.getenv('DATABASE_UPDATE_INTERVAL_DAYS', 7))
-        limit = min(int(request.args.get('limit', 10)), 120)  # Max 120 items
+        limit = min(int(request.args.get('limit', 10)), 200)  # Max 200 items
         offset = int(request.args.get('offset', 0))
         
         print(f"DEBUG: Last update: {last_update}, Interval: {update_interval_days} days")
@@ -399,6 +401,46 @@ def get_cities():
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
 
+@app.route('/api/cities/coords')
+@cache.cached(timeout=86400)
+def get_cities_coords():
+    """Return all cities with average lat/lng computed from their kebab places."""
+    try:
+        cities = db_service.client.collection('cities').get_full_list()
+        result = []
+        for city in cities:
+            places = db_service.client.collection('kebab_places').get_list(
+                1, 50,
+                query_params={
+                    'filter': f'city="{city.id}"',
+                    'fields': 'lat,lng',
+                }
+            )
+            lats, lngs = [], []
+            for p in places.items:
+                la = getattr(p, 'lat', None)
+                lo = getattr(p, 'lng', None)
+                if la and lo:
+                    try:
+                        lats.append(float(la))
+                        lngs.append(float(lo))
+                    except (ValueError, TypeError):
+                        pass
+            if lats and lngs:
+                result.append({
+                    'name': city.name,
+                    'slug': getattr(city, 'slug', city.name.lower()),
+                    'lat': round(sum(lats) / len(lats), 5),
+                    'lng': round(sum(lngs) / len(lngs), 5),
+                    'count': len(lats),
+                })
+        resp = jsonify({'status': 'success', 'data': result})
+        resp.headers['Cache-Control'] = 'public, max-age=86400'
+        return resp
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+
 @app.route('/api/last-update')
 def get_last_update():
     """Get the last update time for any city"""
@@ -461,7 +503,7 @@ def get_city_rankings_with_ai(city):
     try:
         # Get language and limit from query parameters
         lang = request.args.get('lang', 'pl')
-        limit = min(int(request.args.get('limit', 10)), 120)
+        limit = min(int(request.args.get('limit', 10)), 500)
         
         # Get basic rankings
         rankings = db_service.get_city_rankings(city, limit)
@@ -1030,6 +1072,19 @@ def request_city():
     email      = (data.get('email') or '').strip().lower()
     if not city or not email or '@' not in email:
         return jsonify({'error': 'invalid_data'}), 400
+
+    # Check if city already exists in the ranking
+    try:
+        _polish = str.maketrans('łóąęćńśźż', 'loacensza' if False else 'loacenszz')
+        def _norm(s):
+            t = s.lower().strip()
+            return t.translate(str.maketrans('łóąęćńśźż', 'loaecnszz'))
+        existing = db_service.get_cities()
+        city_names = [c.get('name', '') for c in (existing.get('data') or [])]
+        if any(_norm(cn) == _norm(city) for cn in city_names):
+            return jsonify({'error': 'city_exists', 'message': 'To miasto jest już w naszym rankingu!'}), 409
+    except Exception:
+        pass  # if check fails, allow submission through
     db_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'subscribers.db')
     import sqlite3
     conn = sqlite3.connect(db_path)
@@ -1130,4 +1185,4 @@ def export_subscribers():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5001, threaded=True)
+    app.run(debug=True, host='0.0.0.0', port=int(os.environ.get('PORT', 5001)), threaded=True)

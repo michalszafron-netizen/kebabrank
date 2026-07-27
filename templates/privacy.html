@@ -5,12 +5,12 @@ Rank{% endif %}{% endblock %}
 
 {% block content %}
 <div class="h-full w-full overflow-y-auto bg-background-dark flex justify-center">
-    <div class="w-full max-w-4xl bg-[#0f172a] border-x border-white/5 relative z-20 shadow-2xl min-h-screen">
+    <div class="w-full max-w-4xl bg-[#14100c] border-x border-white/5 relative z-20 shadow-2xl min-h-screen">
         <header
             class="sticky top-0 z-50 bg-surface-dark/95 backdrop-blur-md border-b border-white/5 px-6 py-4 flex items-center justify-between">
             <a href="/" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
                 <div
-                    class="w-8 h-8 rounded-md bg-primary flex items-center justify-center shadow-[0_0_10px_rgba(255,106,0,0.4)]">
+                    class="w-8 h-8 rounded-md bg-primary flex items-center justify-center shadow-[0_0_10px_rgba(232,160,32,0.4)]">
                     <span class="material-icons text-white text-lg">kebab_dining</span>
                 </div>
                 <div class="text-xl font-black tracking-tighter uppercase italic text-white flex items-center">
@@ -27,102 +27,106 @@ Rank{% endif %}{% endblock %}
         </header>
 
         <article class="p-6 md:p-12 pb-24 prose prose-invert max-w-none">
-            <h1 class="text-3xl md:text-5xl font-black text-white mb-8" data-translate="legal-privacy-title">Polityka
-                Prywatności i Plików Cookies Serwisu KebabRank.com</h1>
+            <h1 class="text-3xl md:text-5xl font-black text-white mb-8">Polityka Prywatności i Plików Cookies Serwisu KebabRank.com</h1>
 
             <div class="space-y-8 text-gray-300">
                 <section>
-                    <h2 class="text-xl font-bold text-white mb-4" data-translate="legal-admin-title">1. Administrator
-                        Danych</h2>
-                    <p data-translate="legal-admin-desc">Administratorem danych jest Michal Szafron, kontakt:
-                        kebabrank@gmail.com (dalej: "Administrator").</p>
+                    <h2 class="text-xl font-bold text-white mb-4">1. Administrator Danych</h2>
+                    <p>Administratorem danych osobowych jest Michał Szafron, kontakt: <a href="mailto:kebabrank@gmail.com" class="text-primary">kebabrank@gmail.com</a> (dalej: „Administrator"). W sprawach dotyczących danych osobowych można kontaktować się pod adresem: <a href="mailto:kebabrank@gmail.com" class="text-primary">kebabrank@gmail.com</a>.</p>
                 </section>
 
                 <section>
-                    <h2 class="text-xl font-bold text-white mb-4" data-translate="legal-data-purpose-title">2. Jakie
-                        dane przetwarzamy i w jakim celu?</h2>
-                    <p class="mb-4" data-translate="legal-privacy-first">Szanujemy Twoją prywatność. Serwis został
-                        zaprojektowany w duchu "Privacy First".</p>
-                    <ul class="list-disc pl-6 space-y-4">
-                        <li>
-                            <strong class="text-white">Newsletter / Powiadomienia e-mail:</strong>
-                            Użytkownik może dobrowolnie podać swój adres e-mail w celu otrzymywania powiadomień o zmianach w rankingu kebabów (nowy nr 1, nowe miejsca, duże wzrosty lub spadki). Podanie adresu jest całkowicie dobrowolne. Podstawą prawną przetwarzania jest zgoda Użytkownika (art. 6 ust. 1 lit. a RODO). Adres e-mail przechowywany jest do momentu wycofania zgody. Użytkownik może w każdej chwili zrezygnować z subskrypcji, wysyłając wiadomość na adres <a href="mailto:info@kebabrank.com" class="text-primary">info@kebabrank.com</a> z treścią "wypisz". Adresy e-mail nie są udostępniane podmiotom trzecim ani wykorzystywane w celach marketingowych przez osoby trzecie.
-                        </li>
-                        <li>
-                            <strong class="text-white">Pozostałe dane osobowe:</strong>
-                            Poza adresem e-mail (podawanym dobrowolnie) serwis nie zbiera innych danych osobowych. Nie ma formularzy rejestracji, kont użytkowników ani możliwości pozostawiania komentarzy.
-                        </li>
-                        <li>
-                            <strong class="text-white" data-translate="legal-logs-title">Logi serwera:</strong>
-                            <span data-translate="legal-logs-desc">Jak każda strona internetowa, nasz serwer
-                                automatycznie zapisuje zapytania wysyłane przez przeglądarkę (adres IP, data i czas,
-                                informacje o przeglądarce i systemie operacyjnym). Dane te nie są kojarzone z
-                                konkretnymi osobami i służą wyłącznie celom technicznym (diagnostyka, bezpieczeństwo
-                                serwera). Podstawą prawną jest uzasadniony interes Administratora (art. 6 ust. 1 lit. f
-                                RODO).</span>
-                        </li>
-                    </ul>
+                    <h2 class="text-xl font-bold text-white mb-4">2. Jakie dane przetwarzamy i w jakim celu?</h2>
+                    <p class="mb-4">Szanujemy Twoją prywatność. Serwis został zaprojektowany w duchu „Privacy First". Poniżej opisujemy wszystkie kategorie danych przetwarzanych w Serwisie.</p>
+
+                    <div class="space-y-6">
+                        <div class="pl-4 border-l-2 border-primary/40">
+                            <h3 class="text-white font-bold mb-2">a) Dane geolokalizacyjne (funkcja „Radar")</h3>
+                            <p class="mb-2">Serwis oferuje funkcję „Radar", która — za Twoją wyraźną zgodą wyrażoną poprzez okno uprawnień przeglądarki — uzyskuje dostęp do Twojej aktualnej lokalizacji (szerokość i długość geograficzna) w celu wskazania najbliższych kebabów z rankingu.</p>
+                            <ul class="list-disc pl-6 space-y-1 mt-2">
+                                <li><strong class="text-white">Podstawa prawna:</strong> zgoda Użytkownika (art. 6 ust. 1 lit. a RODO) udzielana poprzez systemowy dialog uprawnień przeglądarki.</li>
+                                <li><strong class="text-white">Zakres danych:</strong> współrzędne geograficzne urządzenia w chwili żądania.</li>
+                                <li><strong class="text-white">Przechowywanie:</strong> dane lokalizacyjne <strong class="text-primary">nie są zapisywane</strong> na serwerach Administratora — używane są wyłącznie w trakcie jednej sesji do obliczenia odległości od punktów w rankingu i nie są przekazywane osobom trzecim.</li>
+                                <li><strong class="text-white">Wycofanie zgody:</strong> możesz w każdej chwili cofnąć zgodę, zmieniając ustawienia uprawnień lokalizacji w przeglądarce lub systemie operacyjnym urządzenia. Odmowa dostępu do lokalizacji nie ogranicza dostępu do pozostałych funkcji Serwisu.</li>
+                            </ul>
+                        </div>
+
+                        <div class="pl-4 border-l-2 border-primary/40">
+                            <h3 class="text-white font-bold mb-2">b) Newsletter i powiadomienia e-mail</h3>
+                            <p class="mb-2">Użytkownik może dobrowolnie podać swój adres e-mail w celu otrzymywania powiadomień o zmianach w rankingu kebabów (nowy lider, nowe miejsca, duże wzrosty lub spadki).</p>
+                            <ul class="list-disc pl-6 space-y-1 mt-2">
+                                <li><strong class="text-white">Podstawa prawna:</strong> zgoda Użytkownika (art. 6 ust. 1 lit. a RODO) oraz — w zakresie przesyłania informacji handlowych drogą elektroniczną — art. 10 ust. 2 Ustawy z dnia 18 lipca 2002 r. o świadczeniu usług drogą elektroniczną (t.j. Dz.U. 2020 poz. 344 ze zm.).</li>
+                                <li><strong class="text-white">Cel:</strong> informowanie o zmianach w rankingu; brak wysyłki o charakterze reklamowym na rzecz osób trzecich.</li>
+                                <li><strong class="text-white">Okres przechowywania:</strong> do momentu wycofania zgody (wypisania się z subskrypcji).</li>
+                                <li><strong class="text-white">Rezygnacja:</strong> w każdej chwili, klikając link „wypisz się" w treści otrzymanej wiadomości lub wysyłając e-mail na adres <a href="mailto:kebabrank@gmail.com" class="text-primary">kebabrank@gmail.com</a> z treścią „wypisz". Rezygnacja jest skuteczna niezwłocznie, nie później niż w ciągu 3 dni roboczych.</li>
+                                <li><strong class="text-white">Udostępnianie:</strong> adresy e-mail nie są sprzedawane ani przekazywane podmiotom trzecim w celach marketingowych.</li>
+                            </ul>
+                        </div>
+
+                        <div class="pl-4 border-l-2 border-white/20">
+                            <h3 class="text-white font-bold mb-2">c) Formularz zgłoszenia miasta / restauracji</h3>
+                            <p>Użytkownik może dobrowolnie przesłać prośbę o dodanie nowego miasta do rankingu. Przesłane dane (nazwa miasta, opcjonalny adres e-mail kontaktowy) przetwarzane są na podstawie zgody (art. 6 ust. 1 lit. a RODO) wyłącznie w celu obsługi zgłoszenia.</p>
+                        </div>
+
+                        <div class="pl-4 border-l-2 border-white/20">
+                            <h3 class="text-white font-bold mb-2">d) Logi serwera</h3>
+                            <p>Jak każda strona internetowa, nasz serwer automatycznie zapisuje zapytania wysyłane przez przeglądarkę (adres IP, data i godzina, informacje o przeglądarce i systemie operacyjnym). Dane te nie są kojarzone z konkretnymi osobami i służą wyłącznie celom technicznym (diagnostyka, bezpieczeństwo serwera). Podstawą prawną jest uzasadniony interes Administratora (art. 6 ust. 1 lit. f RODO). Logi przechowywane są przez okres niezbędny do celów technicznych, nie dłużej niż 90 dni.</p>
+                        </div>
+                    </div>
                 </section>
 
                 <section>
-                    <h2 class="text-xl font-bold text-white mb-4" data-translate="legal-cookies-title">3. Pliki Cookies
-                        (Ciasteczka)</h2>
-                    <p class="mb-4" data-translate="legal-cookies-desc">Serwis wykorzystuje pliki cookies (małe pliki
-                        tekstowe zapisywane na urządzeniu Użytkownika) w ograniczonym zakresie:</p>
+                    <h2 class="text-xl font-bold text-white mb-4">3. Pliki Cookies (Ciasteczka)</h2>
+                    <p class="mb-4">Serwis wykorzystuje pliki cookies (małe pliki tekstowe zapisywane na urządzeniu Użytkownika) w ograniczonym zakresie:</p>
                     <ul class="list-disc pl-6 space-y-4">
-                        <li data-translate="legal-cookies-tech"><strong class="text-white">Cookies techniczne:</strong>
-                            Niezbędne do prawidłowego działania strony (np. zapamiętanie ustawień mapy czy widoku
-                            rankingu).</li>
+                        <li><strong class="text-white">Cookies techniczne (niezbędne):</strong> Konieczne do prawidłowego działania strony (np. zapamiętanie wybranego języka, ustawień widoku rankingu). Nie wymagają zgody Użytkownika.</li>
                         <li>
-                            <strong class="text-white" data-translate="legal-cookies-third-party">Cookies podmiotów
-                                trzecich:</strong>
+                            <strong class="text-white">Cookies podmiotów trzecich:</strong>
                             <ul class="mt-2 space-y-2 pl-4 border-l border-white/10">
-                                <li data-translate="legal-cookies-maps"><strong class="text-white">Mapy:</strong> Serwis
-                                    wykorzystuje mapy dostarczane przez zewnętrznych dostawców (OpenStreetMap /
-                                    CartoDB). Dostawcy ci mogą zapisywać własne pliki cookies w celu obsługi mapy.</li>
-                                <li data-translate="legal-cookies-analytics"><strong
-                                        class="text-white">Analityka:</strong> Korzystamy z anonimowych statystyk Google
-                                    Analytics w celu analizy ruchu na stronie. IP użytkowników jest anonimizowane.</li>
+                                <li><strong class="text-white">Mapy (OpenStreetMap / CartoDB / Leaflet):</strong> Serwis wyświetla mapy przy użyciu dostawców zewnętrznych. Dostawcy ci mogą zapisywać własne pliki cookies zgodnie ze swoimi politykami prywatności.</li>
+                                <li><strong class="text-white">Analityka (Google Analytics):</strong> Korzystamy z Google Analytics (Google LLC, USA) do anonimowej analizy ruchu. IP użytkowników jest anonimizowane przed przekazaniem do Google. Dane mogą być przekazywane do USA na podstawie Standardowych Klauzul Umownych (SCC) przyjętych przez Komisję Europejską. Więcej informacji: <a href="https://policies.google.com/privacy" class="text-primary" target="_blank" rel="noopener">polityka prywatności Google</a>.</li>
                             </ul>
                         </li>
                     </ul>
                 </section>
 
                 <section>
-                    <h2 class="text-xl font-bold text-white mb-4" data-translate="legal-manage-cookies-title">4.
-                        Zarządzanie plikami cookies</h2>
-                    <p data-translate="legal-manage-cookies-desc">Użytkownik może w każdej chwili zmienić ustawienia
-                        dotyczące plików cookies w swojej przeglądarce internetowej (zablokować je lub usunąć). Może to
-                        jednak wpłynąć na funkcjonalność mapy w Serwisie.</p>
+                    <h2 class="text-xl font-bold text-white mb-4">4. Zarządzanie plikami cookies</h2>
+                    <p>Użytkownik może w każdej chwili zmienić ustawienia dotyczące plików cookies w swojej przeglądarce (zablokować je lub usunąć). Może to jednak wpłynąć na działanie mapy oraz funkcji analitycznych w Serwisie. Wyłączenie cookies technicznych może uniemożliwić korzystanie z części funkcji Serwisu.</p>
                 </section>
 
                 <section>
-                    <h2 class="text-xl font-bold text-white mb-4">5. Prawa Użytkownika (RODO)</h2>
-                    <p class="mb-4">W związku z przetwarzaniem adresu e-mail przysługują Ci następujące prawa:</p>
+                    <h2 class="text-xl font-bold text-white mb-4">5. Przekazywanie danych</h2>
                     <ul class="list-disc pl-6 space-y-2">
-                        <li><strong class="text-white">Prawo dostępu</strong> — możesz zapytać jakie dane o Tobie przechowujemy.</li>
-                        <li><strong class="text-white">Prawo do usunięcia</strong> — możesz zażądać usunięcia swojego adresu e-mail z naszej bazy.</li>
-                        <li><strong class="text-white">Prawo do wycofania zgody</strong> — możesz w każdej chwili zrezygnować z subskrypcji bez podawania przyczyny.</li>
-                        <li><strong class="text-white">Prawo do skargi</strong> — masz prawo złożyć skargę do Prezesa Urzędu Ochrony Danych Osobowych (UODO), jeśli uważasz, że przetwarzamy Twoje dane niezgodnie z prawem.</li>
+                        <li>Dane techniczne (logi) oraz adresy e-mail subskrybentów mogą być powierzone dostawcy hostingu obsługującemu Serwis, wyłącznie w celu zapewnienia ciągłości działania strony (umowa powierzenia przetwarzania danych).</li>
+                        <li>Dane nie są sprzedawane ani udostępniane podmiotom marketingowym.</li>
+                        <li>Dane geolokalizacyjne nie są przechowywane ani przekazywane żadnym podmiotom trzecim.</li>
+                        <li>W zakresie usług Google Analytics dane mogą być przekazywane do USA na podstawie Standardowych Klauzul Umownych (SCC).</li>
                     </ul>
-                    <p class="mt-4">We wszystkich sprawach dotyczących danych osobowych skontaktuj się z nami: <a href="mailto:info@kebabrank.com" class="text-primary">info@kebabrank.com</a></p>
                 </section>
 
                 <section>
-                    <h2 class="text-xl font-bold text-white mb-4" data-translate="legal-share-title">6. Przekazywanie
-                        danych</h2>
-                    <p data-translate="legal-share-desc">Dane techniczne (logi) oraz adresy e-mail subskrybentów mogą być powierzone firmie hostingowej obsługującej Serwis wyłącznie w celu utrzymania ciągłości działania strony. Nie sprzedajemy ani nie udostępniamy żadnych danych podmiotom marketingowym.</p>
+                    <h2 class="text-xl font-bold text-white mb-4">6. Prawa Użytkownika (RODO)</h2>
+                    <p class="mb-4">W związku z przetwarzaniem danych osobowych przysługują Ci następujące prawa:</p>
+                    <ul class="list-disc pl-6 space-y-2">
+                        <li><strong class="text-white">Prawo dostępu (art. 15 RODO)</strong> — możesz uzyskać informację, jakie dane o Tobie przechowujemy.</li>
+                        <li><strong class="text-white">Prawo do sprostowania (art. 16 RODO)</strong> — możesz żądać poprawienia nieprawidłowych lub uzupełnienia niekompletnych danych.</li>
+                        <li><strong class="text-white">Prawo do usunięcia (art. 17 RODO)</strong> — możesz żądać usunięcia swoich danych osobowych (prawo do bycia zapomnianym).</li>
+                        <li><strong class="text-white">Prawo do ograniczenia przetwarzania (art. 18 RODO)</strong> — możesz żądać ograniczenia przetwarzania Twoich danych w określonych przypadkach.</li>
+                        <li><strong class="text-white">Prawo do przenoszenia danych (art. 20 RODO)</strong> — masz prawo otrzymać swoje dane w ustrukturyzowanym, powszechnie używanym formacie, jeśli przetwarzanie odbywa się na podstawie zgody.</li>
+                        <li><strong class="text-white">Prawo do wycofania zgody (art. 7 ust. 3 RODO)</strong> — możesz w każdej chwili wycofać zgodę na przetwarzanie danych (e-mail, geolokalizacja) bez negatywnych konsekwencji. Wycofanie zgody nie wpływa na zgodność z prawem przetwarzania dokonanego przed jej wycofaniem.</li>
+                        <li><strong class="text-white">Prawo do skargi (art. 77 RODO)</strong> — masz prawo złożyć skargę do Prezesa Urzędu Ochrony Danych Osobowych (ul. Stawki 2, 00-193 Warszawa, <a href="https://uodo.gov.pl" class="text-primary" target="_blank" rel="noopener">uodo.gov.pl</a>), jeśli uważasz, że przetwarzamy Twoje dane niezgodnie z prawem.</li>
+                    </ul>
+                    <p class="mt-4">Aby skorzystać z powyższych praw, skontaktuj się z nami: <a href="mailto:kebabrank@gmail.com" class="text-primary">kebabrank@gmail.com</a>. Odpowiemy w terminie do 30 dni od daty otrzymania żądania.</p>
                 </section>
 
                 <section>
-                    <h2 class="text-xl font-bold text-white mb-4" data-translate="legal-changes-title">6. Zmiany w
-                        polityce</h2>
-                    <p data-translate="legal-changes-desc">W przypadku zmiany funkcjonalności Serwisu, niniejsza
-                        Polityka może ulec zmianie. Aktualna wersja zawsze znajduje się pod tym adresem.</p>
+                    <h2 class="text-xl font-bold text-white mb-4">7. Zmiany w polityce prywatności</h2>
+                    <p>W przypadku zmiany funkcjonalności Serwisu lub zmian przepisów prawa, niniejsza Polityka może ulec zmianie. O istotnych zmianach poinformujemy subskrybentów newslettera. Aktualna wersja Polityki zawsze dostępna jest pod adresem <strong class="text-white">kebabrank.com/privacy</strong>.</p>
                 </section>
 
                 <div class="mt-12 pt-8 border-t border-white/5 text-sm text-gray-500 font-mono">
-                    <span data-translate="refreshing">Ostatnia aktualizacja:</span> {{ current_date }}
+                    <span>Ostatnia aktualizacja:</span> {{ current_date }}
                 </div>
             </div>
         </article>

@@ -114,6 +114,7 @@ const translations = {
         'footer-terms': 'Terms of Use',
         'legal-terms-nav': 'Terms',
         'view-list': 'List',
+        'nav-ranking': 'Ranking',
         'view-map': 'Map',
         'back': 'Back',
         'back-to-rankings': 'Back to rankings',
@@ -217,6 +218,7 @@ const translations = {
         'footer-terms': 'Regulamin',
         'legal-terms-nav': 'Regulamin',
         'view-list': 'Lista',
+        'nav-ranking': 'Ranking',
         'view-map': 'Mapa',
         'back': 'Powrót',
         'back-to-rankings': 'Wróć do rankingu',
@@ -258,7 +260,7 @@ const translations = {
         'legal-provision-3-title': '§ 3. Odpowiedzialność i wyłączenia',
         'legal-provision-3-1': 'Administrator dokłada wszelkich starań, aby dane w Serwisie były aktualne, jednakże ranking jest generowany automatycznie (wspierany przez AI) na podstawie ogólnodostępnych danych. Administrator nie gwarantuje pełnej poprawności danych adresowych, godzin otwarcia lokali ani dostępności menu.',
         'legal-provision-3-2': 'Ranking "TOP 10" oraz wskaźniki "Wynik AI" są rezultatem analizy automatycznej i stanowią subiektywną ocenę algorytmu. Administrator nie ponosi odpowiedzialności za niezadowolenie Użytkownika z jakości usług świadczonych przez lokale gastronomiczne wymienione w Serwisie.',
-        'legal-provision-3-3': 'Decyzję o skorzystaniu z usług danego lokalu Użytkownik podejmuje na własną responsabilidad.',
+        'legal-provision-3-3': 'Decyzję o skorzystaniu z usług danego lokalu Użytkownik podejmuje na własną odpowiedzialność.',
         'legal-provision-4-title': '§ 4. Wymagania techniczne',
         'legal-provision-4-desc': 'Do korzystania z Serwisu niezbędne są:',
         'legal-provision-4-1': 'Urządzenie z dostępem do Internetu.',
@@ -419,10 +421,13 @@ function searchCity() {
         showTab('city');
     }
 
-    const limit = $id('kebab-count')?.value || 10;
     // Set active city for UI highlighting
     window.currentCity = cityName;
-    checkAndLoadRankings(cityName, limit);
+    const sliderReset2 = document.getElementById('kebab-count');
+    if (sliderReset2) sliderReset2.max = 5;
+    const mapSliderReset2 = document.getElementById('map-count-slider');
+    if (mapSliderReset2) mapSliderReset2.max = 5;
+    checkAndLoadRankings(cityName, 500);
 
     // Re-populate selector to show highlight
     if (typeof availableCities !== 'undefined' && availableCities.length > 0) {
@@ -449,17 +454,25 @@ document.addEventListener('DOMContentLoaded', () => {
         // Handle URL routing and initial city
         handleUrlRouting();
 
-        // Auto-load Kraków as default city on home page
-        const isHomePage = window.location.pathname === '/' || window.location.pathname === '';
-        if (isHomePage) {
+        // Auto-load default city on home page (uses city-pill-name set by Flask template)
+        {
             const cityRankings = $id('city-tab');
-            const searchInput = $id('city-search');
-            const searchValue = searchInput ? searchInput.value.trim() : '';
             const hasEmptyRankings = cityRankings && cityRankings.innerHTML.includes('search-prompt');
-            const shouldLoadKrakow = !searchValue || (searchValue === 'Kraków' && hasEmptyRankings);
-            if (shouldLoadKrakow) {
-                autoLoadKrakowAsDefault();
+            const pillCity = ($id('city-pill-name')?.textContent || $id('city-pill-name-desktop')?.textContent || '').trim();
+            const defaultCity = (window.currentCity || pillCity || '').trim();
+            if (hasEmptyRankings && defaultCity && defaultCity !== 'Wybierz miasto' && defaultCity !== 'Miasto') {
+                window.currentCity = defaultCity;
+                checkAndLoadRankings(defaultCity, 500);
             }
+            // Show city bg image in nav tile if initial city is set
+            if (defaultCity && defaultCity !== 'Wybierz miasto' && defaultCity !== 'Miasto') {
+                updateCityBgImage(defaultCity);
+            }
+        }
+
+        // Auto-open Radar on mobile — "fast kebab" mode
+        if (window.innerWidth < 768) {
+            setTimeout(openRadar, 300);
         }
     }
     const searchInput = $id('city-search');
@@ -482,16 +495,17 @@ document.addEventListener('DOMContentLoaded', () => {
             // Debounce API calls
             clearTimeout(debounceTimer);
             debounceTimer = setTimeout(() => {
-                const currentCity = $id('city-search')?.value;
                 const globalTab = $id('global-tab');
-                if (currentCity && globalTab && !globalTab.classList.contains('active')) {
-                    console.log(`Loading ${value} kebabs for ${currentCity}`);
-                    checkAndLoadRankings(currentCity, value);
+                const isGlobalActive = globalTab && !globalTab.classList.contains('hidden');
+                const city = window.currentCity;
+                if (city && !isGlobalActive) {
+                    console.log(`Loading ${value} kebabs for ${city}`);
+                    checkAndLoadRankings(city, value);
                 } else {
                     console.log(`Loading Top ${value} for Poland`);
                     loadGlobalRankings(value);
                 }
-            }, 500); // 500ms delay
+            }, 500);
         });
     }
 
@@ -876,12 +890,33 @@ function showTab(tabName) {
             populateCitySelector(availableCities);
         }
 
+        // Signal global (Poland) context in city pill
+        document.querySelectorAll('#city-pill-name, #city-pill-name-desktop').forEach(el => {
+            el.textContent = currentLang === 'en' ? '🇵🇱 Poland' : '🇵🇱 Polska';
+        });
+        const cityPillBtn = $id('city-pill');
+        if (cityPillBtn) {
+            cityPillBtn.style.borderColor = 'rgba(255,215,0,.35)';
+            cityPillBtn.style.background = 'rgba(255,215,0,.07)';
+        }
+
         loadGlobalRankings();
     } else {
         if (cityMap) cityMap.style.display = 'block';
         if (globalMap) globalMap.style.display = 'none';
         if (kebabMap) {
             setTimeout(() => kebabMap.invalidateSize(), 100);
+        }
+
+        // Restore city pill to current city (or prompt)
+        const restoredCity = window.currentCity || '';
+        document.querySelectorAll('#city-pill-name, #city-pill-name-desktop').forEach(el => {
+            el.textContent = restoredCity || (currentLang === 'en' ? 'Select city' : 'Wybierz miasto');
+        });
+        const cityPillBtn = $id('city-pill');
+        if (cityPillBtn) {
+            cityPillBtn.style.borderColor = '';
+            cityPillBtn.style.background = '';
         }
 
         // Show search prompt ONLY if no city is currently selected or being searched
@@ -1255,13 +1290,21 @@ function selectCity(cityName) {
         showTab('city');
     }
 
-    const limit = $id('kebab-count')?.value || 10;
     // Reset city filters only when switching to a different city
-    if (cityName !== window.currentCity) {
+    const isNewCity = cityName !== window.currentCity;
+    if (isNewCity) {
         window.activeFilters.city = {};
+        // Reset slider max so the new city's count can set it correctly
+        const sliderReset = document.getElementById('kebab-count');
+        if (sliderReset) sliderReset.max = 5;
+        const mapSliderReset = document.getElementById('map-count-slider');
+        if (mapSliderReset) mapSliderReset.max = 5;
     }
-    // Set active city for UI highlighting
+    // For new city: always fetch full list so slider max reflects actual city count
+    const limit = isNewCity ? 500 : ($id('kebab-count')?.value || 10);
     window.currentCity = cityName;
+    document.querySelectorAll('#city-pill-name, #city-pill-name-desktop').forEach(el => { el.textContent = cityName; });
+    updateCityBgImage(cityName);
     checkAndLoadRankings(cityName, limit);
 
     // Re-populate selector to show highlight
@@ -1485,8 +1528,7 @@ function handleUrlRouting() {
         }
 
         // Load the rankings for this city
-        const limit = $id('kebab-count')?.value || 10;
-        checkAndLoadRankings(window.initialCity, limit);
+        checkAndLoadRankings(window.initialCity, 500);
         return;
     }
 
@@ -1766,11 +1808,18 @@ function initializeMap() {
             const limit = document.getElementById('kebab-count')?.value || 10;
             const lang = window.currentLang || 'pl';
             const cacheKey = `${window.currentCity}_${limit}_${lang}`;
+            kebabMap.invalidateSize();
             if (window.rankingCache[cacheKey]) {
                 addKebabMarkers(window.rankingCache[cacheKey]);
+            } else if (window.cityRankingData && window.cityRankingData.length > 0) {
+                addKebabMarkers(window.cityRankingData);
+            }
+            if (window.currentCityBounds) {
+                setTimeout(() => kebabMap.fitBounds(window.currentCityBounds, { padding: [20, 20] }), 150);
             }
         }
 
+        _addLocateBtn('kebab-map');
         console.log('City map initialized successfully');
     });
 }
@@ -1804,6 +1853,7 @@ function initializeGlobalMap() {
             addGlobalKebabMarkers(window.globalRankingCache);
         }
 
+        _addLocateBtn('kebab-map-global');
         console.log('Global map initialized successfully');
     });
 }
@@ -1822,6 +1872,54 @@ function clearGlobalMapMarkers() {
         globalKebabMap.removeLayer(marker);
     });
     globalMapMarkers = [];
+}
+
+function openMapPopupProfile(lat, lng, isGlobal) {
+    const data = isGlobal
+        ? (window.globalDisplayData || window.globalRankingData)
+        : (window.cityDisplayData || window.cityRankingData);
+    if (!data) return;
+    const idx = data.findIndex(function(k) {
+        const kLat = parseFloat(k.latitude || k.lat || 0);
+        const kLng = parseFloat(k.longitude || k.lng || 0);
+        return Math.abs(kLat - lat) < 0.0001 && Math.abs(kLng - lng) < 0.0001;
+    });
+    if (idx >= 0) openKebabProfile(idx, isGlobal);
+}
+
+function buildMapPopupHtml(place, index, isGlobal) {
+    const lat = parseFloat(place.latitude || place.lat || 0);
+    const lng = parseFloat(place.longitude || place.lng || 0);
+    const navUrl = (lat && lng) ? `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}` : '';
+    const st = getOpenNowStatus(place.opening_hours);
+    const score = place.rank_score ? place.rank_score.toFixed(1) : 'N/A';
+    const aiScore = (place.has_ai_analysis && place.ai_score) ? place.ai_score.toFixed(1) : null;
+    const isGlobalBool = !!isGlobal;
+
+    return `<div style="font-family:'Inter',sans-serif;min-width:240px;">
+        <div style="padding:10px 12px 8px;">
+            <p style="margin:0;font-weight:900;font-size:14px;color:#fff;line-height:1.25;">${place.name}</p>
+            <p style="margin:3px 0 0;font-size:11px;color:#9c9080;line-height:1.3;">📍 ${place.address || ''}</p>
+        </div>
+        <div style="display:flex;gap:6px;align-items:center;padding:0 12px 8px;">
+            <div style="background:#e8a020;color:#fff;font-weight:900;font-size:15px;border-radius:8px;padding:3px 8px 2px;text-align:center;line-height:1.2;">${score}<small style="display:block;font-size:6px;font-weight:800;letter-spacing:.06em;color:rgba(255,255,255,.7);">WYNIK</small></div>
+            ${aiScore ? `<div style="background:rgba(99,102,241,.2);border:1px solid rgba(99,102,241,.35);color:#a5b4fc;font-weight:900;font-size:15px;border-radius:8px;padding:3px 8px 2px;text-align:center;line-height:1.2;">${aiScore}<small style="display:block;font-size:6px;font-weight:800;letter-spacing:.06em;">WYNIK AI</small></div>` : ''}
+            <div style="flex:1;"></div>
+            <div style="text-align:right;">
+                <div style="font-size:13px;font-weight:700;color:#f5eddd;">⭐ ${place.rating ? place.rating.toFixed(1) : '—'}</div>
+                <div style="font-size:10px;color:#9c9080;">${place.total_reviews ? place.total_reviews.toLocaleString() : '0'} opinii</div>
+            </div>
+        </div>
+        <div style="display:flex;gap:6px;align-items:center;padding:0 12px 8px;flex-wrap:wrap;">
+            <span style="font-size:11px;font-weight:800;padding:2px 8px;border-radius:99px;background:rgba(232,160,32,.15);color:#e8a020;">Ranking #${index + 1}</span>
+            ${st ? `<span style="font-size:11px;font-weight:700;padding:2px 8px;border-radius:99px;${st.open ? 'background:rgba(63,166,91,.15);color:#6fd490;' : 'background:rgba(220,38,38,.12);color:#f2766a;'}">● ${st.label}</span>` : ''}
+        </div>
+        <div style="border-top:1px solid rgba(255,255,255,.07);margin:0 12px;"></div>
+        <div style="display:flex;gap:6px;padding:8px 12px;">
+            ${navUrl ? `<a href="${navUrl}" target="_blank" rel="noopener" style="flex:1;display:block;text-align:center;text-decoration:none;background:linear-gradient(120deg,#e23b2e,#f0552f);color:#fff;font-weight:800;font-size:10px;text-transform:uppercase;padding:7px 0;border-radius:7px;letter-spacing:.03em;">Prowadź →</a>` : ''}
+            <button onclick="openMapPopupProfile(${lat},${lng},${isGlobalBool})" style="flex:1;background:none;border:1px solid rgba(255,255,255,.2);color:#f5eddd;font-weight:700;font-size:10px;padding:7px 0;border-radius:7px;cursor:pointer;font-family:inherit;">Profil</button>
+        </div>
+    </div>`;
 }
 
 // Add markers for kebab places to city map
@@ -1884,49 +1982,7 @@ function addKebabMarkers(kebabPlaces) {
         // Create marker
         const marker = L.marker([lat, lng], { icon: customIcon })
             .addTo(kebabMap)
-            .bindPopup(`
-                <div style="padding: 12px; min-width: 240px; font-family: 'Inter', sans-serif;">
-                    <div style="margin-bottom: 8px;">
-                         <strong style="font-size: 16px; display: block; margin-bottom: 4px; color: #1e293b;">${place.name}</strong>
-                         <span style="font-size: 12px; color: #64748b; display: flex; align-items: center; gap: 4px;">
-                            <span style="font-size: 14px;">📍</span> ${place.address}
-                         </span>
-                    </div>
-                    
-                    <div style="display: grid; grid-template-columns: ${place.has_ai_analysis ? '1fr 1fr 1fr' : '1fr 1fr'}; gap: 8px; margin-bottom: 8px; background: #f8fafc; padding: 8px; border-radius: 8px;">
-                        <div style="text-align: center; border-right: 1px solid #e2e8f0;">
-                            <div style="font-size: 10px; color: #64748b; text-transform: uppercase; font-weight: bold;">${translations[currentLang]['score'] || 'Score'}</div>
-                            <div style="font-size: 16px; font-weight: 900; color: #ea580c;">${place.rank_score.toFixed(1)}</div>
-                        </div>
-                        <div style="text-align: center; ${place.has_ai_analysis ? 'border-right: 1px solid #e2e8f0;' : ''}">
-                            <div style="font-size: 10px; color: #64748b; text-transform: uppercase; font-weight: bold;">${translations[currentLang]['rating'] || 'Rating'}</div>
-                            <div style="font-size: 14px; font-weight: bold; color: #1e293b;">⭐ ${place.rating.toFixed(1)}</div>
-                        </div>
-                        ${place.has_ai_analysis ? `<div style="text-align: center;">
-                            <div style="font-size: 10px; color: #3b82f6; text-transform: uppercase; font-weight: bold;">${translations[currentLang]['ai-score'] || 'AI Score'}</div>
-                            <div style="font-size: 16px; font-weight: 900; color: #3b82f6;">${place.ai_score ? place.ai_score.toFixed(1) : '—'}</div>
-                        </div>` : ''}
-                    </div>
-                    
-                     <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: #1e293b; border-top: 1px solid #e2e8f0; padding-top: 8px; font-weight: 600;">
-                        <span style="display: flex; align-items: center; gap: 4px;">
-                            <span style="color: #3b82f6;">💬</span> ${place.total_reviews.toLocaleString()} ${translations[currentLang]['reviews']}
-                        </span>
-                        <span style="padding: 2px 8px; border-radius: 4px; background: ${getMarkerColor(index + 1)}15; color: ${getMarkerColor(index + 1)};">${translations[currentLang]['rank']} #${index + 1}</span>
-                    </div>
-
-                    ${(() => { const s = getOpenNowStatus(place.opening_hours); return s ? `<div style="margin-top:8px; padding:5px 8px; border-radius:6px; font-size:12px; font-weight:700; background:${s.open ? '#dcfce7' : '#fee2e2'}; color:${s.open ? '#16a34a' : '#dc2626'};">● ${s.label}</div>` : ''; })()}
-
-                    <div style="text-align: center; margin-top: 8px;">
-                        <a href="https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}"
-                           target="_blank" rel="noopener"
-                           class="navigate-btn">
-                            <span class="material-icons">directions</span>
-                            ${translations[currentLang]['go-to-kebab']}
-                        </a>
-                    </div>
-                </div>
-            `);
+            .bindPopup(buildMapPopupHtml(place, index, false), { className: 'kebab-dark-popup', maxWidth: 280 });
 
         mapMarkers.push(marker);
         bounds.extend([lat, lng]);
@@ -2004,49 +2060,7 @@ function addGlobalKebabMarkers(kebabPlaces) {
         // Create marker
         const marker = L.marker([lat, lng], { icon: customIcon })
             .addTo(globalKebabMap)
-            .bindPopup(`
-                <div style="padding: 12px; min-width: 240px; font-family: 'Inter', sans-serif;">
-                    <div style="margin-bottom: 8px;">
-                         <strong style="font-size: 16px; display: block; margin-bottom: 4px; color: #1e293b;">${place.name}</strong>
-                         <span style="font-size: 12px; color: #64748b; display: flex; align-items: center; gap: 4px;">
-                            <span style="font-size: 14px;">📍</span> ${place.address}
-                         </span>
-                    </div>
-                    
-                    <div style="display: grid; grid-template-columns: ${place.has_ai_analysis ? '1fr 1fr 1fr' : '1fr 1fr'}; gap: 8px; margin-bottom: 8px; background: #f8fafc; padding: 8px; border-radius: 8px;">
-                        <div style="text-align: center; border-right: 1px solid #e2e8f0;">
-                            <div style="font-size: 10px; color: #64748b; text-transform: uppercase; font-weight: bold;">${translations[currentLang]['score'] || 'Score'}</div>
-                            <div style="font-size: 16px; font-weight: 900; color: #ea580c;">${place.rank_score.toFixed(1)}</div>
-                        </div>
-                        <div style="text-align: center; ${place.has_ai_analysis ? 'border-right: 1px solid #e2e8f0;' : ''}">
-                            <div style="font-size: 10px; color: #64748b; text-transform: uppercase; font-weight: bold;">${translations[currentLang]['rating'] || 'Rating'}</div>
-                            <div style="font-size: 14px; font-weight: bold; color: #1e293b;">⭐ ${place.rating.toFixed(1)}</div>
-                        </div>
-                        ${place.has_ai_analysis ? `<div style="text-align: center;">
-                            <div style="font-size: 10px; color: #3b82f6; text-transform: uppercase; font-weight: bold;">${translations[currentLang]['ai-score'] || 'AI Score'}</div>
-                            <div style="font-size: 16px; font-weight: 900; color: #3b82f6;">${place.ai_score ? place.ai_score.toFixed(1) : '—'}</div>
-                        </div>` : ''}
-                    </div>
-                    
-                     <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: #1e293b; border-top: 1px solid #e2e8f0; padding-top: 8px; font-weight: 600;">
-                        <span style="display: flex; align-items: center; gap: 4px;">
-                            <span style="color: #3b82f6;">💬</span> ${place.total_reviews.toLocaleString()} ${translations[currentLang]['reviews']}
-                        </span>
-                        <span style="padding: 2px 8px; border-radius: 4px; background: ${getMarkerColor(index + 1)}15; color: ${getMarkerColor(index + 1)};">${translations[currentLang]['rank']} #${index + 1}</span>
-                    </div>
-
-                    ${(() => { const s = getOpenNowStatus(place.opening_hours); return s ? `<div style="margin-top:8px; padding:5px 8px; border-radius:6px; font-size:12px; font-weight:700; background:${s.open ? '#dcfce7' : '#fee2e2'}; color:${s.open ? '#16a34a' : '#dc2626'};">● ${s.label}</div>` : ''; })()}
-
-                    <div style="text-align: center; margin-top: 8px;">
-                        <a href="https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}"
-                           target="_blank" rel="noopener"
-                           class="navigate-btn">
-                            <span class="material-icons">directions</span>
-                            ${translations[currentLang]['go-to-kebab']}
-                        </a>
-                    </div>
-                </div>
-            `);
+            .bindPopup(buildMapPopupHtml(place, index, true), { className: 'kebab-dark-popup', maxWidth: 280 });
 
         globalMapMarkers.push(marker);
         bounds.extend([lat, lng]);
@@ -2340,13 +2354,13 @@ function syncMobileMapFilter(isGlobal) {
     const pill = (type, label, active, tipKey) => {
         const s = active
             ? 'background:rgba(52,211,153,0.2);color:#34d399;border:1px solid #34d399;font-weight:700'
-            : 'background:rgba(255,255,255,0.06);color:#94a3b8;border:1px solid rgba(255,255,255,0.15)';
+            : 'background:rgba(255,255,255,0.06);color:#9c9080;border:1px solid rgba(255,255,255,0.15)';
         return `<button onclick="applyRankingFilter('${type}',${isGlobal})" style="flex-shrink:0;display:inline-flex;align-items:center;gap:3px;padding:6px 13px;border-radius:20px;font-size:12px;cursor:pointer;${s}">${label}${tipKey ? mInfo(tipKey) : ''}</button>`;
     };
     const spill = (type, label, active, tipKey) => {
         const s = active
             ? 'background:rgba(96,165,250,0.18);color:#60a5fa;border:1px solid #60a5fa;font-weight:700'
-            : 'background:rgba(255,255,255,0.04);color:#64748b;border:1px solid rgba(255,255,255,0.12)';
+            : 'background:rgba(255,255,255,0.04);color:#9c9080;border:1px solid rgba(255,255,255,0.12)';
         return `<button onclick="applyRankingFilter('${type}',${isGlobal})" style="flex-shrink:0;display:inline-flex;align-items:center;gap:3px;padding:6px 13px;border-radius:20px;font-size:12px;cursor:pointer;${s}">${label}${tipKey ? mInfo(tipKey) : ''}</button>`;
     };
 
@@ -2354,8 +2368,21 @@ function syncMobileMapFilter(isGlobal) {
     const triggerBg     = anyNon ? 'rgba(52,211,153,0.12)' : 'rgba(255,255,255,0.05)';
     const triggerColor  = anyNon ? '#34d399' : '#94a3b8';
 
+    // Count slider row (map view only — mirrors the sidebar #kebab-count slider)
+    const curCount = parseInt(document.getElementById('kebab-count')?.value || 10);
+    const pct = ((curCount - 5) / (120 - 5) * 100).toFixed(1);
+    let html = `<div style="display:flex;flex-direction:column;gap:4px;padding-bottom:9px;margin-bottom:9px;border-bottom:1px solid rgba(255,255,255,.07);">
+        <label style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#6b7280;width:100%;text-align:center;">${isEn ? 'FILTER KEBAB COUNT' : 'FILTRUJ ILOŚĆ KEBABÓW'}</label>
+        <div style="display:flex;align-items:center;gap:10px;">
+            <input type="range" id="map-count-slider" min="5" max="120" step="5" value="${curCount}"
+                   style="flex:1;accent-color:#e8a020;cursor:pointer;background:linear-gradient(to right,#e8a020 ${pct}%,rgba(255,255,255,.1) ${pct}%)"
+                   oninput="(function(v,el){var s=document.getElementById('kebab-count');var d=document.getElementById('map-count-display');if(d)d.textContent=v;el.style.background='linear-gradient(to right,#e8a020 '+((v-5)/115*100).toFixed(1)+'%,rgba(255,255,255,.1) '+((v-5)/115*100).toFixed(1)+'%)';if(s){s.value=v;s.dispatchEvent(new Event('input'));}})(parseInt(this.value),this)">
+            <span id="map-count-display" style="font-size:16px;font-weight:900;color:#fff;min-width:28px;text-align:right;">${curCount}</span>
+        </div>
+    </div>`;
+
     // Trigger row
-    let html = `<div style="display:flex;align-items:center;gap:8px;">`;
+    html += `<div style="display:flex;align-items:center;gap:8px;">`;
     html += `<button onclick="toggleMobileFilterPanel('${scope}')" style="display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:9999px;font-size:13px;font-weight:700;border:1px solid ${triggerBorder};background:${triggerBg};color:${triggerColor};cursor:pointer;">
         <span style="font-size:15px;">⚙</span>
         ${isEn ? 'Filters' : 'Filtry'}
@@ -2409,6 +2436,29 @@ function displayRankings(rankings, container, cityName, isGlobal = false) {
         window.globalRankingData = rankings;
     } else {
         window.cityRankingData = rankings;
+        // Dynamically update slider max to actual city count
+        const sliderEl = document.getElementById('kebab-count');
+        const displayEl = document.getElementById('kebab-count-value');
+        const mapSlider = document.getElementById('map-count-slider');
+        const mapDisplay = document.getElementById('map-count-display');
+        if (sliderEl && rankings.length > 0) {
+            const newMax = rankings.length;
+            const currentMax = parseInt(sliderEl.max);
+            const wasAtMax = parseInt(sliderEl.value) >= currentMax - 5;
+            // Only expand max — never shrink it (slider filtered down shouldn't cap the range)
+            if (newMax > currentMax) {
+                sliderEl.max = newMax;
+                if (wasAtMax) {
+                    sliderEl.value = newMax;
+                    sliderEl.style.background = 'linear-gradient(to right,#e8a020 100%,rgba(255,255,255,.1) 100%)';
+                    if (displayEl) displayEl.textContent = newMax;
+                }
+                if (mapSlider) {
+                    mapSlider.max = newMax;
+                    if (wasAtMax) { mapSlider.value = newMax; if (mapDisplay) mapDisplay.textContent = newMax; }
+                }
+            }
+        }
     }
 
     // Apply any currently active filters + sort to initial render
@@ -2425,11 +2475,17 @@ function displayRankings(rankings, container, cityName, isGlobal = false) {
 
     container.classList.remove('ranking-fade-in');
     void container.offsetWidth;
-    container.innerHTML = filterBarHtml + `<div id="${cardsId}"></div>`;
+    // Store display data for profile lookups
+    if (isGlobal) window.globalDisplayData = dataToRender;
+    else window.cityDisplayData = dataToRender;
+
+    const heroId = isGlobal ? 'global-hero-section' : 'city-hero-section';
+    const heroHtml = `<div id="${heroId}">${buildTop3Hero(dataToRender, isGlobal, cityName)}</div>`;
+    container.innerHTML = filterBarHtml + heroHtml + `<div id="${cardsId}"></div>`;
     container.classList.add('ranking-fade-in');
 
     const cardsEl = document.getElementById(cardsId);
-    renderRankingCards(dataToRender, cardsEl, isGlobal, cityName);
+    renderRankingCards(dataToRender.slice(3), cardsEl, isGlobal, cityName, 3);
 
     // Sync map with filtered data (overrides the full-dataset map update from checkAndLoadRankings)
     if (!isGlobal) {
@@ -2547,7 +2603,7 @@ function showFilterTooltip(event, key) {
     if (!tip) {
         tip = document.createElement('div');
         tip.id = 'filter-tooltip';
-        tip.style.cssText = 'position:fixed;z-index:9999;max-width:240px;padding:10px 14px;background:#1e293b;color:#e2e8f0;font-size:12px;line-height:1.6;border-radius:10px;border:1px solid rgba(255,255,255,0.12);box-shadow:0 8px 32px rgba(0,0,0,0.6);pointer-events:none;display:none;';
+        tip.style.cssText = 'position:fixed;z-index:9999;max-width:240px;padding:10px 14px;background:#211b15;color:#e2e8f0;font-size:12px;line-height:1.6;border-radius:10px;border:1px solid rgba(255,255,255,0.12);box-shadow:0 8px 32px rgba(0,0,0,0.6);pointer-events:none;display:none;';
         document.body.appendChild(tip);
     }
     tip.textContent = text;
@@ -2644,7 +2700,7 @@ function buildFilterBar(isGlobal, rankings) {
     };
 
     // Outer sticky wrapper
-    let bar = `<div id="${scope}-filter-bar" style="position:sticky;top:0;z-index:50;background:#0b1121;border-bottom:1px solid rgba(255,255,255,0.06);padding:8px 0 10px;margin-bottom:8px;">`;
+    let bar = `<div id="${scope}-filter-bar" style="position:sticky;top:0;z-index:50;background:#14100c;border-bottom:1px solid rgba(255,255,255,0.06);padding:8px 0 10px;margin-bottom:8px;">`;
 
     // Header row: trigger + count badge + kasuj
     bar += `<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">`;
@@ -2702,166 +2758,132 @@ function buildFilterBar(isGlobal, rankings) {
     return bar;
 }
 
-function renderRankingCards(rankings, cardsContainer, isGlobal, cityName) {
+function buildTop3Hero(data, isGlobal, cityName) {
+    if (!data || data.length < 1) return '';
+    const top3 = data.slice(0, Math.min(3, data.length));
+    const medals = ['🥇','🥈','🥉'];
+    const fallbackImg = 'https://lh3.googleusercontent.com/aida-public/AB6AXuAPZml7HBCvOmxHc3pErimDG6i7ruSOL6NrxB8S8CkUtAIZ9sjOe5U0TSzY4AbGN8NSPkGQZHCdrnALIQoLgGNrze3MwVl9x7OGSn2Gz7CvsUTB4izX8Xatv_tIbLYX6kiuSDVdT3HoS7MKLCnQparIKmg8UVIl7QU1CTAKEBVF9M8_NiLS2ccsanJPm-7kevE10rqP_NKMyBgiXUpcsUtj4e9eJlwKM02h-oL83bYxG2QwVRiuDKWgPfePcvFNWLVGzfpHYYn_Nl4';
+    const isEn = (window.currentLang || 'pl') === 'en';
+    const borderColors = ['rgba(232,160,32,.5)','rgba(192,192,192,.35)','rgba(180,120,60,.3)'];
+
+    let html = `<div style="display:grid;grid-template-columns:repeat(${top3.length},1fr);gap:8px;padding:4px 0 12px;">`;
+    top3.forEach((k, i) => {
+        const photoUrl = k.photo_url && k.photo_url !== 'NONE' && k.photo_url.length > 10 ? k.photo_url : (k.image_url || fallbackImg);
+        const kLat = k.latitude || k.lat || 0;
+        const kLng = k.longitude || k.lng || 0;
+        const navUrl = (kLat && kLng) ? `https://www.google.com/maps/dir/?api=1&destination=${kLat},${kLng}` : '';
+        const mapFn = isGlobal ? `centerGlobalMapOnKebab(${kLat},${kLng})` : `centerMapOnKebab(${kLat},${kLng})`;
+        const st = getOpenNowStatus(k.opening_hours);
+        const score = k.rank_score ? k.rank_score.toFixed(1) : 'N/A';
+
+        let rankBadge = '';
+        if (k.is_new) {
+            rankBadge = `<span style="font-size:7px;font-weight:900;padding:2px 5px;border-radius:5px;background:#6366f1;color:#fff;letter-spacing:.04em;box-shadow:0 1px 4px rgba(0,0,0,.6);">NEW</span>`;
+        } else if (k.rank_change_indicator === 'up' && k.rank_change) {
+            rankBadge = `<span style="font-size:7px;font-weight:900;padding:2px 5px;border-radius:5px;background:rgba(0,0,0,.65);color:#4ade80;box-shadow:0 1px 4px rgba(0,0,0,.6);">▲+${k.rank_change}</span>`;
+        } else if (k.rank_change_indicator === 'down' && k.rank_change) {
+            rankBadge = `<span style="font-size:7px;font-weight:900;padding:2px 5px;border-radius:5px;background:rgba(0,0,0,.65);color:#f87171;box-shadow:0 1px 4px rgba(0,0,0,.6);">▼-${Math.abs(k.rank_change)}</span>`;
+        } else {
+            rankBadge = `<span style="font-size:7px;font-weight:700;padding:2px 5px;border-radius:5px;background:rgba(0,0,0,.55);color:rgba(255,255,255,.5);box-shadow:0 1px 4px rgba(0,0,0,.5);">–</span>`;
+        }
+
+        html += `
+        <div onclick="${mapFn}" style="cursor:pointer;background:#211b15;border:1px solid ${borderColors[i]};border-radius:14px;overflow:hidden;transition:all .3s;" onmouseenter="this.style.borderColor='rgba(232,160,32,.6)'" onmouseleave="this.style.borderColor='${borderColors[i]}'">
+            <div style="position:relative;height:100px;overflow:hidden;">
+                <img src="${photoUrl}" alt="${k.name}" style="width:100%;height:100%;object-fit:cover;" loading="lazy" onerror="this.src='${fallbackImg}'">
+                <div style="position:absolute;top:6px;left:6px;font-size:20px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.5));">${medals[i]}</div>
+                <div style="position:absolute;top:6px;right:6px;">${rankBadge}</div>
+                <div style="position:absolute;bottom:0;left:0;right:0;height:40px;background:linear-gradient(transparent,rgba(33,27,21,.9));"></div>
+                <div style="position:absolute;bottom:6px;right:6px;background:#e8a020;color:#fff;font-weight:900;font-size:14px;border-radius:8px;padding:3px 7px 1px;line-height:1;">${score}</div>
+            </div>
+            <div style="padding:8px 10px 10px;">
+                <p style="margin:0;font-weight:800;font-size:11px;color:#fff;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${k.name}</p>
+                <div style="display:flex;align-items:center;gap:4px;margin-top:3px;">
+                    <span style="font-size:10px;font-weight:700;color:rgba(245,237,221,.85);">${k.rating.toFixed(1)} ⭐</span>
+                    <span style="font-size:9px;color:#9c9080;">${k.total_reviews.toLocaleString()}</span>
+                    ${st ? `<span style="font-size:8px;font-weight:700;padding:1px 5px;border-radius:99px;${st.open ? 'background:rgba(63,166,91,.18);color:#6fd490;' : 'background:rgba(220,38,38,.15);color:#f2766a;'}">${st.open ? '●' : '●'}</span>` : ''}
+                </div>
+                <div style="display:flex;gap:4px;margin-top:6px;">
+                    ${navUrl ? `<a href="${navUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="flex:1;text-align:center;text-decoration:none;background:linear-gradient(120deg,#e23b2e,#f0552f);color:#fff;font-weight:800;font-size:9px;text-transform:uppercase;padding:5px 0;border-radius:6px;">Prowadź</a>` : ''}
+                    <button onclick="event.stopPropagation();openKebabProfile(${i},${isGlobal})" style="flex:1;background:none;border:1px solid rgba(255,255,255,.15);color:#f5eddd;font-weight:700;font-size:9px;padding:5px 0;border-radius:6px;cursor:pointer;font-family:inherit;">Profil</button>
+                </div>
+            </div>
+        </div>`;
+    });
+    html += '</div>';
+    return html;
+}
+
+function renderRankingCards(rankings, cardsContainer, isGlobal, cityName, startIndex) {
+    startIndex = startIndex || 0;
     if (!rankings || rankings.length === 0) {
-        const isEn = (window.currentLang || 'pl') === 'en';
-        cardsContainer.innerHTML = `<p class="text-center text-gray-500 py-4">${isEn ? 'No kebabs match the current filter.' : 'Brak kebabów spełniających filtr.'}</p>`;
+        if (startIndex === 0) {
+            const isEn = (window.currentLang || 'pl') === 'en';
+            cardsContainer.innerHTML = `<p class="text-center text-gray-500 py-4">${isEn ? 'No kebabs match the current filter.' : 'Brak kebabów spełniających filtr.'}</p>`;
+        }
         return;
     }
 
     let html = '';
-    rankings.forEach((kebab, index) => {
+    rankings.forEach((kebab, i) => {
+        const index = startIndex + i;
         const rank = kebab.rank || kebab.global_rank || index + 1;
         const hasAI = kebab.has_ai_analysis === true || (kebab.ai_summary && kebab.ai_summary.length > 0);
 
-        let rankBadgeClass = "bg-surface-dark text-gray-400";
-        if (rank === 1) rankBadgeClass = "bg-yellow-500 text-black";
-        else if (rank === 2) rankBadgeClass = "bg-gray-400 text-black";
-        else if (rank === 3) rankBadgeClass = "bg-orange-700 text-white";
-
         let rankChangeHtml = '';
         if (kebab.is_new) {
-            rankChangeHtml = `<span class="rank-badge-mini rank-new ml-2">NEW</span>`;
+            rankChangeHtml = `<span class="rank-badge-mini rank-new ml-1">NEW</span>`;
         } else if (kebab.rank_change_indicator === 'up' && kebab.rank_change) {
-            rankChangeHtml = `<span class="rank-badge-mini rank-up ml-2"><span class="text-[8px]">▲</span> +${kebab.rank_change}</span>`;
+            rankChangeHtml = `<span class="rank-badge-mini rank-up ml-1"><span class="text-[8px]">▲</span>+${kebab.rank_change}</span>`;
         } else if (kebab.rank_change_indicator === 'down' && kebab.rank_change) {
-            rankChangeHtml = `<span class="rank-badge-mini rank-down ml-2"><span class="text-[8px]">▼</span> -${Math.abs(kebab.rank_change)}</span>`;
+            rankChangeHtml = `<span class="rank-badge-mini rank-down ml-1"><span class="text-[8px]">▼</span>-${Math.abs(kebab.rank_change)}</span>`;
         } else {
-            rankChangeHtml = `<span class="rank-badge-mini rank-neutral ml-2">-</span>`;
+            rankChangeHtml = `<span class="rank-badge-mini rank-neutral ml-1">-</span>`;
         }
 
-        const photoUrl = kebab.photo_url;
-        const hasValidPhoto = photoUrl && photoUrl !== 'NONE' && photoUrl.length > 10;
-        const kebabImage = hasValidPhoto ? photoUrl : (kebab.image_url || "https://lh3.googleusercontent.com/aida-public/AB6AXuAPZml7HBCvOmxHc3pErimDG6i7ruSOL6NrxB8S8CkUtAIZ9sjOe5U0TSzY4AbGN8NSPkGQZHCdrnALIQoLgGNrze3MwVl9x7OGSn2Gz7CvsUTB4izX8Xatv_tIbLYX6kiuSDVdT3HoS7MKLCnQparIKmg8UVIl7QU1CTAKEBVF9M8_NiLS2ccsanJPm-7kevE10rqP_NKMyBgiXUpcsUtj4e9eJlwKM02h-oL83bYxG2QwVRiuDKWgPfePcvFNWLVGzfpHYYn_Nl4");
-
-        const kLat = isGlobal ? (kebab.lat || 0) : (kebab.latitude || 0);
-        const kLng = isGlobal ? (kebab.lng || 0) : (kebab.longitude || 0);
+        const kLat = kebab.latitude || kebab.lat || 0;
+        const kLng = kebab.longitude || kebab.lng || 0;
         const mapFn = isGlobal ? `centerGlobalMapOnKebab(${kLat},${kLng})` : `centerMapOnKebab(${kLat},${kLng})`;
+        const navUrl = (kLat && kLng) ? `https://www.google.com/maps/dir/?api=1&destination=${kLat},${kLng}` : '';
+        const st = getOpenNowStatus(kebab.opening_hours);
+        const stHtml = st
+            ? `<span style="display:inline-flex;align-items:center;font-size:9px;font-weight:700;padding:2px 8px;border-radius:9999px;white-space:nowrap;${st.open ? 'background:rgba(63,166,91,.18);color:#6fd490;border:1px solid rgba(63,166,91,.4);' : 'background:rgba(220,38,38,.15);color:#f2766a;border:1px solid rgba(220,38,38,.35);'}">${st.label}</span>`
+            : '';
+
+        const medalIcons = ['🥇','🥈','🥉'];
+        const medalOrRank = rank <= 3 ? `<span style="font-size:14px;">${medalIcons[rank-1]}</span>` : `<span style="font-size:11px;font-weight:900;color:#9c9080;">#${rank}</span>`;
 
         html += `
-            <div class="glass-card rounded-xl p-3 md:p-4 flex gap-3 md:gap-4 relative overflow-hidden group cursor-pointer hover:bg-white/5 hover:border-primary/30 mb-2 md:mb-3 transition-all duration-300"
-                 onclick="${mapFn}"
-                 data-rank="${rank}">
+            <div class="glass-card rounded-xl mb-2 transition-all duration-300 hover:border-primary/30 cursor-pointer overflow-hidden" onclick="${mapFn}" data-rank="${rank}"
+                 style="border:1px solid ${rank <= 3 ? 'rgba(232,160,32,.25)' : 'rgba(255,255,255,.05)'};">
 
-                <!-- Rank Badge -->
-                <div class="absolute top-3 left-3 md:top-4 md:left-4 ${rankBadgeClass} font-black text-[10px] md:text-xs px-1.5 md:px-2 py-0.5 rounded flex items-center gap-1 z-20 shadow-lg">
-                    <span class="material-icons text-[10px] md:text-xs">emoji_events</span> #${rank}
-                </div>
-
-                <!-- Left Column: Image + Address -->
-                <div class="flex flex-col items-center gap-2 shrink-0 w-20 md:w-24">
-                    <div class="w-20 h-20 md:w-24 md:h-24 rounded-lg overflow-hidden shadow-lg bg-surface-dark mt-1 relative">
-                        <img alt="${kebab.name}"
-                             class="w-full h-full object-cover transition-transform duration-500"
-                             src="${kebabImage}"
-                             loading="lazy"
-                             width="96" height="96"
-                             onerror="this.onerror=null; this.src='https://lh3.googleusercontent.com/aida-public/AB6AXuAPZml7HBCvOmxHc3pErimDG6i7ruSOL6NrxB8S8CkUtAIZ9sjOe5U0TSzY4AbGN8NSPkGQZHCdrnALIQoLgGNrze3MwVl9x7OGSn2Gz7CvsUTB4izX8Xatv_tIbLYX6kiuSDVdT3HoS7MKLCnQparIKmg8UVIl7QU1CTAKEBVF9M8_NiLS2ccsanJPm-7kevE10rqP_NKMyBgiXUpcsUtj4e9eJlwKM02h-oL83bYxG2QwVRiuDKWgPfePcvFNWLVGzfpHYYn_Nl4'"/>
-                    </div>
-                    <p class="text-[9px] text-gray-400 text-center leading-tight break-words w-full opacity-80">
-                        ${kebab.address}, ${kebab.city || cityName || window.currentCity || ''}
-                    </p>
-                    ${(() => { const s = getOpenNowStatus(kebab.opening_hours); return s ? `<span style="display:inline-block;font-size:9px;font-weight:700;padding:2px 7px;border-radius:9999px;background:${s.open ? '#16a34a' : '#dc2626'};color:#fff;">● ${s.label}</span>` : ''; })()}
-                </div>
-
-                <!-- Content -->
-                <div class="flex-1 flex flex-col min-w-0">
-                    <div>
-                        <div class="flex justify-between items-start">
-                             <!-- Middle Column: Title & Button -->
-                             <div class="flex flex-col gap-1 min-w-0 flex-1 pr-2">
-                                 <h3 class="text-xs md:text-lg font-bold text-white group-hover:text-primary transition-colors mb-0.5 md:truncate leading-tight">${kebab.name} ${rankChangeHtml}</h3>
-
-                                 <!-- Navigate Button -->
-                                 ${kLat && kLng ? `
-                                <a href="https://www.google.com/maps/dir/?api=1&destination=${kLat},${kLng}"
-                                   target="_blank" rel="noopener"
-                                   onclick="event.stopPropagation()"
-                                   class="premium-navigate-btn" title="${translations[currentLang]['go-to-kebab']}">
-                                    <span class="material-icons text-sm">directions</span>
-                                    <span>${translations[currentLang]['go-to-kebab']}</span>
-                                </a>
-                                ` : ''}
-                             </div>
-
-                              <!-- Right Column: Scores & Stats Matrix -->
-                              <div class="flex flex-col items-center gap-1 shrink-0 ml-1">
-                                  <div class="flex flex-row items-center gap-2">
-                                    <div class="px-1 py-0.5 md:px-2 md:py-1 rounded bg-[#1e293b] border border-white/10 flex flex-col items-center justify-center w-[52px] md:w-[70px] h-[34px] md:h-[42px]">
-                                        <span class="text-[8px] md:text-[10px] text-gray-400 uppercase font-bold leading-none mb-0.5">${translations[currentLang]['score'] || 'Wynik'}</span>
-                                        <span class="text-sm md:text-base font-black text-primary leading-none">${kebab.rank_score ? kebab.rank_score.toFixed(1) : 'N/A'}</span>
-                                    </div>
-                                     ${hasAI && kebab.ai_score ? `
-                                     <div class="px-1 py-0.5 md:px-2 md:py-1 rounded bg-indigo-500/10 border border-indigo-500/30 flex flex-col items-center justify-center shadow-[0_0_10px_rgba(99,102,241,0.15)] w-[52px] md:w-[70px] h-[34px] md:h-[42px]">
-                                         <span class="text-[8px] md:text-[10px] text-indigo-300 uppercase font-bold tracking-tight leading-none mb-0.5">${translations[currentLang]['ai-score'] || 'AI'}</span>
-                                         <span class="text-sm md:text-base font-black text-indigo-400 drop-shadow-[0_0_8px_rgba(129,140,248,0.4)] leading-none">${kebab.ai_score.toFixed(1)}</span>
-                                     </div>
-                                     ` : ''}
-                                 </div>
-                                 <div class="flex flex-row items-start gap-2 w-full mt-1">
-                                    <div class="flex items-center justify-center gap-1 w-[52px] md:w-[70px]">
-                                        <span class="font-bold text-white text-xs md:text-sm">${kebab.rating.toFixed(1)}</span>
-                                        <span class="material-icons text-yellow-500 text-[10px] md:text-xs">star</span>
-                                    </div>
-                                    <div class="flex items-center justify-center gap-1 w-[52px] md:w-[70px]">
-                                        <span class="font-bold text-white text-xs md:text-sm">${kebab.total_reviews.toLocaleString()}</span>
-                                        <span class="material-icons text-blue-400 text-[10px] md:text-xs">reviews</span>
-                                    </div>
-                                </div>
-                             </div>
+                <!-- Top row: rank + name + scores -->
+                <div style="display:flex;align-items:flex-start;gap:8px;padding:10px 12px 6px;">
+                    <div style="flex-shrink:0;width:28px;text-align:center;padding-top:2px;">${medalOrRank}</div>
+                    <div style="flex:1;min-width:0;">
+                        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;">
+                            <div style="min-width:0;flex:1;">
+                                <p style="margin:0;font-weight:800;font-size:13px;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-transform:uppercase;">${kebab.name} ${rankChangeHtml}</p>
+                                <p style="margin:2px 0 0;font-size:10px;color:#9c9080;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${kebab.address}${isGlobal ? ` · <span style="color:#e8a020;">${kebab.city || ''}</span>` : ''}</p>
+                            </div>
+                            <div style="display:flex;gap:4px;flex-shrink:0;">
+                                <div style="background:#e8a020;color:#fff;font-weight:900;font-size:15px;border-radius:8px;padding:4px 7px 2px;text-align:center;line-height:1;min-width:40px;">${kebab.rank_score ? kebab.rank_score.toFixed(1) : 'N/A'}<small style="display:block;font-size:7px;font-weight:800;letter-spacing:.06em;margin-top:1px;color:rgba(255,255,255,.7);">WYNIK</small></div>
+                                ${hasAI && kebab.ai_score ? `<div style="background:rgba(255,255,255,.06);color:#f5eddd;font-weight:900;font-size:13px;border-radius:8px;padding:4px 7px 2px;text-align:center;line-height:1;border:1px solid rgba(255,255,255,.1);min-width:36px;">${kebab.ai_score.toFixed(1)}<small style="display:block;font-size:7px;font-weight:800;letter-spacing:.06em;margin-top:1px;color:#9c9080;">AI</small></div>` : ''}
+                            </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- AI Sections -->
-                     <div class="space-y-1 md:space-y-2 mt-auto pt-2">
-                        ${hasAI ? `
-                         <div class="border border-indigo-500/20 bg-indigo-500/5 rounded overflow-hidden">
-                            <button onclick="event.stopPropagation(); toggleSection('ai-summary-${index}-${isGlobal ? 'g' : 'c'}')"
-                                    class="w-full flex items-center justify-between px-2 py-1 md:px-3 md:py-1.5 hover:bg-white/5 transition-colors">
-                                <span class="text-[9px] md:text-[11px] font-bold uppercase tracking-widest text-indigo-300 flex items-center gap-1 md:gap-2">
-                                    <span class="material-icons text-[10px] md:text-xs">auto_awesome</span> ${aiTranslations[currentLang]['ai-summary'] || 'Podsumowanie AI'}
-                                </span>
-                                <span class="material-icons text-indigo-300/50 text-[10px] md:text-xs arrow">expand_more</span>
-                            </button>
-                            <div id="ai-summary-${index}-${isGlobal ? 'g' : 'c'}" class="hidden ai-summary-box border-t border-indigo-500/20 p-2 italic text-gray-300 text-[10px] md:text-xs leading-relaxed">
-                                ${kebab.ai_summary ? `"${kebab.ai_summary}"` : `<em class="text-gray-500 opacity-60">${translations[currentLang]['ai-forthcoming'] || 'Analiza AI wkrótce...'}</em>`}
-                            </div>
-                         </div>
-                        ` : ''}
-
-                        ${hasAI && kebab.ai_insights ? `
-                            <div class="border border-fuchsia-500/20 bg-fuchsia-500/5 rounded overflow-hidden">
-                                <button onclick="event.stopPropagation(); toggleSection('ai-insights-${index}-${isGlobal ? 'g' : 'c'}')"
-                                        class="w-full flex items-center justify-between px-2 py-1 md:px-3 md:py-1.5 hover:bg-white/5 transition-colors">
-                                    <span class="text-[9px] md:text-[11px] font-bold uppercase tracking-widest text-fuchsia-300 flex items-center gap-1 md:gap-2">
-                                        <span class="material-icons text-[10px] md:text-xs">analytics</span> ${aiTranslations[currentLang]['ai-insights'] || 'Analiza AI'}
-                                    </span>
-                                    <span class="material-icons text-fuchsia-300/50 text-[10px] md:text-xs arrow">expand_more</span>
-                                </button>
-                                <div id="ai-insights-${index}-${isGlobal ? 'g' : 'c'}" class="hidden ai-insights-box border-t border-fuchsia-500/20 p-2">
-                                    <div class="grid grid-cols-3 gap-1 md:gap-2">
-                                        <div class="flex flex-col items-center text-center">
-                                            <span class="text-[8px] text-gray-500 uppercase font-bold tracking-tighter mb-0.5">${aiTranslations[currentLang]['sentiment'] || 'Nastroje'}</span>
-                                            <span class="text-[9px] md:text-[10px] font-black px-1.5 py-0.5 rounded-full bg-white/5 ${getSentimentColorClass(kebab.ai_insights.sentiment)}">
-                                                ${getSentimentLabel(kebab.ai_insights.sentiment)}
-                                            </span>
-                                        </div>
-                                        <div class="flex flex-col items-center text-center">
-                                            <span class="text-[8px] text-gray-500 uppercase font-bold tracking-tighter mb-0.5">${aiTranslations[currentLang]['trending'] || 'Trend'}</span>
-                                            <span class="text-[9px] md:text-[10px] font-black text-gray-100 italic">
-                                                ${getTrendLabel(kebab.ai_insights.trend)}
-                                            </span>
-                                        </div>
-                                        <div class="flex flex-col items-center text-center">
-                                            <span class="text-[8px] text-gray-500 uppercase font-bold tracking-tighter mb-0.5">${aiTranslations[currentLang]['authenticity'] || 'Autentyczność'}</span>
-                                            <span class="text-[9px] md:text-[10px] font-black text-blue-400">
-                                                ${kebab.ai_insights.authenticity || '100'}%
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        ` : ''}
+                <!-- Bottom row: stats + status + buttons -->
+                <div style="display:flex;align-items:center;gap:6px;padding:0 12px 10px;padding-left:48px;">
+                    <div style="flex:1;min-width:0;display:flex;align-items:center;gap:4px;flex-wrap:wrap;">
+                        <span style="font-size:12px;font-weight:700;color:rgba(245,237,221,.85);white-space:nowrap;">${kebab.rating.toFixed(1)} ⭐</span>
+                        <span style="font-size:11px;color:#9c9080;white-space:nowrap;">${kebab.total_reviews.toLocaleString()} opinii</span>
+                        ${stHtml}
+                    </div>
+                    <div style="display:flex;gap:4px;flex-shrink:0;">
+                        ${navUrl ? `<a href="${navUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="display:inline-flex;align-items:center;gap:3px;text-decoration:none;background:linear-gradient(120deg,#e23b2e,#f0552f);color:#fff;font-weight:800;font-size:10px;text-transform:uppercase;letter-spacing:.03em;padding:6px 12px;border-radius:8px;white-space:nowrap;">Prowadź →</a>` : ''}
+                        <button onclick="event.stopPropagation();openKebabProfile(${index},${isGlobal})" style="display:inline-flex;align-items:center;gap:3px;background:none;border:1px solid rgba(255,255,255,.15);color:#f5eddd;font-weight:700;font-size:10px;padding:6px 12px;border-radius:8px;cursor:pointer;font-family:inherit;white-space:nowrap;">Profil</button>
                     </div>
                 </div>
             </div>
@@ -2869,6 +2891,83 @@ function renderRankingCards(rankings, cardsContainer, isGlobal, cityName) {
     });
 
     cardsContainer.innerHTML = html;
+}
+
+// Profile overlay for ranking cards (reuses buildProfileHtml from Radar)
+async function openKebabProfile(index, isGlobal) {
+    const isEn = (window.currentLang || 'pl') === 'en';
+    const data = isGlobal ? (window.globalDisplayData || window.globalRankingData) : (window.cityDisplayData || window.cityRankingData);
+    if (!data || !data[index]) return;
+
+    const kebab = data[index];
+    const kLat = kebab.latitude || kebab.lat || 0;
+    const kLng = kebab.longitude || kebab.lng || 0;
+    const navUrl = `https://www.google.com/maps/dir/?api=1&destination=${kLat},${kLng}`;
+    const st = getOpenNowStatus(kebab.opening_hours);
+    const score = (kebab.rank_score || 0).toFixed(1);
+    const aiScore = (kebab.has_ai_analysis && kebab.ai_score) ? kebab.ai_score.toFixed(1) : null;
+
+    // Adapt kebab object for buildProfileHtml (expects Radar-style fields)
+    const k = Object.assign({}, kebab);
+    k._lat = kLat;
+    k._lng = kLng;
+    k._distKm = undefined;
+    if (!k.gmaps_url && kLat && kLng) k.gmaps_url = `https://www.google.com/maps/search/?api=1&query=${kLat},${kLng}`;
+
+    // Create or reuse overlay
+    let overlay = document.getElementById('kebab-profile-overlay');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'kebab-profile-overlay';
+        overlay.style.cssText = 'position:fixed;inset:0;z-index:2500;background:rgba(20,16,12,.97);backdrop-filter:blur(20px);overflow-y:auto;display:none;';
+        document.body.appendChild(overlay);
+    }
+
+    const backLabel = isEn ? '← Back to list' : '← Wróć do listy';
+    overlay.innerHTML = `
+        <div style="max-width:480px;margin:0 auto;padding:16px 16px 60px;">
+            <button onclick="closeKebabProfile()" style="background:none;border:none;color:#e8a020;font-weight:700;font-size:13px;cursor:pointer;padding:8px 0;font-family:inherit;">${backLabel}</button>
+            <div id="kebab-profile-content"></div>
+        </div>`;
+    overlay.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+
+    const wrap = document.getElementById('kebab-profile-content');
+    wrap.innerHTML = buildProfileHtml(k, st, navUrl, score, aiScore, kebab.has_ai_analysis === false ? false : null, isEn);
+
+    // Lazy-load AI data (skip if we already know there's no AI analysis)
+    const city = kebab.city || window.currentCity;
+    if (city && !kebab._aiLoaded && kebab.has_ai_analysis !== false) {
+        try {
+            if (!window._radarAiCache) window._radarAiCache = {};
+            let aiMap = window._radarAiCache[city];
+            if (!aiMap) {
+                const resp = await fetch(`/api/rankings/${encodeURIComponent(city)}/ai?lang=${isEn ? 'en' : 'pl'}&limit=50`);
+                const d = await resp.json();
+                if (d.status === 'success' && d.data) {
+                    aiMap = {};
+                    d.data.forEach(item => { aiMap[item.google_place_id] = item; });
+                    window._radarAiCache[city] = aiMap;
+                }
+            }
+            if (aiMap && kebab.google_place_id && aiMap[kebab.google_place_id]) {
+                const ai = aiMap[kebab.google_place_id];
+                kebab.ai_summary = ai.ai_summary;
+                kebab.ai_insights = ai.ai_insights;
+                kebab.has_ai_analysis = ai.has_ai_analysis;
+                kebab._aiLoaded = true;
+                Object.assign(k, kebab);
+                const updatedAiScore = (ai.has_ai_analysis && (ai.ai_score || kebab.ai_score)) ? parseFloat(ai.ai_score || kebab.ai_score).toFixed(1) : null;
+                wrap.innerHTML = buildProfileHtml(k, st, navUrl, score, updatedAiScore, ai, isEn);
+            }
+        } catch (e) { console.error('AI fetch error:', e); }
+    }
+}
+
+function closeKebabProfile() {
+    const overlay = document.getElementById('kebab-profile-overlay');
+    if (overlay) overlay.style.display = 'none';
+    document.body.style.overflow = '';
 }
 
 function applyRankingFilter(type, isGlobal) {
@@ -2936,10 +3035,17 @@ function applyRankingFilter(type, isGlobal) {
     if (isGlobal && filters.voivodeship) filtered = filtered.filter(k => CITY_VOIVODESHIP[k.city] === filters.voivodeship);
     filtered = applySortToData(filtered, sort);
 
-    // Re-render cards
+    // Update display data for profile lookups
+    if (isGlobal) window.globalDisplayData = filtered;
+    else window.cityDisplayData = filtered;
+
+    // Re-render hero + cards
+    const heroId = isGlobal ? 'global-hero-section' : 'city-hero-section';
+    const heroEl = document.getElementById(heroId);
+    if (heroEl) heroEl.innerHTML = buildTop3Hero(filtered, isGlobal, null);
     const cardsId = isGlobal ? 'global-ranking-cards' : 'city-ranking-cards';
     const cardsEl = document.getElementById(cardsId);
-    if (cardsEl) renderRankingCards(filtered, cardsEl, isGlobal, null);
+    if (cardsEl) renderRankingCards(filtered.slice(3), cardsEl, isGlobal, null, 3);
 
     // Update map to reflect filter
     if (isGlobal) {
@@ -2961,9 +3067,10 @@ function applyRankingFilter(type, isGlobal) {
 
 // ─── KEBAB ROULETTE ──────────────────────────────────────────────────────────
 
-function openRouletteModal(isGlobal) {
+function openRouletteModal(isGlobal, customData) {
     const isEn = (window.currentLang || 'pl') === 'en';
-    const allData = isGlobal ? window.globalRankingData : window.cityRankingData;
+    window._rouletteModalData = customData || null;
+    const allData = customData || (isGlobal ? window.globalRankingData : window.cityRankingData);
     if (!allData || allData.length === 0) return;
 
     // Inject keyframe CSS once
@@ -3014,14 +3121,14 @@ function openRouletteModal(isGlobal) {
                 onmouseout="if(!this.classList.contains('roul-sel')){this.style.borderColor='rgba(251,191,36,0.25)';this.style.color='#94a3b8'}"
             >${label}</button>`;
           }).join('')
-        : `<span style="font-size:13px;color:#64748b;">${isEn ? `Picking from all ${n} places` : `Losuję ze wszystkich ${n} miejsc`}</span>`;
+        : `<span style="font-size:13px;color:#9c9080;">${isEn ? `Picking from all ${n} places` : `Losuję ze wszystkich ${n} miejsc`}</span>`;
 
     overlay.innerHTML = `
-    <div style="background:#0f172a;border:1px solid rgba(255,255,255,0.1);border-radius:24px;padding:28px 24px;max-width:420px;width:100%;position:relative;box-shadow:0 25px 60px rgba(0,0,0,0.6);">
+    <div style="background:#14100c;border:1px solid rgba(255,255,255,0.1);border-radius:24px;padding:28px 24px;max-width:420px;width:100%;position:relative;box-shadow:0 25px 60px rgba(0,0,0,0.6);">
         <button onclick="closeRouletteModal()" style="position:absolute;top:16px;right:16px;background:none;border:none;color:#475569;font-size:22px;cursor:pointer;line-height:1;">✕</button>
         <div style="text-align:center;margin-bottom:20px;">
-            <div style="font-size:13px;color:#64748b;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:6px;">${isEn ? 'Kebab Roulette' : 'Kebab Ruletka'}</div>
-            <div style="font-size:22px;font-weight:800;color:#f1f5f9;">${isEn ? 'Where to eat?' : 'Gdzie zjeść?'} 🥙</div>
+            <div style="font-size:13px;color:#9c9080;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:6px;">${isEn ? 'Kebab Roulette' : 'Kebab Ruletka'}</div>
+            <div style="font-size:22px;font-weight:800;color:#f5eddd;">${isEn ? 'Where to eat?' : 'Gdzie zjeść?'} 🥙</div>
         </div>
         ${topOptions ? `
         <div style="margin-bottom:18px;">
@@ -3051,7 +3158,7 @@ function closeRouletteModal() {
 
 function spinRoulette(isGlobal) {
     const isEn = (window.currentLang || 'pl') === 'en';
-    const allData = isGlobal ? window.globalRankingData : window.cityRankingData;
+    const allData = window._rouletteModalData || (isGlobal ? window.globalRankingData : window.cityRankingData);
     if (!allData || allData.length === 0) return;
 
     const topN = Math.min(window._rouletteTopN || allData.length, allData.length);
@@ -3102,8 +3209,8 @@ function spinRoulette(isGlobal) {
         <div class="roulette-reveal" style="background:#111827;border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:18px 16px;">
             <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:12px;">
                 <div>
-                    <div style="font-size:11px;color:#64748b;font-weight:600;margin-bottom:4px;">#${rank} ${isEn ? 'in ranking' : 'w rankingu'}${pick.city ? ' · ' + pick.city : ''}</div>
-                    <div style="font-size:18px;font-weight:800;color:#f1f5f9;line-height:1.2;">${pick.name}</div>
+                    <div style="font-size:11px;color:#9c9080;font-weight:600;margin-bottom:4px;">#${rank} ${isEn ? 'in ranking' : 'w rankingu'}${pick.city ? ' · ' + pick.city : ''}</div>
+                    <div style="font-size:18px;font-weight:800;color:#f5eddd;line-height:1.2;">${pick.name}</div>
                 </div>
                 <div style="text-align:right;flex-shrink:0;">
                     <div style="font-size:22px;font-weight:900;color:#fbbf24;">★ ${rating}</div>
@@ -3119,7 +3226,7 @@ function spinRoulette(isGlobal) {
                 <div style="font-size:12px;color:#475569;margin-bottom:8px;">${isEn ? '📱 Send to your phone (email):' : '📱 Wyślij na maila:'}</div>
                 <div style="display:flex;gap:8px;">
                     <input id="roul-email-input" type="email" placeholder="${isEn ? 'your@email.com' : 'twoj@email.pl'}"
-                        style="flex:1;background:#1e293b;border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:9px 12px;font-size:13px;color:#f1f5f9;outline:none;"
+                        style="flex:1;background:#211b15;border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:9px 12px;font-size:13px;color:#f5eddd;outline:none;"
                         onfocus="this.style.borderColor='rgba(251,191,36,0.5)'" onblur="this.style.borderColor='rgba(255,255,255,0.12)'" />
                     <button onclick="rouletteSubscribe('${encodeURIComponent(pick.name)}')"
                         style="padding:9px 16px;border-radius:10px;border:1px solid rgba(251,191,36,0.4);background:rgba(251,191,36,0.1);color:#fbbf24;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;">
@@ -3206,14 +3313,14 @@ function openWatchCityModal(cityName) {
     overlay.style.cssText = 'position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,0.72);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:16px;';
     overlay.onclick = e => { if (e.target === overlay) overlay.remove(); };
     overlay.innerHTML = `
-    <div style="background:#0f172a;border:1px solid rgba(255,255,255,0.1);border-radius:24px;padding:28px 24px;max-width:380px;width:100%;position:relative;box-shadow:0 25px 60px rgba(0,0,0,0.6);">
+    <div style="background:#14100c;border:1px solid rgba(255,255,255,0.1);border-radius:24px;padding:28px 24px;max-width:380px;width:100%;position:relative;box-shadow:0 25px 60px rgba(0,0,0,0.6);">
         <button onclick="document.getElementById('watch-city-overlay').remove()" style="position:absolute;top:14px;right:16px;background:none;border:none;color:#475569;font-size:22px;cursor:pointer;">✕</button>
         <div style="font-size:28px;margin-bottom:8px;">🔔</div>
-        <div style="font-size:20px;font-weight:800;color:#f1f5f9;margin-bottom:6px;">${isEn ? 'Follow' : 'Obserwuj'} ${cityName || 'ranking'}</div>
-        <div style="font-size:13px;color:#64748b;margin-bottom:20px;line-height:1.5;">${isEn ? 'Get an email when the ranking changes — new #1, new entry, big rise or drop.' : 'Wyślemy maila gdy zmieni się ranking — nowy nr 1, nowe miejsce, duży wzrost lub spad.'}</div>
+        <div style="font-size:20px;font-weight:800;color:#f5eddd;margin-bottom:6px;">${isEn ? 'Follow' : 'Obserwuj'} ${cityName || 'ranking'}</div>
+        <div style="font-size:13px;color:#9c9080;margin-bottom:20px;line-height:1.5;">${isEn ? 'Get an email when the ranking changes — new #1, new entry, big rise or drop.' : 'Wyślemy maila gdy zmieni się ranking — nowy nr 1, nowe miejsce, duży wzrost lub spad.'}</div>
         <div style="display:flex;gap:8px;margin-bottom:12px;">
             <input id="watch-email-input" type="email" placeholder="${isEn ? 'your@email.com' : 'twoj@email.pl'}"
-                style="flex:1;background:#1e293b;border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:11px 14px;font-size:14px;color:#f1f5f9;outline:none;"
+                style="flex:1;background:#211b15;border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:11px 14px;font-size:14px;color:#f5eddd;outline:none;"
                 onfocus="this.style.borderColor='rgba(52,211,153,0.5)'" onblur="this.style.borderColor='rgba(255,255,255,0.12)'"
                 onkeydown="if(event.key==='Enter')watchCitySubscribe('${(cityName||'').replace(/'/g,"\\'")}')"/>
             <button onclick="watchCitySubscribe('${(cityName||'').replace(/'/g,"\\'")}') "
@@ -3264,14 +3371,14 @@ function watchCitySubscribe(cityName) {
         overlay.style.cssText = 'position:fixed;inset:0;z-index:9100;background:rgba(0,0,0,0.65);backdrop-filter:blur(5px);display:flex;align-items:center;justify-content:center;padding:16px;animation:roulette-reveal 0.3s ease forwards;';
         overlay.onclick = e => { if (e.target === overlay) overlay.remove(); };
         overlay.innerHTML = `
-        <div style="background:#0f172a;border:1px solid rgba(255,255,255,0.1);border-radius:24px;padding:28px 24px;max-width:400px;width:100%;position:relative;box-shadow:0 25px 60px rgba(0,0,0,0.7);text-align:center;">
+        <div style="background:#14100c;border:1px solid rgba(255,255,255,0.1);border-radius:24px;padding:28px 24px;max-width:400px;width:100%;position:relative;box-shadow:0 25px 60px rgba(0,0,0,0.7);text-align:center;">
             <button onclick="document.getElementById('exit-intent-overlay').remove()" style="position:absolute;top:14px;right:16px;background:none;border:none;color:#475569;font-size:22px;cursor:pointer;">✕</button>
             <div style="font-size:36px;margin-bottom:10px;">🥙</div>
-            <div style="font-size:21px;font-weight:800;color:#f1f5f9;margin-bottom:8px;">${isEn ? 'Before you go...' : 'Zanim wyjdziesz…'}</div>
-            <div style="font-size:13px;color:#64748b;margin-bottom:22px;line-height:1.6;">${isEn ? 'Rankings update monthly. Leave your email and be the first to know when a new #1 appears in your city.' : 'Rankingi aktualizujemy co miesiąc. Zostaw maila i dowiedz się pierwszy, gdy pojawi się nowy nr 1 w Twoim mieście.'}</div>
+            <div style="font-size:21px;font-weight:800;color:#f5eddd;margin-bottom:8px;">${isEn ? 'Before you go...' : 'Zanim wyjdziesz…'}</div>
+            <div style="font-size:13px;color:#9c9080;margin-bottom:22px;line-height:1.6;">${isEn ? 'Rankings update monthly. Leave your email and be the first to know when a new #1 appears in your city.' : 'Rankingi aktualizujemy co miesiąc. Zostaw maila i dowiedz się pierwszy, gdy pojawi się nowy nr 1 w Twoim mieście.'}</div>
             <div style="display:flex;gap:8px;margin-bottom:12px;">
                 <input id="exit-email-input" type="email" placeholder="${isEn ? 'your@email.com' : 'twoj@email.pl'}"
-                    style="flex:1;background:#1e293b;border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:11px 14px;font-size:14px;color:#f1f5f9;outline:none;"
+                    style="flex:1;background:#211b15;border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:11px 14px;font-size:14px;color:#f5eddd;outline:none;"
                     onfocus="this.style.borderColor='rgba(52,211,153,0.5)'" onblur="this.style.borderColor='rgba(255,255,255,0.12)'"
                     onkeydown="if(event.key==='Enter')exitIntentSubscribe()" />
                 <button onclick="exitIntentSubscribe()"
@@ -3427,6 +3534,23 @@ function refreshCityPhotography() {
     });
 }
 
+// Update the desktop nav city tile background photo when city changes
+function updateCityBgImage(cityName) {
+    const imgDiv = $id('city-btn-bg-img');
+    const gradDiv = $id('city-btn-bg-grad');
+    if (!imgDiv) return;
+    const imageFile = getCityImageFile(cityName);
+    if (imageFile) {
+        const smFile = imageFile.replace('.webp', '-sm.webp');
+        imgDiv.innerHTML = `<img src="/static/img/cities/${imageFile}" srcset="/static/img/cities/${smFile} 400w, /static/img/cities/${imageFile} 800w" sizes="200px" alt="${cityName}" style="width:100%;height:100%;object-fit:cover;">`;
+        imgDiv.style.display = '';
+        if (gradDiv) gradDiv.style.display = '';
+    } else {
+        imgDiv.style.display = 'none';
+        if (gradDiv) gradDiv.style.display = 'none';
+    }
+}
+
 // Global handle for modal triggers
 window.initMegaMenuVisuals = function() {
     // Immediate call and a slightly delayed one to catch any DOM injection
@@ -3504,15 +3628,15 @@ function showCityRequestForm(cityName) {
     box.id = 'city-request-box';
     box.style.cssText = 'grid-column:1/-1;padding:24px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:16px;margin-top:8px;';
     box.innerHTML = `
-        <div style="font-size:15px;font-weight:700;color:#f1f5f9;margin-bottom:4px;">Nie ma jeszcze tego miasta 😔</div>
-        <div style="font-size:13px;color:#64748b;margin-bottom:18px;">Zgłoś swoje miasto — dodamy je do rankingu i poinformujemy Cię mailem!</div>
+        <div style="font-size:15px;font-weight:700;color:#f5eddd;margin-bottom:4px;">Nie ma jeszcze tego miasta 😔</div>
+        <div style="font-size:13px;color:#9c9080;margin-bottom:18px;">Zgłoś swoje miasto — dodamy je do rankingu i poinformujemy Cię mailem!</div>
         <div style="display:flex;flex-direction:column;gap:10px;">
             <input id="city-req-city" type="text" placeholder="Nazwa miasta" value="${cityName}"
-                style="background:#1e293b;border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:10px 14px;font-size:14px;color:#f1f5f9;outline:none;width:100%;box-sizing:border-box;"
-                onfocus="this.style.borderColor='rgba(255,106,0,0.5)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'"/>
+                style="background:#211b15;border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:10px 14px;font-size:14px;color:#f5eddd;outline:none;width:100%;box-sizing:border-box;"
+                onfocus="this.style.borderColor='rgba(232,160,32,0.5)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'"/>
             <select id="city-req-voiv"
-                style="background:#1e293b;border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:10px 14px;font-size:14px;color:#94a3b8;outline:none;width:100%;box-sizing:border-box;"
-                onfocus="this.style.borderColor='rgba(255,106,0,0.5)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'">
+                style="background:#211b15;border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:10px 14px;font-size:14px;color:#9c9080;outline:none;width:100%;box-sizing:border-box;"
+                onfocus="this.style.borderColor='rgba(232,160,32,0.5)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'">
                 <option value="">Wybierz województwo…</option>
                 <option>Dolnośląskie</option><option>Kujawsko-Pomorskie</option>
                 <option>Lubelskie</option><option>Lubuskie</option>
@@ -3524,11 +3648,11 @@ function showCityRequestForm(cityName) {
                 <option>Wielkopolskie</option><option>Zachodniopomorskie</option>
             </select>
             <input id="city-req-email" type="email" placeholder="Twój e-mail (powiadomimy Cię o dodaniu)"
-                style="background:#1e293b;border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:10px 14px;font-size:14px;color:#f1f5f9;outline:none;width:100%;box-sizing:border-box;"
-                onfocus="this.style.borderColor='rgba(255,106,0,0.5)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'"
+                style="background:#211b15;border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:10px 14px;font-size:14px;color:#f5eddd;outline:none;width:100%;box-sizing:border-box;"
+                onfocus="this.style.borderColor='rgba(232,160,32,0.5)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'"
                 onkeydown="if(event.key==='Enter')submitCityRequest()"/>
             <button onclick="submitCityRequest()"
-                style="padding:11px;border-radius:10px;border:none;background:linear-gradient(135deg,#ff6a00,#ee0979);color:#fff;font-size:14px;font-weight:700;cursor:pointer;">
+                style="padding:11px;border-radius:10px;border:none;background:linear-gradient(135deg,#e8a020,#ee0979);color:#fff;font-size:14px;font-weight:700;cursor:pointer;">
                 Zgłoś miasto →
             </button>
         </div>
@@ -3543,6 +3667,84 @@ function hideCityRequestForm() {
     if (box) box.remove();
 }
 
+function _normalizeCity(s) {
+    return s.toLowerCase().trim()
+        .replace(/ł/g,'l').replace(/ó/g,'o').replace(/ą/g,'a').replace(/ę/g,'e')
+        .replace(/ć/g,'c').replace(/ń/g,'n').replace(/ś/g,'s').replace(/ź/g,'z').replace(/ż/g,'z');
+}
+
+function checkCityExistsLive(val) {
+    const warn = document.getElementById('city-req-exists-warning');
+    if (!warn) return;
+    const n = _normalizeCity(val);
+    if (n.length < 2) { warn.style.display = 'none'; return; }
+    const exists = availableCities.some(c => _normalizeCity(c) === n);
+    warn.style.display = exists ? 'flex' : 'none';
+}
+
+function openCityRequestModal() {
+    if (document.getElementById('city-request-modal')) {
+        document.getElementById('city-request-modal').style.display = 'flex';
+        return;
+    }
+    const modal = document.createElement('div');
+    modal.id = 'city-request-modal';
+    modal.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.75);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:24px;';
+    modal.onclick = function(e) { if (e.target === modal) closeCityRequestModal(); };
+    modal.innerHTML = `
+        <div style="background:#211b15;border:1px solid rgba(232,160,32,.25);border-radius:20px;padding:32px;max-width:480px;width:100%;position:relative;box-shadow:0 24px 64px rgba(0,0,0,.8);">
+            <button onclick="closeCityRequestModal()" style="position:absolute;top:14px;right:14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:#9c9080;border-radius:50%;width:30px;height:30px;cursor:pointer;font-size:20px;line-height:1;display:flex;align-items:center;justify-content:center;">×</button>
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+                <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#22c55e,#16a34a);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <span class="material-icons" style="color:#fff;font-size:22px;">add_location_alt</span>
+                </div>
+                <div>
+                    <div style="font-size:17px;font-weight:900;color:#f5eddd;">Zgłoś Swoje Miasto</div>
+                    <div style="font-size:12px;color:#9c9080;">Dodamy je do rankingu i poinformujemy Cię mailem!</div>
+                </div>
+            </div>
+            <div id="city-req-exists-warning" style="display:none;align-items:center;gap:8px;background:rgba(251,146,60,.1);border:1px solid rgba(251,146,60,.3);border-radius:10px;padding:10px 14px;font-size:13px;color:#fb923c;margin-bottom:12px;">
+                <span class="material-icons" style="font-size:18px;flex-shrink:0;">check_circle</span>
+                <span>To miasto jest już w naszym rankingu! 🎉 Sprawdź je na stronie głównej.</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:10px;">
+                <input id="city-req-city" type="text" placeholder="Nazwa miasta"
+                    style="background:#14100c;border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:12px 16px;font-size:14px;color:#f5eddd;outline:none;width:100%;box-sizing:border-box;"
+                    onfocus="this.style.borderColor='rgba(232,160,32,.5)'" onblur="this.style.borderColor='rgba(255,255,255,.1)';checkCityExistsLive(this.value)"
+                    oninput="checkCityExistsLive(this.value)"/>
+                <select id="city-req-voiv"
+                    style="background:#14100c;border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:12px 16px;font-size:14px;color:#9c9080;outline:none;width:100%;box-sizing:border-box;"
+                    onfocus="this.style.borderColor='rgba(232,160,32,.5)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'">
+                    <option value="">Wybierz województwo…</option>
+                    <option>Dolnośląskie</option><option>Kujawsko-Pomorskie</option>
+                    <option>Lubelskie</option><option>Lubuskie</option>
+                    <option>Łódzkie</option><option>Małopolskie</option>
+                    <option>Mazowieckie</option><option>Opolskie</option>
+                    <option>Podkarpackie</option><option>Podlaskie</option>
+                    <option>Pomorskie</option><option>Śląskie</option>
+                    <option>Świętokrzyskie</option><option>Warmińsko-Mazurskie</option>
+                    <option>Wielkopolskie</option><option>Zachodniopomorskie</option>
+                </select>
+                <input id="city-req-email" type="email" placeholder="Twój e-mail (powiadomimy Cię o dodaniu)"
+                    style="background:#14100c;border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:12px 16px;font-size:14px;color:#f5eddd;outline:none;width:100%;box-sizing:border-box;"
+                    onfocus="this.style.borderColor='rgba(232,160,32,.5)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'"
+                    onkeydown="if(event.key==='Enter')submitCityRequest()"/>
+                <button id="city-req-submit-btn" onclick="submitCityRequest()"
+                    style="padding:13px;border-radius:10px;border:none;background:linear-gradient(135deg,#e8a020,#ee0979);color:#fff;font-size:14px;font-weight:700;cursor:pointer;">
+                    Zgłoś miasto →
+                </button>
+            </div>
+            <div id="city-req-msg" style="min-height:16px;font-size:12px;margin-top:10px;text-align:center;"></div>
+            <div style="font-size:10px;color:#334155;margin-top:8px;text-align:center;">Zapisując się akceptujesz <a href="/privacy" style="color:#475569;text-decoration:underline;">politykę prywatności</a>.</div>
+        </div>`;
+    document.body.appendChild(modal);
+}
+
+function closeCityRequestModal() {
+    const modal = document.getElementById('city-request-modal');
+    if (modal) modal.remove();
+}
+
 function submitCityRequest() {
     const city  = (document.getElementById('city-req-city')?.value || '').trim();
     const voiv  = (document.getElementById('city-req-voiv')?.value || '').trim();
@@ -3551,17 +3753,36 @@ function submitCityRequest() {
     if (!city)  { document.getElementById('city-req-city').style.borderColor  = '#f87171'; return; }
     if (!voiv)  { document.getElementById('city-req-voiv').style.borderColor  = '#f87171'; return; }
     if (!email || !email.includes('@')) { document.getElementById('city-req-email').style.borderColor = '#f87171'; return; }
+
+    // client-side city-exists guard
+    if (availableCities.some(c => _normalizeCity(c) === _normalizeCity(city))) {
+        const warn = document.getElementById('city-req-exists-warning');
+        if (warn) { warn.style.display = 'flex'; warn.scrollIntoView({ behavior:'smooth', block:'nearest' }); }
+        else if (msg) { msg.style.color = '#fb923c'; msg.textContent = 'To miasto jest już w naszym rankingu!'; }
+        return;
+    }
+
+    const btn = document.getElementById('city-req-submit-btn') || document.querySelector('#city-request-box button');
+    if (btn) btn.disabled = true;
+
     fetch('/api/request-city', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ city, voivodeship: voiv, email })
     }).then(r => r.json()).then(d => {
+        if (d.error === 'city_exists') {
+            const warn = document.getElementById('city-req-exists-warning');
+            if (warn) { warn.style.display = 'flex'; }
+            else if (msg) { msg.style.color = '#fb923c'; msg.textContent = 'To miasto jest już w naszym rankingu!'; }
+            if (btn) btn.disabled = false;
+            return;
+        }
         if (msg) { msg.style.color = '#34d399'; msg.textContent = '✓ Zgłoszono! Poinformujemy Cię gdy miasto zostanie dodane.'; }
         ['city-req-city','city-req-voiv','city-req-email'].forEach(id => { const el = document.getElementById(id); if (el) el.disabled = true; });
-        const btn = document.querySelector('#city-request-box button');
         if (btn) btn.disabled = true;
     }).catch(() => {
         if (msg) { msg.style.color = '#f87171'; msg.textContent = 'Błąd, spróbuj ponownie.'; }
+        if (btn) btn.disabled = false;
     });
 }
 
@@ -3576,3 +3797,908 @@ function filterCitySearchEnter() {
                        .filter(el => el.style.display !== 'none');
     if (links.length === 1) links[0].click();
 }
+
+// ─── USER LOCATION MARKER ────────────────────────────────────────────────────
+
+window._userMarkers = {};
+
+function placeUserMarker(lat, lng, center) {
+    if (typeof L === 'undefined') return;
+    const icon = L.divIcon({
+        className: '',
+        html: '<div style="position:relative;display:flex;align-items:center;justify-content:center;width:34px;height:34px;">'
+            + '<div style="position:absolute;inset:-5px;border-radius:50%;background:rgba(66,133,244,.22);animation:user-loc-pulse 2s ease-out infinite;pointer-events:none;"></div>'
+            + '<div style="position:absolute;inset:-13px;border-radius:50%;background:rgba(66,133,244,.08);animation:user-loc-pulse 2s ease-out .65s infinite;pointer-events:none;"></div>'
+            + '<span class="material-icons" style="font-size:34px;color:#4285f4;filter:drop-shadow(0 2px 8px rgba(0,0,0,.55));position:relative;z-index:1;line-height:1;">person_pin</span>'
+            + '</div>',
+        iconSize: [34, 34],
+        iconAnchor: [17, 34]
+    });
+    [['kebabMap', window.kebabMap], ['globalKebabMap', window.globalKebabMap]].forEach(function(pair) {
+        const key = pair[0], map = pair[1];
+        if (!map) return;
+        if (window._userMarkers[key]) {
+            try { map.removeLayer(window._userMarkers[key]); } catch(e) {}
+        }
+        window._userMarkers[key] = L.marker([lat, lng], { icon: icon, zIndexOffset: 3000, interactive: false }).addTo(map);
+    });
+    if (center) {
+        const cityMapEl = document.getElementById('kebab-map');
+        const activeMap = (cityMapEl && cityMapEl.style.display !== 'none' && window.kebabMap)
+            ? window.kebabMap : window.globalKebabMap;
+        if (activeMap) setTimeout(function() { activeMap.setView([lat, lng], 14); }, 100);
+    }
+    window._userLat = lat;
+    window._userLng = lng;
+    _updateLocateBtnActive();
+}
+
+function locateUserOnMap() {
+    if (window._radar && window._radar.lat && window._radar.lng) {
+        _locateAndLoadCity(window._radar.lat, window._radar.lng);
+        return;
+    }
+    if (!navigator.geolocation) return;
+    document.querySelectorAll('.locate-map-btn .material-icons').forEach(function(i) { i.textContent = 'sync'; });
+    navigator.geolocation.getCurrentPosition(
+        function(pos) { _locateAndLoadCity(pos.coords.latitude, pos.coords.longitude); },
+        function() { document.querySelectorAll('.locate-map-btn .material-icons').forEach(function(i) { i.textContent = 'my_location'; }); },
+        { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 }
+    );
+}
+
+async function _locateAndLoadCity(lat, lng) {
+    try {
+        const resp = await fetch('/api/cities/coords');
+        const data = await resp.json();
+        if (data.status !== 'success' || !data.data) throw new Error('no data');
+        const nearest = data.data
+            .map(function(c) { return Object.assign({}, c, { dist: haversineKm(lat, lng, c.lat, c.lng) }); })
+            .sort(function(a, b) { return a.dist - b.dist; })[0];
+
+        // Switch to city map view on mobile
+        const mapBtn = document.getElementById('mobile-view-map');
+        if (mapBtn && window.innerWidth < 768) mapBtn.click();
+
+        if (!nearest || nearest.dist > 60) {
+            // No city nearby — just place marker on current map
+            placeUserMarker(lat, lng, true);
+            return;
+        }
+
+        if (nearest.name !== window.currentCity) {
+            // Switch city first, then place marker after data loads
+            selectCity(nearest.name);
+            setTimeout(function() { placeUserMarker(lat, lng, true); }, 1300);
+        } else {
+            // Already on nearest city — just place marker
+            placeUserMarker(lat, lng, true);
+        }
+    } catch(e) {
+        placeUserMarker(lat, lng, true);
+    }
+}
+
+function _addLocateBtn(mapId) {
+    const container = document.getElementById(mapId);
+    if (!container || container.querySelector('.locate-map-btn')) return;
+    const isEn = (window.currentLang || 'pl') === 'en';
+    const btn = document.createElement('button');
+    btn.className = 'locate-map-btn';
+    btn.title = isEn ? 'Where am I?' : 'Gdzie jestem?';
+    btn.onclick = function(e) { e.stopPropagation(); locateUserOnMap(); };
+    btn.style.cssText = 'top:8px;left:50%;transform:translateX(-50%);width:auto;border-radius:20px;padding:0 14px 0 10px;height:36px;gap:7px;white-space:nowrap;background:rgba(20,16,12,.82);border:1px solid rgba(66,133,244,.45);backdrop-filter:blur(8px);';
+    btn.innerHTML = '<span class="material-icons" style="font-size:20px;color:#4285f4;flex-shrink:0;">person_pin_circle</span>'
+        + '<span class="locate-map-label" style="font-size:11px;font-weight:800;color:#f5eddd;text-transform:uppercase;letter-spacing:.07em;">'
+        + (isEn ? 'Check where you are' : 'Sprawdź gdzie jesteś') + '</span>';
+    container.appendChild(btn);
+}
+
+function _updateLocateBtnActive() {
+    const isEn = (window.currentLang || 'pl') === 'en';
+    document.querySelectorAll('.locate-map-btn').forEach(function(btn) {
+        btn.style.borderColor = 'rgba(66,133,244,.8)';
+        btn.style.background = 'rgba(66,133,244,.18)';
+        const lbl = btn.querySelector('.locate-map-label');
+        if (lbl) lbl.textContent = isEn ? 'Your location' : 'Twoja lokalizacja';
+        const ico = btn.querySelector('.material-icons');
+        if (ico) ico.style.color = '#6ab4ff';
+    });
+}
+
+// ─── KEBAB RADAR ──────────────────────────────────────────────────────────────
+// Mobilny ekran startowy: geolokalizacja → 3 najbliższe kebaby z topki.
+// Dystans liczony client-side (haversine), status otwarcia z opening_hours.
+
+window._radar = { lat: null, lng: null, city: null, list: [], shown: 3, filters: { open: false, night: false }, radius: 6 };
+
+function haversineKm(lat1, lng1, lat2, lng2) {
+    const R = 6371, toRad = d => d * Math.PI / 180;
+    const dLat = toRad(lat2 - lat1), dLng = toRad(lng2 - lng1);
+    const a = Math.sin(dLat / 2) ** 2 +
+              Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng / 2) ** 2;
+    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+function radarDistLabel(km) {
+    const walkMin = Math.max(1, Math.round(km / 5 * 60));
+    const dist = km < 1 ? `${Math.round(km * 1000)} m` : `${km.toFixed(1)} km`;
+    return `🚶 ${dist} · ${walkMin} min`;
+}
+
+function radarDistBadge(km) {
+    const walkMin = Math.max(1, Math.round(km / 5 * 60));
+    const isMeters = km < 1;
+    const distNum = isMeters ? Math.round(km * 1000) : km.toFixed(1);
+    const unit = isMeters ? 'm' : 'km';
+    const color = km < 1 ? '#6fd490' : km < 2 ? '#fbbf24' : km < 4 ? '#e8a020' : '#9c9080';
+    const bg    = km < 1 ? 'rgba(63,166,91,.12)' : km < 2 ? 'rgba(251,191,36,.1)' : km < 4 ? 'rgba(232,160,32,.1)' : 'rgba(255,255,255,.05)';
+    const border= km < 1 ? 'rgba(63,166,91,.3)'  : km < 2 ? 'rgba(251,191,36,.25)': km < 4 ? 'rgba(232,160,32,.25)': 'rgba(255,255,255,.1)';
+    const pulse = km < 1
+        ? `<span style="position:relative;display:inline-flex;width:8px;height:8px;flex-shrink:0;margin-right:1px;"><span style="position:absolute;inset:0;border-radius:50%;background:${color};animation:kr-pulse 1.5s ease-out infinite;"></span><span style="position:relative;width:8px;height:8px;border-radius:50%;background:${color};display:inline-block;"></span></span>`
+        : `<span style="font-size:12px;line-height:1;">🚶</span>`;
+    return `<span style="display:inline-flex;align-items:center;gap:4px;background:${bg};border:1px solid ${border};border-radius:8px;padding:4px 10px 4px 8px;"><span>${pulse}</span><span style="font-size:17px;font-weight:900;color:${color};line-height:1;">${distNum}</span><span style="font-size:10px;font-weight:700;color:${color};opacity:.85;">${unit}</span><span style="font-size:10px;color:rgba(245,237,221,.4);white-space:nowrap;margin-left:2px;">· ${walkMin} min</span></span>`;
+}
+
+function ensureRadarOverlay() {
+    if (document.getElementById('radar-overlay')) return;
+    const isEn = (window.currentLang || 'pl') === 'en';
+    const ov = document.createElement('div');
+    ov.id = 'radar-overlay';
+    ov.style.cssText = 'position:fixed;inset:0;z-index:8500;background:#14100c;display:none;flex-direction:column;color:#f5eddd;';
+    ov.innerHTML = `
+    <style>
+        @keyframes kr-pulse { 0% { transform:scale(.92); opacity:.9; } 100% { transform:scale(1.4); opacity:0; } }
+        @keyframes kr-spin  { to { transform:rotate(360deg); } }
+        @keyframes kb-ring  { 0%{transform:scale(.4);opacity:.8} 100%{transform:scale(3.8);opacity:0} }
+        @keyframes kb-float { from{transform:translateY(0)} to{transform:translateY(-10px)} }
+        @keyframes kb-shine { 0%,60%,100%{opacity:0} 30%{opacity:.55} }
+        @keyframes kb-pin   { 0%,100%{transform:translateY(0)} 40%{transform:translateY(-8px)} 60%{transform:translateY(-4px)} }
+        @keyframes kb-glow  { from{opacity:.25} to{opacity:.65} }
+        @media (prefers-reduced-motion: reduce) { .kr-ring, .kr-spit { animation: none !important; } }
+        #radar-overlay .kr-chip { flex-shrink:0; font-size:11px; font-weight:700; white-space:nowrap; padding:6px 12px; border-radius:9999px; border:1px solid rgba(255,255,255,0.14); background:rgba(255,255,255,0.05); color:#f5eddd; cursor:pointer; font-family:inherit; }
+        #radar-overlay .kr-chip.on { background:#e8a020; border-color:#e8a020; color:#fff; }
+        #radar-overlay .kr-nav div { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; color:rgba(245,237,221,.65); padding:4px 2px; cursor:pointer; transition:color .15s; }
+        #radar-overlay .kr-nav div span.material-icons { font-size:22px; line-height:1; }
+        #radar-overlay .kr-nav .active { color:#e8a020; }
+        #radar-overlay .kr-nav .active span { filter:drop-shadow(0 0 6px rgba(232,160,32,.7)); }
+    </style>
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px 8px;flex-shrink:0;">
+        <div style="font-weight:900;font-style:italic;text-transform:uppercase;letter-spacing:-0.04em;font-size:19px;color:#fff;">Kebab<span style="color:#e8a020;">Rank</span> <span style="font-size:11px;color:#9c9080;font-style:normal;letter-spacing:.1em;">RADAR</span></div>
+        <button onclick="closeRadar()" style="background:none;border:none;color:#9c9080;font-size:24px;cursor:pointer;line-height:1;" aria-label="${isEn ? 'Close' : 'Zamknij'}">✕</button>
+    </div>
+
+    <div id="radar-scr-start" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:0 28px 8px;text-align:center;overflow-y:auto;">
+        <p style="font-size:22px;font-weight:900;font-style:italic;text-transform:uppercase;letter-spacing:-0.03em;line-height:1.1;color:#fff;margin:0;">${isEn ? 'Hungry?' : 'Głodny?'}<br><span style="color:#e8a020;">${isEn ? "We'll find you a kebab." : 'Znajdziemy Ci kebsa z TOPKI.'}</span></p>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+          <div style="position:relative;width:150px;height:200px;cursor:pointer;" onclick="radarLocate()">
+            <div style="position:absolute;left:50%;top:52%;width:90px;height:90px;border-radius:50%;border:2px solid rgba(232,160,32,.65);margin-left:-45px;margin-top:-45px;pointer-events:none;animation:kb-ring 2.8s ease-out infinite;"></div>
+            <div style="position:absolute;left:50%;top:52%;width:90px;height:90px;border-radius:50%;border:2px solid rgba(232,160,32,.65);margin-left:-45px;margin-top:-45px;pointer-events:none;animation:kb-ring 2.8s ease-out .9s infinite;"></div>
+            <div style="position:absolute;left:50%;top:52%;width:90px;height:90px;border-radius:50%;border:2px solid rgba(232,160,32,.65);margin-left:-45px;margin-top:-45px;pointer-events:none;animation:kb-ring 2.8s ease-out 1.8s infinite;"></div>
+            <svg style="animation:kb-float 3s ease-in-out infinite alternate;filter:drop-shadow(0 10px 24px rgba(232,160,32,.3));display:block;" viewBox="0 0 200 270" width="150" height="200" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="kb-mg" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#6b3308"/><stop offset="20%" stop-color="#a85e0c"/><stop offset="50%" stop-color="#e8a020"/><stop offset="80%" stop-color="#c17a10"/><stop offset="100%" stop-color="#6b3308"/></linearGradient>
+                <linearGradient id="kb-md" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#50260a"/><stop offset="50%" stop-color="#9a5010"/><stop offset="100%" stop-color="#50260a"/></linearGradient>
+                <linearGradient id="kb-sp" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#3a3a3a"/><stop offset="40%" stop-color="#d0d0d0"/><stop offset="100%" stop-color="#4a4a4a"/></linearGradient>
+                <linearGradient id="kb-sh" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="rgba(255,255,255,0)"/><stop offset="50%" stop-color="rgba(255,255,255,.32)"/><stop offset="100%" stop-color="rgba(255,255,255,0)"/></linearGradient>
+                <radialGradient id="kb-bg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#e8a020" stop-opacity=".5"/><stop offset="100%" stop-color="#e8a020" stop-opacity="0"/></radialGradient>
+              </defs>
+              <ellipse cx="100" cy="215" rx="44" ry="14" fill="url(#kb-bg)" style="animation:kb-glow 2s ease-in-out infinite alternate"/>
+              <rect x="97" y="10" width="6" height="212" rx="3" fill="url(#kb-sp)"/>
+              <ellipse cx="100" cy="34" rx="16" ry="5.5" fill="url(#kb-md)"/><ellipse cx="100" cy="32" rx="16" ry="5" fill="url(#kb-mg)"/>
+              <ellipse cx="100" cy="46" rx="23" ry="5.5" fill="url(#kb-md)"/><ellipse cx="100" cy="44" rx="23" ry="5" fill="url(#kb-mg)"/>
+              <ellipse cx="100" cy="58" rx="30" ry="6" fill="url(#kb-md)"/><ellipse cx="100" cy="56" rx="30" ry="5.5" fill="url(#kb-mg)"/>
+              <ellipse cx="100" cy="70" rx="36" ry="6" fill="url(#kb-md)"/><ellipse cx="100" cy="68" rx="36" ry="5.5" fill="url(#kb-mg)"/>
+              <ellipse cx="100" cy="82" rx="41" ry="6" fill="url(#kb-md)"/><ellipse cx="100" cy="80" rx="41" ry="5.5" fill="url(#kb-mg)"/>
+              <ellipse cx="100" cy="94" rx="45" ry="6" fill="url(#kb-md)"/><ellipse cx="100" cy="92" rx="45" ry="5.5" fill="url(#kb-mg)"/>
+              <ellipse cx="100" cy="106" rx="48" ry="6.5" fill="url(#kb-md)"/><ellipse cx="100" cy="104" rx="48" ry="6" fill="url(#kb-mg)"/>
+              <ellipse cx="100" cy="119" rx="50" ry="7" fill="url(#kb-md)"/><ellipse cx="100" cy="116" rx="50" ry="6.5" fill="url(#kb-mg)"/>
+              <ellipse cx="100" cy="132" rx="50" ry="7" fill="url(#kb-md)"/><ellipse cx="100" cy="129" rx="50" ry="6.5" fill="url(#kb-mg)"/>
+              <ellipse cx="100" cy="145" rx="48" ry="6.5" fill="url(#kb-md)"/><ellipse cx="100" cy="142" rx="48" ry="6" fill="url(#kb-mg)"/>
+              <ellipse cx="100" cy="157" rx="44" ry="6.5" fill="url(#kb-md)"/><ellipse cx="100" cy="154" rx="44" ry="6" fill="url(#kb-mg)"/>
+              <ellipse cx="100" cy="168" rx="38" ry="6" fill="url(#kb-md)"/><ellipse cx="100" cy="166" rx="38" ry="5.5" fill="url(#kb-mg)"/>
+              <ellipse cx="100" cy="178" rx="30" ry="5.5" fill="url(#kb-md)"/><ellipse cx="100" cy="176" rx="30" ry="5" fill="url(#kb-mg)"/>
+              <ellipse cx="100" cy="187" rx="22" ry="5" fill="url(#kb-md)"/><ellipse cx="100" cy="185" rx="22" ry="4.5" fill="url(#kb-mg)"/>
+              <ellipse cx="100" cy="195" rx="14" ry="4.5" fill="url(#kb-md)"/><ellipse cx="100" cy="193" rx="14" ry="4" fill="url(#kb-mg)"/>
+              <path d="M100,32C127,32 150,54 152,100C154,140 146,178 136,196L64,196C54,178 46,140 48,100C50,54 73,32 100,32Z" fill="url(#kb-sh)" style="animation:kb-shine 3s ease-in-out infinite;opacity:0"/>
+              <ellipse cx="68" cy="190" rx="9" ry="4" fill="#3d6e2a" opacity=".9"/><ellipse cx="80" cy="193" rx="11" ry="4.5" fill="#4e8c36" opacity=".85"/><ellipse cx="94" cy="195" rx="10" ry="4" fill="#3d6e2a"/><ellipse cx="106" cy="195" rx="10" ry="4" fill="#4e8c36" opacity=".85"/><ellipse cx="120" cy="193" rx="11" ry="4.5" fill="#3d6e2a" opacity=".9"/><ellipse cx="132" cy="190" rx="9" ry="4" fill="#4e8c36" opacity=".85"/>
+              <circle cx="62" cy="187" r="4.5" fill="#c0392b"/><circle cx="138" cy="187" r="4.5" fill="#c0392b"/><circle cx="84" cy="192" r="3.5" fill="#e74c3c"/><circle cx="116" cy="192" r="3.5" fill="#e74c3c"/>
+              <ellipse cx="100" cy="213" rx="50" ry="10" fill="#211b15"/><ellipse cx="100" cy="213" rx="50" ry="10" fill="none" stroke="#c17a10" stroke-width="1.5" opacity=".7"/>
+              <path d="M62,213Q70,209 78,213Q86,217 94,213Q102,209 110,213Q118,217 126,213Q134,209 138,213" fill="none" stroke="rgba(232,96,32,.5)" stroke-width="2" stroke-linecap="round"/>
+              <ellipse cx="100" cy="14" rx="9" ry="4" fill="#c17a10"/>
+              <polygon points="100,0 102.5,8 110,6 104,12 107,20 100,15 93,20 96,12 90,6 97.5,8" fill="#e8a020" stroke="#f2b233" stroke-width=".5"/>
+              <circle cx="100" cy="10" r="3" fill="rgba(255,255,255,.8)"/>
+            </svg>
+          </div>
+          <div style="font-size:14px;font-weight:900;font-style:italic;text-transform:uppercase;letter-spacing:.06em;color:#f5eddd;display:flex;align-items:center;gap:6px;cursor:pointer;" onclick="radarLocate()">
+            <span style="font-size:18px;display:inline-block;animation:kb-pin 2s ease-in-out infinite;">📍</span>
+            ${isEn ? 'Find kebab now' : 'Znajdź kebab teraz'}
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center;">
+            <span style="font-size:12px;color:rgba(245,237,221,.45);font-weight:700;">📍 ${isEn ? 'Range' : 'Zasięg'}:</span>
+            <button class="kr-chip" id="radar-r-1" onclick="radarSetRadius(1)">≤ 1 km</button>
+            <button class="kr-chip" id="radar-r-3" onclick="radarSetRadius(3)">≤ 3 km</button>
+            <button class="kr-chip on" id="radar-r-6" onclick="radarSetRadius(6)">≤ 6 km</button>
+            <button class="kr-chip" id="radar-r-10" onclick="radarSetRadius(10)">≤ 10 km</button>
+            <button class="kr-chip" id="radar-r-0" onclick="radarSetRadius(0)">${isEn ? 'All' : 'Wszystko'}</button>
+            <div style="display:flex;align-items:center;gap:4px;">
+                <input id="radar-r-custom" type="number" min="1" max="200" placeholder="km" style="width:52px;padding:5px 6px;border-radius:9999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);color:#f5eddd;font-size:12px;font-weight:700;text-align:center;font-family:inherit;outline:none;" onkeydown="if(event.key==='Enter'){radarSetRadius(+this.value);this.blur();}">
+                <button class="kr-chip" onclick="var v=document.getElementById('radar-r-custom').value;if(+v>0)radarSetRadius(+v);" style="padding:5px 8px;">OK</button>
+            </div>
+        </div>
+        <p style="font-size:12px;font-weight:800;color:rgba(232,160,32,.85);margin:0;background:rgba(232,160,32,.08);border:1px solid rgba(232,160,32,.2);border-radius:10px;padding:8px 16px;">⚠️ ${isEn ? 'Select your search range in km above' : 'Uwaga! Wybierz swój zakres poszukiwań w km'}</p>
+        <p style="font-size:13px;color:rgba(245,237,221,.55);margin:0;">${isEn ? 'or' : 'albo'} <a href="#" onclick="closeRadar();document.getElementById('mega-menu-trigger')?.click();return false;" style="color:#e8a020;font-weight:700;">${isEn ? 'pick a city manually' : 'wybierz miasto ręcznie'}</a></p>
+    </div>
+
+    <div id="radar-scr-loading" style="flex:1;display:none;flex-direction:column;align-items:center;justify-content:center;gap:18px;text-align:center;padding:0 30px;">
+        <div class="kr-spit" style="font-size:64px;animation:kr-spin 1.1s linear infinite;">🥙</div>
+        <p style="margin:0;font-size:14px;color:rgba(245,237,221,.7);"><b>${isEn ? 'Scanning the area…' : 'Skanuję okolicę…'}</b><br>${isEn ? 'looking for top kebabs near you' : 'szukam kebabów z topki blisko Ciebie'}</p>
+    </div>
+
+    <div id="radar-scr-error" style="flex:1;display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;padding:0 30px;">
+        <div style="font-size:44px;">😕</div>
+        <p id="radar-error-msg" style="margin:0;font-size:15px;color:rgba(245,237,221,.75);max-width:34ch;line-height:1.5;"></p>
+        <button onclick="closeRadar();document.getElementById('mega-menu-trigger')?.click();" style="border:none;cursor:pointer;font-family:inherit;background:#e8a020;color:#fff;font-weight:800;font-size:14px;padding:12px 26px;border-radius:12px;">${isEn ? 'Pick a city' : 'Wybierz miasto'}</button>
+        <button onclick="radarShowStart()" style="background:none;border:none;color:#9c9080;font-size:12px;cursor:pointer;font-family:inherit;">${isEn ? 'Try again' : 'Spróbuj ponownie'}</button>
+    </div>
+
+    <div id="radar-scr-results" style="flex:1;display:none;flex-direction:column;overflow:hidden;">
+        <div style="max-width:600px;width:100%;margin:0 auto;display:flex;flex-direction:column;overflow:hidden;flex:1;">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:0 20px 8px;flex-shrink:0;">
+                <div id="radar-city-label" style="font-size:12px;color:#9c9080;font-weight:600;"></div>
+                <button onclick="radarReset()" style="background:none;border:1px solid rgba(255,255,255,.12);color:#9c9080;font-size:11px;font-weight:700;font-family:inherit;padding:4px 12px;border-radius:9999px;cursor:pointer;">🔄 ${isEn ? 'New search' : 'Szukaj ponownie'}</button>
+            </div>
+            <div style="display:flex;gap:6px;padding:0 16px 6px;overflow-x:auto;flex-shrink:0;scrollbar-width:none;width:100%;box-sizing:border-box;">
+                <button class="kr-chip" id="radar-chip-open" onclick="radarToggleFilter('open')" style="padding:5px 9px;">🕐 ${isEn ? 'Open now' : 'Otwarte teraz'}</button>
+                <button class="kr-chip" id="radar-chip-night" onclick="radarToggleFilter('night')" style="padding:5px 9px;">🌙 ${isEn ? 'After 23:00' : 'Po 23:00'}</button>
+                <button class="kr-chip" onclick="radarShowMapScreen()" style="padding:5px 9px;border-color:rgba(66,133,244,.4);color:#6ab0f5;flex-shrink:0;"><span class="material-icons" style="font-size:13px;vertical-align:-2px;margin-right:3px;">map</span>${isEn ? 'Radar map' : 'Mapa radaru'}</button>
+                <button class="kr-chip" onclick="openWatchCityModal(window._radar.city || '')" style="padding:5px 9px;border-color:rgba(232,160,32,.3);color:#e8a020;flex-shrink:0;" title="${isEn ? 'Watch' : 'Obserwuj'}">🔔</button>
+            </div>
+            <div id="radar-radius-info" style="padding:0 20px 10px;font-size:11px;color:#9c9080;font-weight:600;flex-shrink:0;"></div>
+            <div id="radar-cards" style="flex:1;overflow-y:auto;padding:2px 16px 12px;display:flex;flex-direction:column;gap:12px;"></div>
+        </div>
+    </div>
+
+    <div id="radar-scr-profile" style="flex:1;display:none;flex-direction:column;overflow:hidden;">
+        <div style="max-width:600px;width:100%;margin:0 auto;display:flex;flex-direction:column;overflow:hidden;flex:1;">
+            <div style="padding:8px 20px;flex-shrink:0;">
+                <button onclick="radarShowScreen('results')" style="background:none;border:none;color:#e8a020;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;padding:0;">← ${isEn ? 'Back to list' : 'Wróć do listy'}</button>
+            </div>
+            <div id="radar-profile-content" style="flex:1;overflow-y:auto;padding:0 16px 16px;"></div>
+        </div>
+    </div>
+
+    <div id="radar-scr-map" style="flex:1;display:none;flex-direction:column;overflow:hidden;">
+        <div style="display:flex;align-items:center;padding:8px 16px;flex-shrink:0;border-bottom:1px solid rgba(255,255,255,.07);">
+            <button onclick="radarShowScreen('results')" style="background:none;border:none;color:#e8a020;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;padding:0;flex-shrink:0;">← ${isEn ? 'List' : 'Lista'}</button>
+            <div id="radar-map-subtitle" style="flex:1;text-align:center;font-size:11px;color:#9c9080;font-weight:700;letter-spacing:.06em;text-transform:uppercase;"></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px;padding:6px 10px;flex-shrink:0;border-bottom:1px solid rgba(255,255,255,.05);">
+            <div style="display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;">
+                <button class="kr-chip" id="radar-map-r-1" onclick="radarSetRadius(1)">≤ 1 km</button>
+                <button class="kr-chip" id="radar-map-r-3" onclick="radarSetRadius(3)">≤ 3 km</button>
+                <button class="kr-chip on" id="radar-map-r-6" onclick="radarSetRadius(6)">≤ 6 km</button>
+                <button class="kr-chip" id="radar-map-r-10" onclick="radarSetRadius(10)">≤ 10 km</button>
+                <button class="kr-chip" id="radar-map-r-0" onclick="radarSetRadius(0)">${isEn ? 'All' : 'Wszystko'}</button>
+            </div>
+            <div style="display:flex;gap:5px;">
+                <button class="kr-chip" id="radar-map-chip-open" onclick="radarToggleFilter('open')" style="padding:5px 9px;">🕐 ${isEn ? 'Open' : 'Otwarte'}</button>
+                <button class="kr-chip" id="radar-map-chip-night" onclick="radarToggleFilter('night')" style="padding:5px 9px;">🌙 Po 23:00</button>
+            </div>
+        </div>
+        <div id="radar-map-container" style="flex:1;min-height:0;width:100%;"></div>
+    </div>
+
+    <div class="kr-nav" style="flex-shrink:0;display:flex;border-top:2px solid rgba(255,255,255,.12);background:#1a140f;padding:10px 6px calc(env(safe-area-inset-bottom,0px) + 10px);">
+        <div class="active"><span class="material-icons">radar</span><span>Radar</span></div>
+        <div onclick="closeRadar('list')"><span class="material-icons">emoji_events</span><span>Ranking</span></div>
+        <div onclick="closeRadar('map')"><span class="material-icons">map</span><span>${isEn ? 'Map' : 'Mapa'}</span></div>
+        <div onclick="closeRadar('roulette')"><span class="material-icons">casino</span><span>${isEn ? 'Roulette' : 'Ruletka'}</span></div>
+    </div>`;
+    document.body.appendChild(ov);
+}
+
+function radarShowScreen(name) {
+    ['start', 'loading', 'error', 'results', 'profile', 'map'].forEach(s => {
+        const el = document.getElementById('radar-scr-' + s);
+        if (el) el.style.display = (s === name) ? 'flex' : 'none';
+    });
+    // Update bottom nav active state
+    const nav = document.querySelector('#radar-overlay .kr-nav');
+    if (nav) {
+        nav.querySelectorAll('div').forEach(d => d.classList.remove('active'));
+        const activeIdx = { start: 0, loading: 0, error: 0, results: 0, profile: 0, map: 0 }[name];
+        if (activeIdx !== undefined) {
+            const divs = nav.querySelectorAll('div');
+            if (divs[activeIdx]) divs[activeIdx].classList.add('active');
+        }
+    }
+}
+
+function radarShowStart() { radarShowScreen('start'); }
+
+// ─── RADAR INTERNAL MAP ───────────────────────────────────────────────────────
+let _radarMap = null;
+let _radarMapKebabMarkers = [];
+let _radarMapUserMarker = null;
+let _radarMapRadiusCircle = null;
+
+function radarShowMapScreen() {
+    radarShowScreen('map');
+    setTimeout(initRadarMap, 150);
+}
+
+function radarFocusOnMap(idx, event) {
+    if (event && event.target.closest('a, button')) return;
+    if (window.innerWidth >= 768) return;
+    window._radar.focusIdx = idx;
+    radarShowMapScreen();
+}
+
+function initRadarMap() {
+    const container = document.getElementById('radar-map-container');
+    if (!container) return;
+    const isEn = (window.currentLang || 'pl') === 'en';
+    const userLat = window._radar.lat || 52.0;
+    const userLng = window._radar.lng || 19.0;
+
+    // Sync map filter chip states with current radar state
+    [1, 3, 6, 10, 0].forEach(r => {
+        const mel = document.getElementById('radar-map-r-' + r);
+        if (mel) mel.classList.toggle('on', r === (window._radar.radius || 6));
+    });
+    ['open', 'night'].forEach(f => {
+        const mel = document.getElementById('radar-map-chip-' + f);
+        if (mel) mel.classList.toggle('on', !!window._radar.filters[f]);
+    });
+
+    loadLeafletCSS();
+    loadLeafletJS(function() {
+        // Init map once
+        if (!_radarMap) {
+            _radarMap = L.map('radar-map-container', { zoomControl: true }).setView([userLat, userLng], 13);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap',
+                maxZoom: 18
+            }).addTo(_radarMap);
+        }
+
+        // Clear previous markers and circle
+        _radarMapKebabMarkers.forEach(function(m) { try { _radarMap.removeLayer(m); } catch(e){} });
+        _radarMapKebabMarkers = [];
+        if (_radarMapUserMarker) { try { _radarMap.removeLayer(_radarMapUserMarker); } catch(e){} }
+        if (_radarMapRadiusCircle) { try { _radarMap.removeLayer(_radarMapRadiusCircle); } catch(e){} _radarMapRadiusCircle = null; }
+
+        // Get same filtered list as the results cards
+        let list = window._radar.list || [];
+        const radius = window._radar.radius || 0;
+        if (radius > 0) list = list.filter(function(k) { return k._distKm <= radius; });
+        if (window._radar.filters.open)  list = list.filter(function(k) { return getOpenNowStatus(k.opening_hours)?.open === true; });
+        if (window._radar.filters.night) list = list.filter(function(k) { return isNightKebab(k.opening_hours); });
+
+        // Update subtitle
+        const sub = document.getElementById('radar-map-subtitle');
+        if (sub) sub.textContent = list.length + ' ' + (isEn ? 'kebabs nearby' : 'kebabów w pobliżu') + (radius > 0 ? ' · ≤ ' + radius + ' km' : '');
+
+        // Plot kebab pins (rank among full list, not filtered)
+        const pendingFocusIdx = window._radar.focusIdx;
+        const bounds = L.latLngBounds();
+        list.forEach(function(k, i) {
+            const rankNum = (window._radar.list || []).indexOf(k) + 1;
+            const isSelected = (pendingFocusIdx !== null && pendingFocusIdx !== undefined && i === pendingFocusIdx);
+            const pinClass = isSelected ? '' : (rankNum === 1 ? 'pin-winner-1' : rankNum === 2 ? 'pin-winner-2' : rankNum === 3 ? 'pin-winner-3' : '');
+            const selectedStyle = isSelected ? ' style="background:#4285f4;box-shadow:0 0 0 6px rgba(66,133,244,.35),0 2px 16px rgba(0,0,0,.6);"' : '';
+            const icon = L.divIcon({
+                className: '',
+                html: '<div class="premium-pin ' + pinClass + '"' + selectedStyle + '><span class="pin-number">' + rankNum + '</span></div>',
+                iconSize: [38, 38],
+                iconAnchor: [19, 38],
+                popupAnchor: [0, -38]
+            });
+            const listIdx = (window._radar.list || []).indexOf(k);
+            const marker = L.marker([k._lat, k._lng], { icon: icon })
+                .addTo(_radarMap)
+                .bindPopup(buildRadarMapPopup(k, listIdx), { className: 'kebab-dark-popup', maxWidth: 280 });
+            _radarMapKebabMarkers.push(marker);
+            bounds.extend([k._lat, k._lng]);
+        });
+
+        // Focus on selected kebab if coming from list tap (mobile)
+        const focusIdx = window._radar.focusIdx;
+        if (focusIdx !== undefined && focusIdx !== null && _radarMapKebabMarkers[focusIdx]) {
+            window._radar.focusIdx = null;
+            const focusKebab = list[focusIdx];
+            const capturedIdx = focusIdx;
+            setTimeout(function() {
+                if (focusKebab) {
+                    const b = L.latLngBounds([[userLat, userLng], [focusKebab._lat, focusKebab._lng]]);
+                    _radarMap.fitBounds(b, { padding: [60, 60], maxZoom: 15 });
+                }
+                _radarMapKebabMarkers[capturedIdx].openPopup();
+            }, 350);
+        }
+
+        // Plot user location (person pin)
+        const userIcon = L.divIcon({
+            className: '',
+            html: '<div style="position:relative;display:flex;align-items:center;justify-content:center;width:34px;height:34px;">'
+                + '<div style="position:absolute;inset:-5px;border-radius:50%;background:rgba(66,133,244,.22);animation:user-loc-pulse 2s ease-out infinite;pointer-events:none;"></div>'
+                + '<div style="position:absolute;inset:-13px;border-radius:50%;background:rgba(66,133,244,.08);animation:user-loc-pulse 2s ease-out .65s infinite;pointer-events:none;"></div>'
+                + '<span class="material-icons" style="font-size:34px;color:#4285f4;filter:drop-shadow(0 2px 8px rgba(0,0,0,.55));position:relative;z-index:1;line-height:1;">person_pin</span>'
+                + '</div>',
+            iconSize: [34, 34],
+            iconAnchor: [17, 34]
+        });
+        _radarMapUserMarker = L.marker([userLat, userLng], { icon: userIcon, zIndexOffset: 3000, interactive: false }).addTo(_radarMap);
+        bounds.extend([userLat, userLng]);
+
+        // Draw radius circle (shows exact search boundary)
+        if (radius > 0) {
+            _radarMapRadiusCircle = L.circle([userLat, userLng], {
+                radius: radius * 1000,
+                color: 'rgba(232,160,32,0.7)',
+                weight: 2,
+                fill: true,
+                fillColor: 'rgba(232,160,32,0.04)',
+                dashArray: '8,6',
+                interactive: false
+            }).addTo(_radarMap);
+        }
+
+        // Fit view — when radius set, show full circle; otherwise fit markers
+        if (radius > 0 && _radarMapRadiusCircle) {
+            _radarMap.fitBounds(_radarMapRadiusCircle.getBounds(), { padding: [20, 20] });
+        } else if (list.length > 0) {
+            _radarMap.fitBounds(bounds, { padding: [48, 48], maxZoom: 15 });
+        } else {
+            _radarMap.setView([userLat, userLng], 13);
+        }
+
+        setTimeout(function() { _radarMap.invalidateSize(); }, 250);
+    });
+}
+
+function buildRadarMapPopup(k, listIdx) {
+    const isEn = (window.currentLang || 'pl') === 'en';
+    const dist = k._distKm < 1 ? Math.round(k._distKm * 1000) + ' m' : k._distKm.toFixed(1) + ' km';
+    const st = getOpenNowStatus(k.opening_hours);
+    const score = k.rank_score ? k.rank_score.toFixed(1) : 'N/A';
+    const navUrl = k._lat && k._lng ? 'https://www.google.com/maps/dir/?api=1&destination=' + k._lat + ',' + k._lng + '&travelmode=walking' : '';
+    const name = k.name || k.place_name || '';
+    const stHtml = st ? '<span style="font-size:10px;font-weight:800;padding:2px 7px;border-radius:9999px;' + (st.open ? 'background:rgba(63,166,91,.18);color:#6fd490;' : 'background:rgba(220,38,38,.15);color:#f2766a;') + '">' + st.label + '</span>' : '';
+    return '<div style="padding:12px 14px 10px;">'
+        + '<div style="font-size:13px;font-weight:900;color:#f5eddd;margin-bottom:3px;">' + name + '</div>'
+        + '<div style="font-size:11px;color:#9c9080;margin-bottom:7px;display:flex;align-items:center;gap:6px;">🚶 ' + dist + stHtml + '</div>'
+        + '<div style="display:flex;gap:6px;">'
+        + '<span style="background:#e8a020;color:#fff;font-weight:900;font-size:13px;padding:4px 10px;border-radius:7px;flex-shrink:0;">' + score + '</span>'
+        + (navUrl ? '<a href="' + navUrl + '" target="_blank" rel="noopener" style="flex:1;display:flex;align-items:center;justify-content:center;text-decoration:none;background:linear-gradient(120deg,#e23b2e,#f0552f);color:#fff;font-weight:800;font-size:10px;text-transform:uppercase;padding:4px 8px;border-radius:7px;letter-spacing:.03em;">Prowadź →</a>' : '')
+        + (listIdx >= 0 ? '<button onclick="radarOpenProfile(' + listIdx + ')" style="flex-shrink:0;background:none;border:1px solid rgba(255,255,255,.2);color:#f5eddd;font-weight:700;font-size:10px;padding:4px 10px;border-radius:7px;cursor:pointer;font-family:inherit;">' + (isEn ? 'Profile' : 'Profil') + '</button>' : '')
+        + '</div>'
+        + '</div>';
+}
+
+function openRadar() {
+    ensureRadarOverlay();
+    document.getElementById('radar-overlay').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    if (window._radar.list.length > 0) {
+        radarRenderCards();
+        radarShowScreen('results');
+    } else {
+        radarShowScreen('start');
+    }
+}
+
+function closeRadar(target) {
+    const ov = document.getElementById('radar-overlay');
+    if (ov) ov.style.display = 'none';
+    document.body.style.overflow = '';
+    if (target === 'map') {
+        const btn = document.getElementById('mobile-view-map');
+        if (btn && window.innerWidth < 768) btn.click();
+        if (window._radar && window._radar.lat && window._radar.lng) {
+            const radarCity = window._radar.city;
+            if (radarCity && radarCity !== window.currentCity) {
+                selectCity(radarCity);
+                setTimeout(function() { placeUserMarker(window._radar.lat, window._radar.lng, false); }, 1300);
+            } else {
+                setTimeout(function() { placeUserMarker(window._radar.lat, window._radar.lng, false); }, 500);
+            }
+        }
+    } else if (target === 'list') {
+        const btn = document.getElementById('mobile-view-list');
+        if (btn && window.innerWidth < 768) btn.click();
+    } else if (target === 'roulette') {
+        if (window._radar && window._radar.list && window._radar.list.length > 0) {
+            let radarPool = window._radar.list;
+            const r = window._radar.radius || 0;
+            if (r > 0) radarPool = radarPool.filter(k => k._distKm <= r);
+            if (window._radar.filters && window._radar.filters.open) radarPool = radarPool.filter(k => getOpenNowStatus(k.opening_hours)?.open === true);
+            if (radarPool.length > 0 && typeof openRouletteModal === 'function') {
+                openRouletteModal(false, radarPool);
+                return;
+            }
+        }
+        const isGlobal = !!(document.getElementById('global-tab') && !document.getElementById('global-tab').classList.contains('hidden'));
+        if (typeof openRouletteModal === 'function') openRouletteModal(isGlobal);
+    }
+}
+
+function radarLocate() {
+    const isEn = (window.currentLang || 'pl') === 'en';
+    if (!navigator.geolocation) {
+        radarError(isEn ? 'Your browser does not support geolocation.' : 'Twoja przeglądarka nie obsługuje geolokalizacji.');
+        return;
+    }
+    radarShowScreen('loading');
+    navigator.geolocation.getCurrentPosition(
+        pos => radarOnPosition(pos.coords.latitude, pos.coords.longitude),
+        err => {
+            const denied = err && err.code === 1;
+            radarError(denied
+                ? (isEn ? 'No location access. Allow it in browser settings or pick a city manually.' : 'Brak dostępu do lokalizacji. Zezwól w ustawieniach przeglądarki albo wybierz miasto ręcznie.')
+                : (isEn ? 'Could not get your location. Try again or pick a city.' : 'Nie udało się pobrać lokalizacji. Spróbuj ponownie albo wybierz miasto.'));
+        },
+        { enableHighAccuracy: true, timeout: 12000, maximumAge: 30 * 1000 }
+    );
+}
+
+function radarError(msg) {
+    const el = document.getElementById('radar-error-msg');
+    if (el) el.textContent = msg;
+    radarShowScreen('error');
+}
+
+async function radarOnPosition(lat, lng) {
+    const isEn = (window.currentLang || 'pl') === 'en';
+    window._radar.lat = lat;
+    window._radar.lng = lng;
+    try {
+        // Step 1: get all cities with coordinates
+        const cResp = await fetch('/api/cities/coords');
+        const cData = await cResp.json();
+        if (cData.status !== 'success' || !cData.data || !cData.data.length) throw new Error('no city data');
+
+        // Step 2: find nearest 3 cities by distance
+        const cityDists = cData.data
+            .map(c => ({ ...c, dist: haversineKm(lat, lng, c.lat, c.lng) }))
+            .sort((a, b) => a.dist - b.dist);
+
+        const nearbyCities = cityDists.slice(0, 5);
+        if (!nearbyCities.length || nearbyCities[0].dist > 60) {
+            radarError(isEn
+                ? 'No top-ranked kebabs within 60 km. Pick a city manually — or request yours!'
+                : 'Brak kebabów z topki w promieniu 60 km. Wybierz miasto ręcznie — albo zgłoś swoje!');
+            return;
+        }
+
+        // Step 3: fetch full rankings for nearest 3 cities in parallel
+        const cityFetches = nearbyCities.map(c =>
+            fetch(`/api/rankings/${encodeURIComponent(c.name)}?limit=120`)
+                .then(r => r.json())
+                .then(d => (d.status === 'success' && d.data) ? d.data.map(k => ({ ...k, city: k.city || c.name })) : [])
+                .catch(() => [])
+        );
+        const cityResults = await Promise.all(cityFetches);
+        const allKebabs = cityResults.flat();
+
+        if (!allKebabs.length) {
+            radarError(isEn
+                ? 'No kebab data found for nearby cities. Try again later.'
+                : 'Brak danych o kebsach w pobliskich miastach. Spróbuj później.');
+            return;
+        }
+
+        window._radar.city = nearbyCities[0].name;
+        window._radar.list = allKebabs
+            .map(k => {
+                const kLat = parseFloat(k.latitude || k.lat), kLng = parseFloat(k.longitude || k.lng);
+                if (isNaN(kLat) || isNaN(kLng)) return null;
+                return { ...k, _distKm: haversineKm(lat, lng, kLat, kLng), _lat: kLat, _lng: kLng };
+            })
+            .filter(Boolean)
+            .sort((a, b) => (parseFloat(b.score || b.rank_score || 0)) - (parseFloat(a.score || a.rank_score || 0)));
+        window._radar.shown = 3;
+
+        radarRenderCards();
+        radarShowScreen('results');
+    } catch (e) {
+        console.error('Radar error:', e);
+        radarError(isEn ? 'Something went wrong. Try again.' : 'Coś poszło nie tak. Spróbuj ponownie.');
+    }
+}
+
+function radarToggleFilter(name) {
+    window._radar.filters[name] = !window._radar.filters[name];
+    const chip = document.getElementById('radar-chip-' + name);
+    if (chip) chip.classList.toggle('on', window._radar.filters[name]);
+    const mapChip = document.getElementById('radar-map-chip-' + name);
+    if (mapChip) mapChip.classList.toggle('on', window._radar.filters[name]);
+    window._radar.shown = 3;
+    radarRenderCards();
+    const mapScr = document.getElementById('radar-scr-map');
+    if (mapScr && mapScr.style.display !== 'none') initRadarMap();
+}
+
+function radarReset() {
+    window._radar = { lat: null, lng: null, city: null, list: [], shown: 3, filters: { open: false, night: false }, radius: 6 };
+    const chipOpen = document.getElementById('radar-chip-open');
+    const chipNight = document.getElementById('radar-chip-night');
+    if (chipOpen) chipOpen.classList.remove('on');
+    if (chipNight) chipNight.classList.remove('on');
+    [1, 3, 6, 10, 0].forEach(r => {
+        const el = document.getElementById('radar-r-' + r);
+        if (el) el.classList.toggle('on', r === 6);
+    });
+    const ci = document.getElementById('radar-r-custom');
+    if (ci) { ci.value = ''; ci.style.borderColor = 'rgba(255,255,255,.14)'; }
+    radarShowScreen('start');
+}
+
+function radarSetRadius(km) {
+    window._radar.radius = km;
+    [1, 3, 6, 10, 0].forEach(r => {
+        const el = document.getElementById('radar-r-' + r);
+        if (el) el.classList.toggle('on', r === km);
+        const mel = document.getElementById('radar-map-r-' + r);
+        if (mel) mel.classList.toggle('on', r === km);
+    });
+    const ci = document.getElementById('radar-r-custom');
+    if (ci && ![1, 3, 6, 10, 0].includes(km)) {
+        ci.value = km;
+        ci.style.borderColor = '#e8a020';
+    } else if (ci) {
+        ci.value = '';
+        ci.style.borderColor = 'rgba(255,255,255,.14)';
+    }
+    window._radar.shown = 3;
+    radarRenderCards();
+    const mapScr = document.getElementById('radar-scr-map');
+    if (mapScr && mapScr.style.display !== 'none') initRadarMap();
+}
+
+function radarShowMore() {
+    window._radar.shown += 3;
+    radarRenderCards();
+}
+
+window._radarAiCache = {};
+
+async function radarOpenProfile(cardIdx) {
+    const isEn = (window.currentLang || 'pl') === 'en';
+    const wrap = document.getElementById('radar-profile-content');
+    if (!wrap) return;
+
+    // cardIdx is always an index into the full _radar.list (from both list cards and map popups)
+    const k = (window._radar.list || [])[cardIdx];
+    if (!k) return;
+
+    const st = getOpenNowStatus(k.opening_hours);
+    const navUrl = `https://www.google.com/maps/dir/?api=1&destination=${k._lat},${k._lng}&travelmode=walking`;
+    const score = parseFloat(k.score || k.rank_score || 0).toFixed(1);
+    const aiScore = (k.has_ai_analysis && k.ai_score) ? parseFloat(k.ai_score).toFixed(1) : null;
+
+    // Show profile screen with loading state for AI
+    radarShowScreen('profile');
+    wrap.innerHTML = buildProfileHtml(k, st, navUrl, score, aiScore, k.has_ai_analysis === false ? false : null, isEn);
+
+    // Lazy-fetch AI data (skip if we already know there's no AI analysis)
+    const city = k.city || window._radar.city;
+    if (city && !k._aiLoaded && k.has_ai_analysis !== false) {
+        try {
+            let aiMap = window._radarAiCache[city];
+            if (!aiMap) {
+                const resp = await fetch(`/api/rankings/${encodeURIComponent(city)}/ai?lang=${isEn ? 'en' : 'pl'}&limit=50`);
+                const data = await resp.json();
+                if (data.status === 'success' && data.data) {
+                    aiMap = {};
+                    data.data.forEach(item => { aiMap[item.google_place_id] = item; });
+                    window._radarAiCache[city] = aiMap;
+                }
+            }
+            if (aiMap && k.google_place_id && aiMap[k.google_place_id]) {
+                const ai = aiMap[k.google_place_id];
+                k.ai_summary = ai.ai_summary;
+                k.ai_insights = ai.ai_insights;
+                k.has_ai_analysis = ai.has_ai_analysis;
+                k._aiLoaded = true;
+                const updatedAiScore = (ai.has_ai_analysis && (ai.ai_score || k.ai_score)) ? parseFloat(ai.ai_score || k.ai_score).toFixed(1) : null;
+                wrap.innerHTML = buildProfileHtml(k, st, navUrl, score, updatedAiScore, ai, isEn);
+            }
+        } catch (e) {
+            console.error('AI fetch error:', e);
+        }
+    }
+}
+
+function buildProfileHtml(k, st, navUrl, score, aiScore, ai, isEn) {
+    const stHtml = st
+        ? `<span style="font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:9999px;${st.open ? 'background:rgba(63,166,91,.18);color:#6fd490;border:1px solid rgba(63,166,91,.4);' : 'background:rgba(220,38,38,.15);color:#f2766a;border:1px solid rgba(220,38,38,.35);'}">${st.label}</span>`
+        : '';
+
+    const photoHtml = k.photo_url
+        ? `<div style="border-radius:14px;overflow:hidden;margin-bottom:16px;max-height:220px;"><img src="${k.photo_url}" alt="${k.name}" style="width:100%;height:220px;object-fit:cover;display:block;" onerror="this.parentElement.style.display='none'"></div>`
+        : '';
+
+    const sentimentScore = k.ai_insights?.sentiment;
+    const trend = k.ai_insights?.trend;
+    const authenticity = k.ai_insights?.authenticity;
+
+    let sentimentHtml = '';
+    if (typeof sentimentScore === 'number') {
+        const pct = Math.round((sentimentScore + 1) * 50);
+        const sentColor = sentimentScore > 0.3 ? '#6fd490' : sentimentScore < -0.2 ? '#f2766a' : '#fbbf24';
+        const sentLabel = sentimentScore > 0.5 ? (isEn ? 'Very positive' : 'Bardzo pozytywny')
+            : sentimentScore > 0.2 ? (isEn ? 'Positive' : 'Pozytywny')
+            : sentimentScore < -0.5 ? (isEn ? 'Very negative' : 'Bardzo negatywny')
+            : sentimentScore < -0.2 ? (isEn ? 'Negative' : 'Negatywny')
+            : (isEn ? 'Neutral' : 'Neutralny');
+        sentimentHtml = `
+        <div style="margin-top:14px;padding:12px;background:rgba(255,255,255,.04);border-radius:12px;border:1px solid rgba(255,255,255,.08);">
+            <p style="margin:0 0 8px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:#9c9080;">📊 ${isEn ? 'Sentiment Analysis' : 'Analiza sentymentu'}</p>
+            <div style="display:flex;align-items:center;gap:10px;">
+                <div style="flex:1;height:6px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden;">
+                    <div style="width:${pct}%;height:100%;background:${sentColor};border-radius:3px;"></div>
+                </div>
+                <span style="font-size:12px;font-weight:700;color:${sentColor};white-space:nowrap;">${sentLabel}</span>
+            </div>
+        </div>`;
+    }
+
+    let trendHtml = '';
+    if (trend) {
+        const trendIcon = trend === 'growing' ? '📈' : trend === 'declining' ? '📉' : '➡️';
+        const trendLabel = trend === 'growing' ? (isEn ? 'Growing' : 'Rosnący')
+            : trend === 'declining' ? (isEn ? 'Declining' : 'Spadający')
+            : (isEn ? 'Stable' : 'Stabilny');
+        const trendColor = trend === 'growing' ? '#6fd490' : trend === 'declining' ? '#f2766a' : '#94a3b8';
+        trendHtml = `<div style="display:flex;align-items:center;gap:6px;"><span>${trendIcon}</span><span style="font-size:12px;font-weight:700;color:${trendColor};">${isEn ? 'Trend' : 'Trend'}: ${trendLabel}</span></div>`;
+    }
+
+    let authHtml = '';
+    if (typeof authenticity === 'number') {
+        const authColor = authenticity > 80 ? '#6fd490' : authenticity > 50 ? '#fbbf24' : '#f2766a';
+        authHtml = `<div style="display:flex;align-items:center;gap:6px;"><span>🛡️</span><span style="font-size:12px;font-weight:700;color:${authColor};">${isEn ? 'Authenticity' : 'Autentyczność'}: ${authenticity}%</span></div>`;
+    }
+
+    const aiSummaryHtml = k.ai_summary
+        ? `<div style="margin-top:14px;padding:12px;background:rgba(232,160,32,.06);border-radius:12px;border:1px solid rgba(232,160,32,.2);">
+            <p style="margin:0 0 6px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:#e8a020;">✨ ${isEn ? 'AI Summary' : 'Podsumowanie AI'}</p>
+            <p style="margin:0;font-size:13px;line-height:1.5;color:rgba(245,237,221,.85);">${k.ai_summary}</p>
+           </div>`
+        : (ai === null ? `<div style="text-align:center;padding:20px;color:#9c9080;font-size:12px;">⏳ ${isEn ? 'Loading AI analysis...' : 'Ładuję analizę AI...'}</div>` : '');
+
+    const metaHtml = (trendHtml || authHtml)
+        ? `<div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;padding:10px 12px;background:rgba(255,255,255,.04);border-radius:12px;border:1px solid rgba(255,255,255,.08);">${trendHtml}${authHtml}</div>`
+        : '';
+
+    return `
+    ${photoHtml}
+    <div style="background:#211b15;border:1px solid rgba(255,255,255,.07);border-radius:18px;padding:16px;">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;">
+            <div style="min-width:0;">
+                <p style="font-weight:900;font-style:italic;text-transform:uppercase;letter-spacing:-0.02em;font-size:20px;line-height:1.15;color:#fff;margin:0;">${k.name}</p>
+                <p style="font-size:12px;color:rgba(245,237,221,.55);margin:5px 0 0;">${k.address || ''}${k.city ? ` · <span style="color:#e8a020;">${k.city}</span>` : ''}</p>
+            </div>
+            <div style="display:flex;gap:6px;flex-shrink:0;">
+                <div style="background:#e8a020;color:#fff;font-weight:900;font-size:18px;border-radius:10px;padding:8px 10px 5px;text-align:center;line-height:1;">${score}<small style="display:block;font-size:7px;font-weight:800;letter-spacing:.08em;margin-top:2px;">WYNIK</small></div>
+                ${aiScore ? `<div style="background:rgba(255,255,255,.08);color:#f5eddd;font-weight:900;font-size:15px;border-radius:10px;padding:8px 9px 5px;text-align:center;line-height:1;border:1px solid rgba(255,255,255,.12);">${aiScore}<small style="display:block;font-size:7px;font-weight:800;letter-spacing:.08em;margin-top:2px;color:#9c9080;">AI</small></div>` : ''}
+            </div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:12px;">
+            ${k.rating ? `<span style="font-size:13px;font-weight:700;color:rgba(245,237,221,.85);">⭐ ${k.rating.toFixed(1)}</span>` : ''}
+            ${k.total_reviews ? `<span style="font-size:12px;color:#9c9080;">(${k.total_reviews.toLocaleString()} ${isEn ? 'reviews' : 'opinii'})</span>` : ''}
+            ${stHtml}
+        </div>
+
+        ${k._distKm != null ? `<div style="display:flex;align-items:center;gap:8px;margin-top:10px;font-size:13px;font-weight:600;color:rgba(245,237,221,.85);"><span>${radarDistLabel(k._distKm)}</span></div>` : ''}
+
+        <div style="display:flex;gap:8px;margin-top:14px;">
+            <a href="${navUrl}" target="_blank" rel="noopener" style="flex:1;text-align:center;text-decoration:none;background:linear-gradient(120deg,#e23b2e,#f0552f);color:#fff;font-weight:900;font-style:italic;text-transform:uppercase;font-size:14px;letter-spacing:.02em;padding:13px 0;border-radius:12px;">${isEn ? 'Navigate →' : 'Prowadź →'}</a>
+            ${k.gmaps_url ? `<a href="${k.gmaps_url}" target="_blank" rel="noopener" style="text-decoration:none;border:1px solid rgba(255,255,255,.15);color:#f5eddd;font-weight:700;font-size:12px;padding:13px 16px;border-radius:12px;display:flex;align-items:center;gap:4px;">📍 Google Maps</a>` : ''}
+        </div>
+    </div>
+
+    ${aiSummaryHtml}
+    ${sentimentHtml}
+    ${metaHtml}
+    `;
+}
+
+function radarRenderCards() {
+    const isEn = (window.currentLang || 'pl') === 'en';
+    const wrap = document.getElementById('radar-cards');
+    const cityLabel = document.getElementById('radar-city-label');
+    if (!wrap) return;
+
+    let list = window._radar.list;
+    const radius = window._radar.radius || 0;
+    if (radius > 0) list = list.filter(k => k._distKm <= radius);
+    if (window._radar.filters.open)  list = list.filter(k => getOpenNowStatus(k.opening_hours)?.open === true);
+    if (window._radar.filters.night) list = list.filter(k => isNightKebab(k.opening_hours));
+
+    if (cityLabel) {
+        const radiusInfo = radius > 0 ? ` · ≤ ${radius} km` : '';
+        cityLabel.textContent = (isEn ? 'Top kebabs near you' : 'Topka blisko Ciebie') + ` (${list.length})` + radiusInfo;
+    }
+    const rInfo = document.getElementById('radar-radius-info');
+    if (rInfo) {
+        rInfo.textContent = radius > 0
+            ? (isEn ? `Showing kebabs within ${radius} km` : `Zasięg: do ${radius} km od Ciebie`)
+            : '';
+    }
+
+    if (!list.length) {
+        const nextRadius = radius > 0 ? (radius <= 1 ? 3 : radius <= 3 ? 6 : radius <= 6 ? 10 : radius <= 10 ? 30 : 0) : 0;
+        const expandHtml = nextRadius > 0
+            ? `<button onclick="radarSetRadius(${nextRadius})" style="border:none;cursor:pointer;font-family:inherit;background:#e8a020;color:#fff;font-weight:800;font-size:13px;padding:11px 22px;border-radius:12px;">📍 ${isEn ? 'Expand to' : 'Zwiększ do'} ${nextRadius} km</button>`
+            : '';
+        wrap.innerHTML = `<div style="text-align:center;padding:40px 20px;display:flex;flex-direction:column;align-items:center;gap:14px;">
+            <div style="font-size:40px;">😕</div>
+            <p style="margin:0;font-size:15px;font-weight:700;color:rgba(245,237,221,.8);">${isEn ? 'No kebabs in this range' : 'Brak kebabów w tym zasięgu'}</p>
+            <p style="margin:0;font-size:13px;color:#9c9080;max-width:28ch;line-height:1.5;">${radius > 0 ? (isEn ? 'Try expanding your search radius' : 'Spróbuj zwiększyć zasięg poszukiwań') : (isEn ? 'No results match your filters' : 'Nic nie pasuje do filtrów')}</p>
+            ${expandHtml}
+            <div style="width:40px;height:1px;background:rgba(255,255,255,.1);margin:4px 0;"></div>
+            <p style="margin:0;font-size:12px;color:#9c9080;">${isEn ? "Your city isn't listed?" : 'Nie ma Twojej miejscowości?'}</p>
+            <button onclick="closeRadar();setTimeout(()=>{const el=document.getElementById('mega-menu-trigger');if(el)el.click();setTimeout(()=>{const inp=document.querySelector('#city-search-input');if(inp){inp.value='brak';inp.dispatchEvent(new Event('input'));}},400);},200);" style="background:none;border:1px solid rgba(232,160,32,.4);color:#e8a020;font-weight:700;font-size:12px;padding:9px 18px;border-radius:9999px;cursor:pointer;font-family:inherit;">🏙️ ${isEn ? 'Request your city' : 'Zgłoś swoją miejscowość'}</button>
+        </div>`;
+        return;
+    }
+
+    const shown = list.slice(0, window._radar.shown);
+    const medals = ['🥇', '🥈', '🥉'];
+
+    wrap.innerHTML = shown.map((k, i) => {
+        const st = getOpenNowStatus(k.opening_hours);
+        const stHtml = st
+            ? `<span style="font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:9999px;${st.open ? 'background:rgba(63,166,91,.18);color:#6fd490;border:1px solid rgba(63,166,91,.4);' : 'background:rgba(220,38,38,.15);color:#f2766a;border:1px solid rgba(220,38,38,.35);'}">${st.label}</span>`
+            : '';
+        const rankIdx = window._radar.list.indexOf(k);
+        const navUrl = `https://www.google.com/maps/dir/?api=1&destination=${k._lat},${k._lng}&travelmode=walking`;
+        const topBorder = i === 0 ? 'border-color:rgba(232,160,32,.55);box-shadow:0 0 0 1px rgba(232,160,32,.25);' : '';
+        return `
+        <div onclick="radarFocusOnMap(${i}, event)" style="cursor:pointer;background:#211b15;border:1px solid rgba(255,255,255,.07);border-radius:18px;padding:14px 14px 12px;${topBorder}">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;">
+                <div style="min-width:0;">
+                    <p style="font-weight:900;font-style:italic;text-transform:uppercase;letter-spacing:-0.02em;font-size:16px;line-height:1.15;color:#fff;margin:0;">${rankIdx < 3 ? medals[rankIdx] + ' ' : ''}${k.name}</p>
+                    <p style="font-size:12px;color:rgba(245,237,221,.55);margin:3px 0 0;">${k.address || ''}${k.rating ? ` · ⭐ ${k.rating.toFixed(1)}` : ''}${k.total_reviews ? ` (${k.total_reviews.toLocaleString()} ${isEn ? 'reviews' : 'opinii'})` : ''}${k.city ? ` · <span style="color:#e8a020;">${k.city}</span>` : ''}</p>
+                </div>
+                <div style="display:flex;gap:6px;flex-shrink:0;align-items:flex-start;">
+                    ${k.score || k.rank_score ? `<div style="background:#e8a020;color:#fff;font-weight:900;font-size:16px;border-radius:9px;padding:6px 9px 4px;text-align:center;line-height:1;">${parseFloat(k.score || k.rank_score).toFixed(1)}<small style="display:block;font-size:7px;font-weight:800;letter-spacing:.08em;margin-top:2px;">WYNIK</small></div>` : ''}
+                    ${k.has_ai_analysis && k.ai_score ? `<div style="background:rgba(255,255,255,.08);color:#f5eddd;font-weight:900;font-size:14px;border-radius:9px;padding:6px 8px 4px;text-align:center;line-height:1;border:1px solid rgba(255,255,255,.12);">${parseFloat(k.ai_score).toFixed(1)}<small style="display:block;font-size:7px;font-weight:800;letter-spacing:.08em;margin-top:2px;color:#9c9080;">AI</small></div>` : ''}
+                </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:10px;font-size:12px;font-weight:600;color:rgba(245,237,221,.85);">
+                <span style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:6px;padding:2px 7px;font-size:11px;font-weight:900;color:#9c9080;">#${rankIdx + 1}</span>
+                ${radarDistBadge(k._distKm)}
+                ${stHtml}
+            </div>
+            <div style="display:flex;gap:8px;margin-top:12px;">
+                <a href="${navUrl}" target="_blank" rel="noopener" style="flex:1;text-align:center;text-decoration:none;background:linear-gradient(120deg,#e23b2e,#f0552f);color:#fff;font-weight:900;font-style:italic;text-transform:uppercase;font-size:13px;letter-spacing:.02em;padding:11px 0;border-radius:11px;">${isEn ? 'Navigate →' : 'Prowadź →'}</a>
+                <button onclick="radarOpenProfile(${rankIdx})" style="background:none;border:1px solid rgba(255,255,255,.15);color:#f5eddd;font-weight:700;font-size:12px;padding:11px 14px;border-radius:11px;cursor:pointer;font-family:inherit;">${isEn ? 'Profile' : 'Profil'}</button>
+            </div>
+        </div>`;
+    }).join('') +
+    (list.length > window._radar.shown
+        ? `<button onclick="radarShowMore()" style="margin:2px auto 6px;background:none;border:1px dashed rgba(255,255,255,.25);color:rgba(245,237,221,.7);font-family:inherit;font-weight:700;font-size:12px;padding:9px 22px;border-radius:9999px;cursor:pointer;">${isEn ? 'Show more ↓' : 'Pokaż więcej ↓'}</button>`
+        : '') +
+    (window._radar.city
+        ? `<div style="text-align:center;padding:6px 0 10px;"><a href="#" onclick="openWatchCityModal('${(window._radar.city || '').replace(/'/g, "\\'")}');return false;" style="font-size:12px;color:#9c9080;">🔔 ${isEn ? 'Follow' : 'Obserwuj'} ${window._radar.city} — ${isEn ? 'ranking change alerts' : 'powiadomienia o zmianach w topce'}</a></div>`
+        : '');
+}
+
+// Auto-otwarcie radaru na mobile (raz na sesję, tylko na stronie głównej bez miasta)
+document.addEventListener('DOMContentLoaded', () => {
+    try {
+        if (window.innerWidth < 768 &&
+            !window.initialCity &&
+            !sessionStorage.getItem('kr_radar_seen')) {
+            sessionStorage.setItem('kr_radar_seen', '1');
+            setTimeout(openRadar, 600);
+        }
+    } catch (e) { /* sessionStorage może być zablokowane */ }
+});
+
+// ─── END KEBAB RADAR ──────────────────────────────────────────────────────────

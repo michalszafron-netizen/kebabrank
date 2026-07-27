@@ -1,21 +1,21 @@
 /* static/css/skeleton.css */
 @keyframes skeleton-pulse {
     0% {
-        background-color: rgba(30, 41, 59, 0.5);
+        background-color: rgba(33, 27, 21, 0.5);
     }
 
     50% {
-        background-color: rgba(30, 41, 59, 1);
+        background-color: rgba(33, 27, 21, 1);
     }
 
     100% {
-        background-color: rgba(30, 41, 59, 0.5);
+        background-color: rgba(33, 27, 21, 0.5);
     }
 }
 
 .skeleton-loader {
     animation: skeleton-pulse 1.5s ease-in-out infinite;
-    background-color: #1e293b;
+    background-color: #211b15;
     border-radius: 0.5rem;
 }
 

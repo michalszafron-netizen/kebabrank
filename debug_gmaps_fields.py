@@ -8,12 +8,12 @@ def debug_gmaps_fields():
     load_dotenv()
     api_key = os.getenv("GMAPS_EXTRACTOR_API_KEY")
     if not api_key:
-        # Hardcoded for test if env fails
-        api_key = "ZUaHNRMieiVzFcAOvmyZ6tMjK9U4HDLN4MVejoLgmyn0K7LB"
-        
+        print("ERROR: Ustaw GMAPS_EXTRACTOR_API_KEY w .env")
+        return
+
     gmaps = GmapsextractorService(api_key)
     print("Searching for kebab in Zakopane...")
-    results = gmaps.search_places("kebab Zakopane", page=1, extra=True)
+    results = gmaps.search_places("kebab", page=1, extra=False, ll="@50.0619474,19.9368564,11z")
     
     if results:
         print(f"Found {len(results)} results.")

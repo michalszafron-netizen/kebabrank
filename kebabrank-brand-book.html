@@ -1,0 +1,1083 @@
+<title>KebabRank — Księga Znaku</title>
+<style>
+  :root {
+    --kr-amber:      #e8a020;
+    --kr-amber-lt:   #f2b233;
+    --kr-amber-glow: rgba(232,160,32,0.4);
+    --kr-bg:         #14100c;
+    --kr-surface:    #211b15;
+    --kr-surface-2:  #2a2118;
+    --kr-text:       #f8fafc;
+    --kr-warm:       #f5eddd;
+    --kr-muted:      #9c9080;
+    --kr-border:     rgba(255,255,255,0.08);
+    --kr-violet:     #a855f7;
+    --kr-indigo:     #6366f1;
+    --kr-blue:       #3b82f6;
+    --kr-green:      #4ade80;
+    --kr-red:        #f87171;
+    --kr-slate:      #94a3b8;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--kr-bg);
+    color: var(--kr-text);
+    font-family: system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 72px 40px 80px;
+  }
+
+  /* ─── HEADER ─────────────────────────────── */
+  .brand-header {
+    padding-bottom: 56px;
+    margin-bottom: 72px;
+    border-bottom: 1px solid var(--kr-border);
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .brand-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--kr-muted);
+    margin-bottom: 16px;
+  }
+
+  .brand-wordmark {
+    font-size: 64px;
+    font-weight: 900;
+    letter-spacing: -3px;
+    line-height: 1;
+    background: linear-gradient(90deg, var(--kr-amber) 0%, var(--kr-amber-lt) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .brand-sub {
+    font-size: 17px;
+    color: var(--kr-muted);
+    margin-top: 14px;
+    font-weight: 400;
+    max-width: 540px;
+    line-height: 1.6;
+  }
+
+  .header-meta {
+    margin-top: 28px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .meta-chip {
+    display: inline-block;
+    background: var(--kr-surface);
+    border: 1px solid var(--kr-border);
+    border-radius: 100px;
+    padding: 4px 14px;
+    font-size: 11px;
+    color: var(--kr-muted);
+    letter-spacing: 0.04em;
+  }
+
+  /* ─── SECTION ────────────────────────────── */
+  .section {
+    margin-bottom: 80px;
+  }
+
+  .section-eyebrow {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--kr-amber);
+    margin-bottom: 8px;
+  }
+
+  .section-title {
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin-bottom: 12px;
+    line-height: 1.15;
+    text-wrap: balance;
+  }
+
+  .section-desc {
+    font-size: 14px;
+    color: var(--kr-muted);
+    max-width: 600px;
+    line-height: 1.75;
+    margin-bottom: 36px;
+  }
+
+  /* ─── COLORS ─────────────────────────────── */
+  .color-group-title {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--kr-muted);
+    margin-bottom: 14px;
+    margin-top: 32px;
+  }
+
+  .color-group-title:first-of-type { margin-top: 0; }
+
+  .color-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+    gap: 12px;
+  }
+
+  .swatch {
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--kr-border);
+  }
+
+  .swatch-color { height: 76px; width: 100%; display: block; }
+
+  .swatch-body {
+    background: var(--kr-surface);
+    padding: 10px 13px 12px;
+  }
+
+  .swatch-name {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--kr-text);
+    margin-bottom: 3px;
+    line-height: 1.3;
+  }
+
+  .swatch-hex {
+    font-size: 11px;
+    color: var(--kr-muted);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.03em;
+  }
+
+  .swatch-role {
+    font-size: 10px;
+    color: var(--kr-muted);
+    opacity: 0.65;
+    margin-top: 4px;
+  }
+
+  /* ─── TYPOGRAPHY ─────────────────────────── */
+  .type-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .type-row {
+    background: var(--kr-surface);
+    border: 1px solid var(--kr-border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  .type-sample { flex: 1; min-width: 0; }
+
+  .type-spec {
+    font-size: 11px;
+    color: var(--kr-muted);
+    text-align: right;
+    white-space: nowrap;
+    flex-shrink: 0;
+    line-height: 1.7;
+  }
+
+  .type-spec strong {
+    display: block;
+    color: var(--kr-warm);
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 1px;
+  }
+
+  /* ─── COMPONENTS ─────────────────────────── */
+  .comp-block {
+    background: var(--kr-surface);
+    border: 1px solid var(--kr-border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 14px;
+  }
+
+  .comp-block-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--kr-muted);
+    margin-bottom: 18px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255,255,255,.05);
+  }
+
+  .comp-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .kr-btn-primary {
+    background: var(--kr-amber);
+    color: #000;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    letter-spacing: 0.01em;
+    transition: filter .15s, transform .15s;
+  }
+
+  .kr-btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
+
+  .kr-btn-secondary {
+    background: transparent;
+    color: var(--kr-text);
+    padding: 9px 18px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    border: 1px solid var(--kr-border);
+    cursor: pointer;
+    font-family: inherit;
+    transition: border-color .15s;
+  }
+
+  .kr-btn-secondary:hover { border-color: rgba(255,255,255,.2); }
+
+  .kr-btn-ai {
+    background: linear-gradient(90deg, var(--kr-amber), var(--kr-violet));
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    transition: opacity .15s, transform .15s;
+  }
+
+  .kr-btn-ai:hover { opacity: .9; transform: translateY(-1px); }
+
+  .kr-btn-nav {
+    background: var(--kr-indigo);
+    color: #fff;
+    padding: 7px 13px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 12px;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .kr-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    border-radius: 100px;
+    padding: 4px 11px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .kr-pill-open   { background: rgba(74,222,128,.1);   color: var(--kr-green);  border: 1px solid rgba(74,222,128,.2); }
+  .kr-pill-closed { background: rgba(248,113,113,.1); color: var(--kr-red);    border: 1px solid rgba(248,113,113,.2); }
+  .kr-pill-24h    { background: rgba(59,130,246,.1);  color: var(--kr-blue);   border: 1px solid rgba(59,130,246,.2); }
+  .kr-pill-null   { background: rgba(255,255,255,.05); color: var(--kr-muted); border: 1px solid rgba(255,255,255,.1); }
+
+  .kr-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .kr-dot-green  { background: var(--kr-green); }
+  .kr-dot-red    { background: var(--kr-red); }
+  .kr-dot-blue   { background: var(--kr-blue); }
+  .kr-dot-muted  { background: var(--kr-muted); }
+
+  .kr-input {
+    background: rgba(0,0,0,.2);
+    border: 1px solid var(--kr-border);
+    border-radius: 9999px;
+    padding: 11px 20px;
+    color: var(--kr-text);
+    font-size: 14px;
+    font-family: inherit;
+    width: 260px;
+    outline: none;
+    transition: border-color .15s, box-shadow .15s;
+  }
+
+  .kr-input:focus {
+    border-color: var(--kr-amber);
+    box-shadow: 0 0 0 4px rgba(232,160,32,.15);
+  }
+
+  .kr-card {
+    background: rgba(33,27,21,.3);
+    border: 1px solid var(--kr-border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    max-width: 300px;
+    cursor: pointer;
+    transition: background .2s, border-color .2s, transform .2s;
+  }
+
+  .kr-card:hover {
+    background: rgba(33,27,21,.55);
+    border-color: rgba(232,160,32,.3);
+    transform: translateY(-2px);
+  }
+
+  .kr-rank-badge {
+    background: linear-gradient(135deg, var(--kr-amber), var(--kr-amber-lt));
+    color: #000;
+    font-weight: 900;
+    font-size: 15px;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  /* ─── GRADIENTS ──────────────────────────── */
+  .grad-item { margin-bottom: 24px; }
+
+  .grad-strip {
+    height: 52px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+  }
+
+  .grad-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--kr-muted);
+  }
+
+  .grad-meta strong { color: var(--kr-warm); font-weight: 600; }
+
+  /* ─── MAP PINS ───────────────────────────── */
+  .pins-row {
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+    align-items: flex-end;
+  }
+
+  .pin-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .pin-shape {
+    width: 52px;
+    height: 52px;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid #fff;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.5);
+    flex-shrink: 0;
+  }
+
+  .pin-num {
+    transform: rotate(45deg);
+    font-weight: 900;
+    font-size: 16px;
+    line-height: 1;
+  }
+
+  .pin-label {
+    text-align: center;
+    font-size: 11px;
+    color: var(--kr-muted);
+    line-height: 1.5;
+  }
+
+  .pin-label strong {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--kr-text);
+    margin-bottom: 2px;
+  }
+
+  /* ─── SPACING ────────────────────────────── */
+  .spacing-demo {
+    display: flex;
+    gap: 8px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+  }
+
+  .sp-block {
+    background: rgba(232,160,32,.12);
+    border: 1px dashed rgba(232,160,32,.35);
+    border-radius: 3px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 4px;
+  }
+
+  .sp-val {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--kr-amber);
+  }
+
+  .radius-demo {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .rad-item {
+    background: var(--kr-surface);
+    border: 1px solid var(--kr-border);
+    padding: 10px 18px;
+    font-size: 12px;
+    color: var(--kr-muted);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .rad-item span { font-size: 10px; opacity: .7; }
+
+  /* ─── TRANSITIONS ────────────────────────── */
+  .trans-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .trans-chip {
+    background: var(--kr-surface);
+    border: 1px solid var(--kr-border);
+    border-radius: 8px;
+    padding: 14px 18px;
+    flex: 1;
+    min-width: 180px;
+  }
+
+  .trans-chip-name {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--kr-amber);
+    margin-bottom: 4px;
+  }
+
+  .trans-chip-val {
+    font-size: 12px;
+    color: var(--kr-warm);
+    font-family: 'Courier New', monospace;
+  }
+
+  .trans-chip-role {
+    font-size: 11px;
+    color: var(--kr-muted);
+    margin-top: 6px;
+  }
+
+  /* ─── GLASSMORPHISM ──────────────────────── */
+  .glass-specs {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 14px;
+  }
+
+  .glass-chip {
+    border-radius: 12px;
+    padding: 20px;
+  }
+
+  .glass-chip-name {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--kr-muted);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .glass-chip-val {
+    font-size: 12px;
+    color: var(--kr-warm);
+    line-height: 1.9;
+  }
+
+  /* ─── TONE ───────────────────────────────── */
+  .tone-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  .tone-table th {
+    text-align: left;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--kr-muted);
+    padding: 10px 16px 10px;
+    border-bottom: 1px solid var(--kr-border);
+  }
+
+  .tone-table td {
+    padding: 13px 16px;
+    border-bottom: 1px solid rgba(255,255,255,.04);
+    line-height: 1.5;
+    vertical-align: top;
+  }
+
+  .tone-table tr:last-child td { border-bottom: none; }
+
+  .tone-yes { color: var(--kr-green); }
+  .tone-no  { color: var(--kr-red);   }
+
+  /* ─── FOOTER ─────────────────────────────── */
+  .brand-footer {
+    border-top: 1px solid var(--kr-border);
+    padding-top: 32px;
+    margin-top: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-wordmark {
+    font-size: 20px;
+    font-weight: 900;
+    letter-spacing: -0.5px;
+    background: linear-gradient(90deg, var(--kr-amber), var(--kr-amber-lt));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .footer-meta {
+    font-size: 12px;
+    color: var(--kr-muted);
+    text-align: right;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 620px) {
+    .page { padding: 40px 20px 60px; }
+    .brand-wordmark { font-size: 44px; }
+    .type-row { flex-direction: column; gap: 8px; }
+    .type-spec { text-align: left; }
+    .color-grid { grid-template-columns: repeat(2, 1fr); }
+    .pins-row { gap: 24px; }
+  }
+</style>
+
+<div class="page">
+
+  <!-- HEADER -->
+  <header class="brand-header">
+    <div class="brand-eyebrow">Księga Znaku</div>
+    <div class="brand-wordmark">KebabRank</div>
+    <p class="brand-sub">Jedyna rzecz ważniejsza od dobrego kebaba — to wiedzieć, gdzie on jest. Przewodnik po języku wizualnym marki.</p>
+    <div class="header-meta">
+      <span class="meta-chip">v1.0 · Lipiec 2026</span>
+      <span class="meta-chip">Tylko ciemny motyw</span>
+      <span class="meta-chip">Inter Variable · self-hosted</span>
+    </div>
+  </header>
+
+  <!-- 01 KOLORY -->
+  <section class="section">
+    <div class="section-eyebrow">01 — Kolory</div>
+    <h2 class="section-title">Paleta barw</h2>
+    <p class="section-desc">Ciepła czerń nawiązuje do nocnego baru, węgla pod rożnem, przypraw. Bursztyn to jedyny kolor CTA i aktywnych stanów. Fiolet zarezerwowany wyłącznie dla funkcji AI.</p>
+
+    <div class="color-group-title">Fundament</div>
+    <div class="color-grid">
+      <div class="swatch">
+        <div class="swatch-color" style="background:#14100c;"></div>
+        <div class="swatch-body">
+          <div class="swatch-name">Background Deep</div>
+          <div class="swatch-hex">#14100C</div>
+          <div class="swatch-role">Tło całej strony</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#211b15;"></div>
+        <div class="swatch-body">
+          <div class="swatch-name">Surface</div>
+          <div class="swatch-hex">#211B15</div>
+          <div class="swatch-role">Karty, panele, popupy</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#2a2118;border-bottom:1px solid rgba(255,255,255,.06);"></div>
+        <div class="swatch-body">
+          <div class="swatch-name">Surface Hover</div>
+          <div class="swatch-hex">#2A2118</div>
+          <div class="swatch-role">Hover kart</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#f8fafc;"></div>
+        <div class="swatch-body">
+          <div class="swatch-name">Text Primary</div>
+          <div class="swatch-hex">#F8FAFC</div>
+          <div class="swatch-role">Nagłówki, body</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#f5eddd;"></div>
+        <div class="swatch-body">
+          <div class="swatch-name">Text Warm</div>
+          <div class="swatch-hex">#F5EDDD</div>
+          <div class="swatch-role">Overlay, profil</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#9c9080;"></div>
+        <div class="swatch-body">
+          <div class="swatch-name">Text Muted</div>
+          <div class="swatch-hex">#9C9080</div>
+          <div class="swatch-role">Metadane, etykiety</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="color-group-title">Akcenty</div>
+    <div class="color-grid">
+      <div class="swatch">
+        <div class="swatch-color" style="background:linear-gradient(90deg,#e8a020,#f2b233);"></div>
+        <div class="swatch-body">
+          <div class="swatch-name">Amber — Primary</div>
+          <div class="swatch-hex">#E8A020 · #F2B233</div>
+          <div class="swatch-role">CTA, active, logo gradient</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#a855f7;"></div>
+        <div class="swatch-body">
+          <div class="swatch-name">Violet — AI</div>
+          <div class="swatch-hex">#A855F7</div>
+          <div class="swatch-role">Tylko AI / premium</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#6366f1;"></div>
+        <div class="swatch-body">
+          <div class="swatch-name">Indigo — Nawigacja</div>
+          <div class="swatch-hex">#6366F1</div>
+          <div class="swatch-role">Przycisk „Nawiguj"</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#3b82f6;"></div>
+        <div class="swatch-body">
+          <div class="swatch-name">Blue — Info</div>
+          <div class="swatch-hex">#3B82F6</div>
+          <div class="swatch-role">Akcent AI summary</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#4285f4;"></div>
+        <div class="swatch-body">
+          <div class="swatch-name">Maps Blue — Pin</div>
+          <div class="swatch-hex">#4285F4</div>
+          <div class="swatch-role">Zaznaczony pin mapy</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="color-group-title">Statusy</div>
+    <div class="color-grid">
+      <div class="swatch">
+        <div class="swatch-color" style="background:rgba(74,222,128,.12);"></div>
+        <div class="swatch-body">
+          <div class="swatch-name">Open / Success</div>
+          <div class="swatch-hex">#4ADE80</div>
+          <div class="swatch-role">Otwarte, sukces</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:rgba(248,113,113,.12);"></div>
+        <div class="swatch-body">
+          <div class="swatch-name">Closed / Error</div>
+          <div class="swatch-hex">#F87171</div>
+          <div class="swatch-role">Zamknięte, błąd</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:rgba(148,163,184,.12);"></div>
+        <div class="swatch-body">
+          <div class="swatch-name">Unknown</div>
+          <div class="swatch-hex">#94A3B8</div>
+          <div class="swatch-role">Brak danych</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="color-group-title">Podium rankingowe</div>
+    <div class="color-grid">
+      <div class="swatch">
+        <div class="swatch-color" style="background:linear-gradient(135deg,#FFD700,#FFA500);"></div>
+        <div class="swatch-body">
+          <div class="swatch-name">Gold — Miejsce #1</div>
+          <div class="swatch-hex">#FFD700 → #FFA500</div>
+          <div class="swatch-role">Pin, badge, glow</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:linear-gradient(135deg,#E2E2E2,#8F8F8F);"></div>
+        <div class="swatch-body">
+          <div class="swatch-name">Silver — Miejsce #2</div>
+          <div class="swatch-hex">#E2E2E2 → #8F8F8F</div>
+          <div class="swatch-role">Pin, badge</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:linear-gradient(135deg,#CD7F32,#8B4513);"></div>
+        <div class="swatch-body">
+          <div class="swatch-name">Bronze — Miejsce #3</div>
+          <div class="swatch-hex">#CD7F32 → #8B4513</div>
+          <div class="swatch-role">Pin, badge</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 TYPOGRAFIA -->
+  <section class="section">
+    <div class="section-eyebrow">02 — Typografia</div>
+    <h2 class="section-title">Inter Variable</h2>
+    <p class="section-desc">Jeden krój w całym produkcie — Inter Variable (400–900). Hostowany lokalnie, obejmuje pełny latin-ext (ą ć ę ł ń ó ś ź ż). Material Icons jako uzupełniający icon font.</p>
+
+    <div class="type-stack">
+      <div class="type-row">
+        <div class="type-sample" style="font-size:52px;font-weight:900;letter-spacing:-2.5px;line-height:1;background:linear-gradient(90deg,#e8a020,#f2b233);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Ranking</div>
+        <div class="type-spec"><strong>Display 900</strong>52 px · 900 · ls −2.5px<br>Hero, wordmark</div>
+      </div>
+      <div class="type-row">
+        <div class="type-sample" style="font-size:30px;font-weight:800;letter-spacing:-0.5px;line-height:1.15;color:#f8fafc;">Najlepszy kebab w Polsce</div>
+        <div class="type-spec"><strong>Heading 800</strong>30 px · 800 · ls −0.5px<br>Nagłówki sekcji</div>
+      </div>
+      <div class="type-row">
+        <div class="type-sample" style="font-size:18px;font-weight:700;line-height:1.3;color:#f8fafc;">Kebab Władysław — Kraków, Stare Miasto</div>
+        <div class="type-spec"><strong>Title 700</strong>18 px · 700<br>Nazwy miejsc</div>
+      </div>
+      <div class="type-row">
+        <div class="type-sample" style="font-size:15px;font-weight:400;line-height:1.75;color:#f5eddd;max-width:440px;">Oceniamy kebaby na podstawie danych z Google Maps, analizy AI i tysięcy recenzji. Bez przekupstwa, bez sponsorów.</div>
+        <div class="type-spec"><strong>Body 400</strong>15 px · 400 · lh 1.75<br>Tekst ciągły</div>
+      </div>
+      <div class="type-row">
+        <div class="type-sample" style="font-size:13px;font-weight:500;color:#9c9080;">ul. Floriańska 12, Kraków · 0,4 km · 5 min</div>
+        <div class="type-spec"><strong>Caption 500</strong>13 px · 500<br>Adresy, metadane</div>
+      </div>
+      <div class="type-row">
+        <div class="type-sample" style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#e8a020;">01 — Analiza AI · wynik 9.2</div>
+        <div class="type-spec"><strong>Label 700</strong>11 px · 700 · ls +0.12em<br>Eyebrow, category</div>
+      </div>
+    </div>
+
+    <div style="margin-top:28px;background:var(--kr-surface);border:1px solid var(--kr-border);border-radius:10px;padding:20px 24px;">
+      <div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--kr-muted);margin-bottom:16px;">Warianty wagowe — Inter</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;align-items:baseline;gap:16px;"><span style="font-size:20px;font-weight:400;color:#f8fafc;">400</span><span style="font-size:13px;color:#9c9080;">Regular — body text</span></div>
+        <div style="display:flex;align-items:baseline;gap:16px;"><span style="font-size:20px;font-weight:500;color:#f8fafc;">500</span><span style="font-size:13px;color:#9c9080;">Medium — metadane, captions</span></div>
+        <div style="display:flex;align-items:baseline;gap:16px;"><span style="font-size:20px;font-weight:600;color:#f8fafc;">600</span><span style="font-size:13px;color:#9c9080;">Semibold — przyciski secondary</span></div>
+        <div style="display:flex;align-items:baseline;gap:16px;"><span style="font-size:20px;font-weight:700;color:#f8fafc;">700</span><span style="font-size:13px;color:#9c9080;">Bold — tytuły kart, labelki</span></div>
+        <div style="display:flex;align-items:baseline;gap:16px;"><span style="font-size:20px;font-weight:800;color:#f8fafc;">800</span><span style="font-size:13px;color:#9c9080;">Extrabold — sekcje H2</span></div>
+        <div style="display:flex;align-items:baseline;gap:16px;"><span style="font-size:20px;font-weight:900;color:#e8a020;">900</span><span style="font-size:13px;color:#9c9080;">Black — hero, numerki #1 / #2 / #3</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 KOMPONENTY -->
+  <section class="section">
+    <div class="section-eyebrow">03 — Komponenty</div>
+    <h2 class="section-title">Elementy UI</h2>
+
+    <div class="comp-block">
+      <div class="comp-block-label">Przyciski</div>
+      <div class="comp-row">
+        <button class="kr-btn-primary">Znajdź kebaba</button>
+        <button class="kr-btn-secondary">Anuluj</button>
+        <button class="kr-btn-ai">✦ Analiza AI</button>
+        <button class="kr-btn-nav">↗ Nawiguj</button>
+      </div>
+      <div style="margin-top:14px;font-size:12px;color:var(--kr-muted);line-height:1.7;">
+        <strong style="color:var(--kr-warm);">Primary</strong> — Amber bg, czarny tekst, border-radius 8px &nbsp;·&nbsp;
+        <strong style="color:var(--kr-warm);">Secondary</strong> — transparent, border rgba(255,255,255,.08) &nbsp;·&nbsp;
+        <strong style="color:var(--kr-warm);">AI</strong> — gradient Amber→Violet &nbsp;·&nbsp;
+        <strong style="color:var(--kr-warm);">Nav</strong> — Indigo #6366F1, uppercase
+      </div>
+    </div>
+
+    <div class="comp-block">
+      <div class="comp-block-label">Statusy otwarcia</div>
+      <div class="comp-row">
+        <span class="kr-pill kr-pill-open"><span class="kr-dot kr-dot-green"></span>Otwarte</span>
+        <span class="kr-pill kr-pill-closed"><span class="kr-dot kr-dot-red"></span>Zamknięte</span>
+        <span class="kr-pill kr-pill-24h"><span class="kr-dot kr-dot-blue"></span>Całą dobę</span>
+        <span class="kr-pill kr-pill-null"><span class="kr-dot kr-dot-muted"></span>Brak danych</span>
+      </div>
+    </div>
+
+    <div class="comp-block">
+      <div class="comp-block-label">Wyszukiwarka miasta</div>
+      <div class="comp-row">
+        <input class="kr-input" type="text" placeholder="Wpisz miasto…" />
+      </div>
+      <div style="margin-top:10px;font-size:12px;color:var(--kr-muted);">border-radius: 9999px · focus: amber border + glow rgba(232,160,32,.15)</div>
+    </div>
+
+    <div class="comp-block">
+      <div class="comp-block-label">Karta kebaba (Glass Card)</div>
+      <div class="kr-card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;gap:12px;">
+          <div>
+            <div style="font-size:15px;font-weight:700;color:#f8fafc;margin-bottom:3px;">Kebab Władysław</div>
+            <div style="font-size:12px;color:#9c9080;">ul. Floriańska 12, Kraków</div>
+          </div>
+          <div class="kr-rank-badge">#1</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px;">
+          <span class="kr-pill kr-pill-open" style="font-size:11px;padding:3px 9px;"><span class="kr-dot kr-dot-green"></span>Otwarte</span>
+          <span style="font-size:12px;color:#9c9080;">0,4 km · 5 min 🚶</span>
+        </div>
+        <div style="padding-top:12px;border-top:1px solid rgba(255,255,255,.06);display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-size:12px;font-weight:700;color:#e8a020;">✦ AI 9.2 / 10</span>
+          <span style="font-size:12px;color:#9c9080;">4.6 ★ · 1 203 opinii</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 GRADIENTY -->
+  <section class="section">
+    <div class="section-eyebrow">04 — Gradienty</div>
+    <h2 class="section-title">Zestawy gradientów</h2>
+    <p class="section-desc">Maksymalnie dwie barwy. Kąty 90° (poziome, UI) lub 135° (piny, ikony, wyróżnienia). Nigdy nie łączyć więcej niż jednego gradientu w tym samym obszarze wizualnym.</p>
+
+    <div class="grad-item">
+      <div class="grad-strip" style="background:linear-gradient(90deg,#e8a020,#f2b233);"></div>
+      <div class="grad-meta"><strong>Primary — Amber</strong><span>#E8A020 → #F2B233 · 90°  ·  CTA, logo, aktywne elementy</span></div>
+    </div>
+    <div class="grad-item">
+      <div class="grad-strip" style="background:linear-gradient(90deg,#e8a020,#a855f7);"></div>
+      <div class="grad-meta"><strong>Premium AI — Amber → Violet</strong><span>#E8A020 → #A855F7 · 90°  ·  Przycisk AI, border AI card</span></div>
+    </div>
+    <div class="grad-item">
+      <div class="grad-strip" style="background:linear-gradient(135deg,#FFD700,#FFA500);"></div>
+      <div class="grad-meta"><strong>Gold — Podium #1</strong><span>#FFD700 → #FFA500 · 135°  ·  Pin #1, animacja pulse</span></div>
+    </div>
+    <div class="grad-item">
+      <div class="grad-strip" style="background:linear-gradient(135deg,#E2E2E2,#8F8F8F);"></div>
+      <div class="grad-meta"><strong>Silver — Podium #2</strong><span>#E2E2E2 → #8F8F8F · 135°</span></div>
+    </div>
+    <div class="grad-item">
+      <div class="grad-strip" style="background:linear-gradient(135deg,#CD7F32,#8B4513);"></div>
+      <div class="grad-meta"><strong>Bronze — Podium #3</strong><span>#CD7F32 → #8B4513 · 135°</span></div>
+    </div>
+    <div class="grad-item">
+      <div class="grad-strip" style="background:linear-gradient(135deg,#e8a020,#a855f7);"></div>
+      <div class="grad-meta"><strong>Standard Pin — mapa</strong><span>#E8A020 → #A855F7 · 135°  ·  Wszystkie piny poza podium</span></div>
+    </div>
+  </section>
+
+  <!-- 05 PINY -->
+  <section class="section">
+    <div class="section-eyebrow">05 — Piny mapowe</div>
+    <h2 class="section-title">Markery na mapie</h2>
+    <p class="section-desc">Kształt teardrop — koło z jednym rogiem, rotacja −45°. Numer ranku obrócony +45° wewnątrz. Biała ramka 3px (4px dla gold), box-shadow 0 4px 14px rgba(0,0,0,0.5).</p>
+
+    <div class="pins-row">
+      <div class="pin-wrap">
+        <div class="pin-shape" style="background:linear-gradient(135deg,#FFD700,#FFA500);box-shadow:0 0 28px rgba(255,215,0,0.6),0 4px 14px rgba(0,0,0,0.5);border-width:4px;width:56px;height:56px;">
+          <span class="pin-num" style="color:#000;font-size:18px;">1</span>
+        </div>
+        <div class="pin-label"><strong>Gold</strong>Pulse animation<br>#FFD700 → #FFA500</div>
+      </div>
+      <div class="pin-wrap">
+        <div class="pin-shape" style="background:linear-gradient(135deg,#E2E2E2,#8F8F8F);box-shadow:0 0 20px rgba(192,192,192,0.5),0 4px 14px rgba(0,0,0,0.5);">
+          <span class="pin-num" style="color:#000;font-size:16px;">2</span>
+        </div>
+        <div class="pin-label"><strong>Silver</strong>#E2E2E2 → #8F8F8F</div>
+      </div>
+      <div class="pin-wrap">
+        <div class="pin-shape" style="background:linear-gradient(135deg,#CD7F32,#8B4513);box-shadow:0 0 16px rgba(205,127,50,0.4),0 4px 14px rgba(0,0,0,0.5);">
+          <span class="pin-num" style="color:#fff;font-size:16px;">3</span>
+        </div>
+        <div class="pin-label"><strong>Bronze</strong>#CD7F32 → #8B4513</div>
+      </div>
+      <div class="pin-wrap">
+        <div class="pin-shape" style="background:linear-gradient(135deg,#e8a020,#a855f7);">
+          <span class="pin-num" style="color:#fff;font-size:14px;">23</span>
+        </div>
+        <div class="pin-label"><strong>Standard</strong>Amber → Violet</div>
+      </div>
+      <div class="pin-wrap">
+        <div class="pin-shape" style="background:#4285f4;box-shadow:0 0 0 7px rgba(66,133,244,.3),0 2px 18px rgba(0,0,0,.6);">
+          <span class="pin-num" style="color:#fff;font-size:14px;">7</span>
+        </div>
+        <div class="pin-label"><strong>Selected</strong>Zaznaczony<br>#4285F4</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 SPACING -->
+  <section class="section">
+    <div class="section-eyebrow">06 — Spacing & Radius</div>
+    <h2 class="section-title">Siatka i narożniki</h2>
+    <p class="section-desc">Bazowa jednostka 4px. Każdy odstęp jest wielokrotnością 4. Gap między elementami sibling przez flex/grid gap — nie marginesy per-element.</p>
+
+    <div class="spacing-demo">
+      <div class="sp-block" style="width:16px;height:16px;"><span class="sp-val">4</span></div>
+      <div class="sp-block" style="width:24px;height:24px;"><span class="sp-val">8</span></div>
+      <div class="sp-block" style="width:36px;height:36px;"><span class="sp-val">12</span></div>
+      <div class="sp-block" style="width:48px;height:48px;"><span class="sp-val">16</span></div>
+      <div class="sp-block" style="width:64px;height:64px;"><span class="sp-val">24</span></div>
+      <div class="sp-block" style="width:80px;height:80px;"><span class="sp-val">32</span></div>
+      <div class="sp-block" style="width:96px;height:96px;"><span class="sp-val">48</span></div>
+      <div class="sp-block" style="width:120px;height:120px;"><span class="sp-val">64</span></div>
+    </div>
+
+    <div class="radius-demo">
+      <div class="rad-item" style="border-radius:4px;"><span>r-4</span>Badges</div>
+      <div class="rad-item" style="border-radius:6px;"><span>r-6</span>Chips</div>
+      <div class="rad-item" style="border-radius:8px;"><span>r-8</span>Przyciski, karty</div>
+      <div class="rad-item" style="border-radius:12px;"><span>r-12</span>Panele, popupy</div>
+      <div class="rad-item" style="border-radius:9999px;"><span>r-full</span>Wyszukiwarka, pille</div>
+    </div>
+  </section>
+
+  <!-- 07 EFEKTY -->
+  <section class="section">
+    <div class="section-eyebrow">07 — Efekty & Ruch</div>
+    <h2 class="section-title">Glassmorphism & animacje</h2>
+    <p class="section-desc">Frosted-glass tylko na panelach tła — nigdy na tekście ani interaktywnych przyciskach. Przejścia na cubic-bezier material design.</p>
+
+    <div class="glass-specs" style="margin-bottom:28px;">
+      <div class="glass-chip" style="background:rgba(20,16,12,.6);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.08);">
+        <div class="glass-chip-name">Glass Panel</div>
+        <div class="glass-chip-val">rgba(20,16,12, 0.6)<br>blur(16px)<br>border rgba(255,255,255,.08)</div>
+      </div>
+      <div class="glass-chip" style="background:rgba(33,27,21,.3);border:1px solid rgba(255,255,255,.08);">
+        <div class="glass-chip-name">Glass Card</div>
+        <div class="glass-chip-val">rgba(33,27,21, 0.3)<br>brak blur<br>hover → amber border</div>
+      </div>
+      <div class="glass-chip" style="background:rgba(33,27,21,.9);border:1px solid rgba(255,255,255,.05);box-shadow:0 8px 32px rgba(0,0,0,.65);">
+        <div class="glass-chip-name">Popup / Overlay</div>
+        <div class="glass-chip-val">rgba(33,27,21, 0.9)<br>border rgba(255,255,255,.05)<br>shadow 0 8px 32px rgba(0,0,0,.65)</div>
+      </div>
+    </div>
+
+    <div class="trans-row">
+      <div class="trans-chip">
+        <div class="trans-chip-name">Fast</div>
+        <div class="trans-chip-val">200ms cubic-bezier(0.4, 0, 0.2, 1)</div>
+        <div class="trans-chip-role">Hover, focus, active stanów</div>
+      </div>
+      <div class="trans-chip">
+        <div class="trans-chip-name">Standard</div>
+        <div class="trans-chip-val">300ms cubic-bezier(0.4, 0, 0.2, 1)</div>
+        <div class="trans-chip-role">Panele, slideover, modals</div>
+      </div>
+      <div class="trans-chip">
+        <div class="trans-chip-name">Bounce</div>
+        <div class="trans-chip-val">300ms cubic-bezier(0.175, 0.885, 0.32, 1.275)</div>
+        <div class="trans-chip-role">Piny mapy, pojawianie kart</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 08 TON -->
+  <section class="section">
+    <div class="section-eyebrow">08 — Komunikacja</div>
+    <h2 class="section-title">Ton marki</h2>
+    <p class="section-desc">KebabRank to kibic ulicznego jedzenia — konkretny, nieoficjalny, z charakterem. Piszemy językiem zjadacza kebaba, nie recenzenta Michelina. Liczby, nie przymiotniki.</p>
+
+    <table class="tone-table">
+      <thead>
+        <tr>
+          <th style="width:50%">✓ Tak piszemy</th>
+          <th>✗ Nie piszemy</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="tone-yes">„Najlepszy kebab w okolicy"</td>
+          <td class="tone-no">„Placówka gastronomiczna o najwyższym wskaźniku satysfakcji klientów"</td>
+        </tr>
+        <tr>
+          <td class="tone-yes">„0,4 km — 5 minut piechotą 🚶"</td>
+          <td class="tone-no">„Dystans od Twojej aktualnej lokalizacji wynosi 0,4 km"</td>
+        </tr>
+        <tr>
+          <td class="tone-yes">„AI przeanalizowało 1 203 opinie"</td>
+          <td class="tone-no">„System NLP dokonał analizy sentymentu recenzji użytkowników"</td>
+        </tr>
+        <tr>
+          <td class="tone-yes">„Wygląda na zamknięte 😔"</td>
+          <td class="tone-no">„Status dostępności: niedostępny"</td>
+        </tr>
+        <tr>
+          <td class="tone-yes">„Radar — kebaby blisko Ciebie"</td>
+          <td class="tone-no">„Funkcja geolokalizacji w Twoim obszarze"</td>
+        </tr>
+        <tr>
+          <td class="tone-yes">„#1 w Krakowie od 3 miesięcy"</td>
+          <td class="tone-no">„Lokal utrzymuje pozycję lidera w kategorii"</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="brand-footer">
+    <div class="footer-wordmark">KebabRank</div>
+    <div class="footer-meta">Księga Znaku · v1.0<br>Lipiec 2026</div>
+  </footer>
+
+</div>

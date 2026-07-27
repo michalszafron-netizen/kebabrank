@@ -299,6 +299,29 @@ CREATE TABLE subscribers (
 > **WAŻNE:** `subscribers.db` jest w `.gitignore` — nigdy nie trafi na GitHub.
 > Na Hostingerze plik żyje na serwerze niezależnie od deploymentów.
 
+### Podgląd bazy w przeglądarce (produkcja)
+
+```
+https://kebabrank.com/api/subscribers/export?key=kebab2024adminkey
+```
+
+### Test wysyłki emaila (tylko lokalnie, wyłączone na produkcji)
+
+```
+http://localhost:5001/api/test-email?to=kryptoholik@gmail.com
+```
+
+Wysyła testowy email z przykładowym kebahem. Sprawdź konsolę Flask po wynik:
+- `[EMAIL] OK → ...` — działa
+- `[EMAIL] Brak konfiguracji SMTP` — brakuje `.env`
+- `[EMAIL] BŁĄD → ...` — błąd SMTP, skopiuj treść
+
+### Czyszczenie bazy (np. po testach)
+
+```bash
+python -c "import sqlite3; c=sqlite3.connect('subscribers.db'); c.execute('DELETE FROM subscribers'); c.commit(); print('Wyczyszczone')"
+```
+
 ### Skrypt eksportu emaili (Python)
 
 ```python
